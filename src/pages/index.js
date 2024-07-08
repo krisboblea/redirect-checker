@@ -1,9 +1,7 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import { Heading, Text } from "@chakra-ui/react";
 
-const inter = Inter({ subsets: ["latin"] });
+import { Heading, Stack, Text } from "@chakra-ui/react";
+import { AppContainer } from "@/components/AppContainer";
 
 export default function Home() {
   return (
@@ -17,12 +15,19 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${inter.className}`}>
-        <Heading as="h1">Redirect Services Performance Comparison</Heading>
-        <Text>
-          Discover which redirect service delivers the fastest response times and highest uptime with our real-time
-          comparison tool.
-        </Text>
+      <main>
+        <AppContainer>
+          <Stack gap="15px" textAlign="center" my="60px">
+            <Heading as="h1" size="text40">
+              Redirect Services Performance Comparison
+            </Heading>
+            <Text>
+              Discover which redirect service delivers the fastest response times and highest uptime with our real-time
+              comparison tool.
+            </Text>
+          </Stack>
+          <hr />
+        </AppContainer>
       </main>
     </>
   );
