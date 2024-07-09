@@ -24,14 +24,14 @@ export default function DataSources() {
 
   return (
     <>
-      <Box maxW={{ lg: "80%" }} mx="auto" mt="50px">
+      <Box maxW="80%" mx="auto" mt="50px" p="20px">
         <Stack>
           <Heading fontSize={getFluidFontSize(20, 26)} fontWeight="500">
             Data Sources
           </Heading>
           <Text>Performance data are tested by updown.io from {Object.keys(dataSources)?.length} locations.</Text>
         </Stack>
-        <Grid mt="30px" gap="15px" gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))">
+        <Grid mt="30px" gap="15px" gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))">
           {Object.keys(dataSources)?.map((sourceKey) => {
             const { city, country, country_code } = dataSources[sourceKey];
 

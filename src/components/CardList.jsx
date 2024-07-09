@@ -40,7 +40,7 @@ export default function CardList() {
   }, []);
 
   return (
-    <Box maxW={{ lg: "80%" }} mx="auto" borderBlockStart="1px solid var(--chakra-colors-gray-200)">
+    <Box mx="auto" borderBlockStart="1px solid var(--chakra-colors-gray-200)">
       {checksData?.length > 0 &&
         checksData.map((data) => {
           return (
