@@ -15,8 +15,6 @@ const fonts = {
   body: inter.style.fontFamily,
 };
 
-console.log(inter);
-
 const colors = {
   white: "#ffffff",
   black: "#000000",
