@@ -6,7 +6,6 @@ import { getFluidFontSize } from "@/utils";
 
 export default function DataSources() {
   const [dataSources, setDataSources] = useState([]);
-  // https://updown.io/api/nodes?api-key=ro-Yk9zfJX5ud6PmEGgwseA
 
   async function fetchDataSources() {
     try {
@@ -19,7 +18,6 @@ export default function DataSources() {
 
   useEffect(() => {
     fetchDataSources();
-    // console.log(dataSources);
   }, []);
 
   return (

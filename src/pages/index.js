@@ -8,6 +8,18 @@ import CardList from "@/components/CardList";
 import DataSources from "@/components/DataSources";
 
 export default function Home() {
+  const stylesBtnCta = {
+    className: "btn-cta",
+    display: "flex",
+    fontSize: getFluidFontSize(16, 18),
+    fontWeight: "500",
+    padding: "5px 15px",
+    textAlign: "center",
+    borderRadius: "3px",
+    color: "#fff",
+    backgroundColor: "#17b96e",
+  };
+
   return (
     <>
       <Head>
@@ -21,16 +33,21 @@ export default function Home() {
       </Head>
       <main>
         <AppContainer>
-          <Stack gap="20px" textAlign="center" my="60px" maxW={{ lg: "60%" }} mx="auto">
+          <Stack gap="20px" textAlign="center" my="60px" mx="auto">
             <Heading as="h1" fontSize={getFluidFontSize(28, 32)} fontWeight="600">
               Redirect Services Performance Comparison
             </Heading>
-            <Text>
+            {/* <Text>
               Discover which redirect service delivers the fastest response times and highest uptime with our real-time
               comparison tool.
-            </Text>
+            </Text> */}
           </Stack>
           <CardList />
+          <Flex my="50px" alignItems="center" justifyContent="center">
+            <Link href="https://www.redirhub.com" {...stylesBtnCta}>
+              Get started with RedirHub today
+            </Link>
+          </Flex>
           <DataSources />
         </AppContainer>
       </main>
