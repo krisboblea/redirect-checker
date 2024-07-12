@@ -12,8 +12,6 @@ export default function DataSources() {
     try {
       const apiRouteResponse = await axios.get("api/data");
       setSitesData(apiRouteResponse.data.data.nodes);
-
-      console.log(apiRouteResponse.data.data);
     } catch (error) {
       console.error(error);
     }
