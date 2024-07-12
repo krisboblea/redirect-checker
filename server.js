@@ -42,7 +42,7 @@ app.prepare().then(() => {
      console.log(`> Ready on http://${hostname}:${port}`);
      
      // run cronjob
-     cron.schedule('* */3 * * * *', async () => {
+     cron.schedule('*/3 * * * *', async () => {
        console.log('saving new data in every 3 minutes', Date.now());
        try {
          const { exec } = require('child_process');
