@@ -5,7 +5,6 @@ import axios from "axios";
 import { getFluidFontSize } from "@/utils";
 
 export default function DataSources() {
-  const [dataSources, setDataSources] = useState([]);
   const [sitesData, setSitesData] = useState({});
 
   async function fetchDataSources() {
