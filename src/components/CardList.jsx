@@ -118,7 +118,7 @@ export default function CardList({ sitesData = [] }) {
                         Response
                       </Text>
                       <Box as="span" fontSize={getFluidFontSize(26, 32)}>
-                        {timings.total}ms
+                        {timings?.total}ms
                       </Box>
                     </Box>
                     <Link
