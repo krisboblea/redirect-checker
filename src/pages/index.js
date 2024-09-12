@@ -42,7 +42,15 @@ export default function Home() {
           content="Find the fastest redirect services from RedirHub, Redirect.pizza, and EasyRedir with our comprehensive speed comparison tool. Check uptime, response times, and performance details in real-time."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" sizes="32x32" />
+        <link rel="icon" href="/logo.png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <meta name="msapplication-TileImage" content="/logo.png" />
+        <meta property="og:image" content="/preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Redirect Services Performance Comparison" />
+
       </Head>
       <main>
         <Box bgGradient={bgGradient} py={20}>
