@@ -1,3 +1,5 @@
+import { FaRocket } from "react-icons/fa";
+
 // Extracted styles to a separate object
 export const styles = {
     card: {
@@ -6,9 +8,9 @@ export const styles = {
             boxShadow: "xl",
             transform: "translateY(-2px)",
         },
-        bg: {
-            light: "white",
-            dark: "gray.800",
+        bg: 'white',
+        _dark: {
+            bg: "gray.800",
         },
     },
     statusBadge: {
@@ -19,9 +21,9 @@ export const styles = {
         py: 1,
         borderRadius: "full",
         fontWeight: "medium",
-        color: {
-            light: "gray.800",
-            dark: "gray.100",
+        color: 'gray.800',
+        _dark: {
+            color: 'gray.100',
         },
     },
     fastestBadge: {
@@ -48,13 +50,24 @@ export const styles = {
         borderRadius: "md",
         p: 4,
         minWidth: "180px",
-        bg: {
-            light: "gray.50",
-            dark: "gray.700",
+        bg: "gray.50",
+        color: "gray.800",
+        _dark: {
+            bg: "gray.700",
+            color: "gray.100",
         },
-        color: {
-            light: "gray.800",
-            dark: "gray.100",
+    },
+    getStartedButton: {
+        as: "a",
+        size: "lg",
+        bg: "green.300",
+        color: "gray.800",
+        _dark: {
+            bg: "gray.700",
+            color: "gray.100",
         },
+        rightIcon: <FaRocket />,
+        _hover: { transform: "translateY(-2px)", boxShadow: "lg" },
+        transition: "all 0.3s",
     },
 };

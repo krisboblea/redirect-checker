@@ -62,9 +62,9 @@ export default function RedirectResultList({ results }) {
                     {truncateUrl(result.url, 30)}
                   </Heading>
                 </Tooltip>
-                <Badge colorScheme={result.chain[result.chain.length - 1].succeed ? "green" : "red"} {...styles.statusBadge}>
+                {/* <Badge colorScheme={result.chain[result.chain.length - 1].succeed ? "green" : "red"} {...styles.statusBadge}>
                   {result.statusCode}
-                </Badge>
+                </Badge> */}
                 {getProviderBadge(result.chain[0].header)}
                 {result === fastestResult && results.length > 1 && (
                   <Badge {...styles.fastestBadge}>
@@ -83,14 +83,14 @@ export default function RedirectResultList({ results }) {
             </VStack>
             <HStack spacing={4} justifyContent="flex-end" flexWrap="wrap">
               <StatItem
-                label="Redirects"
-                value={result.chainNumber}
-                icon={getRedirectIcon(result.chainNumber)}
-              />
-              <StatItem
                 label="Status"
                 value={result.statusCode}
                 icon={<Icon as={FaCode} color="purple.500" boxSize={8} />}
+              />
+              <StatItem
+                label="Redirects"
+                value={result.chainNumber}
+                icon={getRedirectIcon(result.chainNumber)}
               />
               <StatItem
                 label="Response"

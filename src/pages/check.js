@@ -3,15 +3,16 @@ import { Box } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
+import { APP_NAME } from "@/configs/constant";
 
 export default function RedirectCheck() {
     return (
         <MainLayout>
             <Head>
-                <title>Redirect Check | RedirHub</title>
+                <title>Redirect Check | {APP_NAME}</title>
                 <meta
                     name="description"
-                    content="Check and analyze your redirects with RedirHub's powerful redirect checking tool."
+                    content={`Check and analyze your redirects with powerful redirect checking tool. `}
                 />
             </Head>
             <AppContainer>

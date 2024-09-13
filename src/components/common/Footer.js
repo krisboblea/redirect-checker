@@ -35,15 +35,17 @@ export default function Footer() {
             <Container
                 as={Stack}
                 maxW={"6xl"}
-                mt={12}
-                py={4}
+                mt={8} // Reduced top margin
+                py={6} // Increased vertical padding
                 direction={{ base: "column", md: "row" }}
-                spacing={4}
+                spacing={{ base: 6, md: 4 }} // Increased spacing for mobile
                 justify={{ base: "center", md: "space-between" }}
                 align={{ base: "center", md: "center" }}
             >
-                <Text>© {new Date().getFullYear()} RedirHub. All rights reserved</Text>
-                <Stack direction={"row"} spacing={6}>
+                <Text textAlign={{ base: "center", md: "left" }}>
+                    © {new Date().getFullYear()} RedirHub. All rights reserved
+                </Text>
+                <Stack direction={"row"} spacing={{ base: 4, md: 6 }}>
                     <SocialButton label={"Twitter"} href={"https://twitter.com/redirhub"}>
                         <FaTwitter />
                     </SocialButton>
