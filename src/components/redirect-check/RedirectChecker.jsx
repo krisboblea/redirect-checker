@@ -74,7 +74,7 @@ export default function RedirectChecker() {
           bg={bgColor}
           borderRadius="2xl"
           boxShadow="xl"
-          p={10}
+          p={{base: 4, md: 10}}
           borderColor={borderColor}
           borderWidth={1}
         >
@@ -83,7 +83,7 @@ export default function RedirectChecker() {
               value={urls}
               onChange={(e) => setUrls(e.target.value)}
               placeholder="Enter URLs (one per line)&#10;e.g., https://example.com"
-              rows={6}
+              rows={5}
               resize="vertical"
               bg={useColorModeValue("gray.50", "gray.700")}
               borderColor={borderColor}
@@ -92,7 +92,6 @@ export default function RedirectChecker() {
               _focus={{ borderColor: "blue.400", boxShadow: "0 0 0 1px var(--chakra-colors-blue-400)" }}
               fontSize="md"
             />
-            <Divider />
             <Button
               leftIcon={<FaSearch />}
               colorScheme="blue"
