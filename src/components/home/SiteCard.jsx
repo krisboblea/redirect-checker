@@ -12,16 +12,18 @@ export default function SiteCard({ site, isFastest }) {
   const { token, url, alias, last_check_at, uptime } = site[0];
   const { timings } = site[1];
   const siteInfo = SITESMAPPING.find(site => site.id === token);
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   return (
     <Box
       {...styles.card}
-      bg="white"
+      bg={bgColor}
       borderRadius="xl"
       p={6}
       boxShadow="md"
       border="1px solid"
-      borderColor="gray.100"
+      borderColor={borderColor}
     >
       <Flex direction={{ base: "column", md: "row" }} justifyContent="space-between" alignItems="stretch" gap={6}>
         <Stack spacing={4} flex={1}>

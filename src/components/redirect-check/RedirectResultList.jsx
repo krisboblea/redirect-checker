@@ -23,7 +23,7 @@ import {
   Tooltip,
   Divider,
 } from "@chakra-ui/react";
-import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown } from "react-icons/fa";
+import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
 import { FiZap } from "react-icons/fi";
 import { GiTurtle } from "react-icons/gi";
@@ -31,8 +31,6 @@ import { FaBicycle, FaCar, FaCode } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 
 export default function RedirectResultList({ results }) {
-  const bgColor = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
   const arrowColor = useColorModeValue("gray.300", "gray.600");
 
   // Find the fastest result
@@ -51,12 +49,10 @@ export default function RedirectResultList({ results }) {
         <Box
           {...styles.card}
           key={result.url}
-          bg={bgColor}
           borderRadius="xl"
           boxShadow="md"
           p={6}
           borderWidth={1}
-          borderColor={borderColor}
         >
           <Flex direction={{ base: "column", md: "row" }} justifyContent="space-between" alignItems="stretch" gap={6}>
             <VStack align="flex-start" spacing={4} flex={1}>
@@ -217,10 +213,8 @@ const getResponseIcon = (responseTime) => {
 };
 
 const getRedirectIcon = (chainNumber) => {
-  if (chainNumber === 0) {
-    return <Icon as={FaCheckCircle} color="green.500" boxSize={8} />;
-  } else if (chainNumber <= 2) {
-    return <Icon as={FaSmile} color="yellow.500" boxSize={8} />;
+  if (chainNumber <= 2 && chainNumber > 0) {
+    return <Icon as={FaThumbsUp} color="green.500" boxSize={8} />;
   } else {
     return <Icon as={FaSadTear} color="red.500" boxSize={8} />;
   }

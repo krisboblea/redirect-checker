@@ -1,4 +1,3 @@
-
 // Extracted styles to a separate object
 export const styles = {
     card: {
@@ -17,6 +16,12 @@ export const styles = {
         py: 1,
         borderRadius: "full",
         fontWeight: "medium",
+        bg: "gray.100",
+        color: "gray.800",
+        _dark: {
+            bg: "gray.700",
+            color: "gray.100",
+        },
     },
     providerBadge: {
         fontSize: "sm",
@@ -26,6 +31,12 @@ export const styles = {
         borderRadius: "full",
         fontWeight: "medium",
         textTransform: "uppercase",
+        bg: "blue.100",
+        color: "blue.800",
+        _dark: {
+            bg: "blue.700",
+            color: "blue.100",
+        },
     },
     fastestBadge: {
         display: "flex",
@@ -36,6 +47,10 @@ export const styles = {
         borderRadius: "full",
         bg: "yellow.100",
         color: "yellow.800",
+        _dark: {
+            bg: "yellow.700",
+            color: "yellow.100",
+        },
         fontWeight: "medium",
         fontSize: "sm",
     },
@@ -45,8 +60,11 @@ export const styles = {
         alignItems: "center",
         justifyContent: "center",
         bg: "gray.50",
+        _dark: {
+            bg: "gray.700", // Dark mode background
+        },
         borderRadius: "md",
-        p: 4, // Increased padding
-        minWidth: "120px", // Increased minimum width
+        p: 4,
+        minWidth: "120px",
     },
 };

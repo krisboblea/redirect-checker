@@ -38,8 +38,8 @@ export default function Header() {
                     <Stack direction={"row"} spacing={7}>
                         <NavLink href="/" icon={<FaHome />}>Home</NavLink>
                         <NavLink href="/check" icon={<FaCheckCircle />}>Redirect Check</NavLink>
-                        <NavLink href="/redirect-speed" icon={<FaBolt />}>Speed Analysis</NavLink>
-                        <NavLink href="/blog" icon={<FaBlog />}>Blog</NavLink>
+                        <NavLink href="#" icon={<FaBolt />}>Speed Analysis</NavLink>
+                        <NavLink href="#" icon={<FaBlog />}>Blog</NavLink>
                         <Button onClick={toggleColorMode} aria-label="Toggle color mode">
                             {colorMode === "light" ? <FaMoon /> : <FaSun />}
                         </Button>
