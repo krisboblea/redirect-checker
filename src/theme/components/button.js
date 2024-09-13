@@ -26,32 +26,52 @@ export const themeButton = defineStyle({
 
       if (c === "default") {
         return {
-          bg: "var(--chakra-colors-black)",
-          color: "var(--chakra-colors-white)",
+          bg: "black",
+          color: "white",
           _hover: {
-            bg: "var(--chakra-colors-primary)",
+            bg: "primary",
+          },
+          _dark: {
+            bg: "white",
+            color: "black",
+            _hover: {
+              bg: "primary",
+              color: "white",
+            },
           },
         };
       }
 
       if (c === "white") {
         return {
-          bg: "var(--chakra-colors-white)",
-          color: "var(--chakra-colors-black)",
+          bg: "white",
+          color: "black",
           _hover: {
-            bg: "var(--chakra-colors-white)",
-            color: "var(--chakra-colors-black)",
+            bg: "gray.100",
+          },
+          _dark: {
+            bg: "gray.800",
+            color: "white",
+            _hover: {
+              bg: "gray.700",
+            },
           },
         };
       }
 
       if (c === "primary") {
         return {
-          bg: "var(--chakra-colors-primary)",
-          color: "var(--chakra-colors-white)",
+          bg: "primary",
+          color: "white",
           _hover: {
-            bg: "var(--chakra-colors-primary)",
-            color: "var(--chakra-colors-white)",
+            bg: "primary.600",
+          },
+          _dark: {
+            bg: "primary",
+            color: "white",
+            _hover: {
+              bg: "primary.400",
+            },
           },
         };
       }

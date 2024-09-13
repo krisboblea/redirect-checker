@@ -2,14 +2,15 @@ import { defineStyle, defineStyleConfig } from "@chakra-ui/react";
 import { fontSizes, getFluidFontSize } from "@/utils";
 
 export const themeHeading = defineStyleConfig({
-  baseStyle: {
-    lineHeight: ["1.121"],
+  baseStyle: (props) => ({
+    lineHeight: [ "1.121" ],
     fontWeight: "400",
-  },
+    color: props.colorMode === "dark" ? "whiteAlpha.900" : "gray.800",
+  }),
   sizes: {
     hero: defineStyle({
       fontSize: getFluidFontSize("100", "140"),
-      lineHeight: ["1.121"],
+      lineHeight: [ "1.121" ],
     }),
     text80: defineStyle({
       fontSize: fontSizes.text80,
@@ -31,6 +32,11 @@ export const themeHeading = defineStyleConfig({
     }),
     text16: defineStyle({
       fontSize: fontSizes.text16,
+    }),
+  },
+  variants: {
+    emphasis: (props) => ({
+      color: props.colorMode === "dark" ? "teal.200" : "teal.600",
     }),
   },
 });

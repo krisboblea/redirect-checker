@@ -1,7 +1,8 @@
-import { Box, Flex, Button, useColorModeValue, Stack, useColorMode } from "@chakra-ui/react";
+import { Box, Flex, Button, useColorModeValue, Stack, useColorMode, Image } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import Image from "next/image";
+import { APP_LOGO } from "@/configs/constant";
 import { FaSun, FaMoon, FaHome, FaCheckCircle, FaBolt, FaBlog } from "react-icons/fa";
+import { APP_NAME } from "@/configs/constant";
 
 const NavLink = ({ children, href, icon }) => (
     <Link
@@ -29,7 +30,7 @@ export default function Header() {
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
                 <Box>
                     <Link href="/">
-                        <Image src="/logo.png" alt="RedirHub Logo" width={120} height={40} />
+                        <Image src={APP_LOGO} alt={APP_NAME} width={'auto'} height={'53px'} />
                     </Link>
                 </Box>
 

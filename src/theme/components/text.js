@@ -3,8 +3,11 @@ import { fontSizes } from '@/utils';
 
 export const themeText = defineStyle({
     baseStyle: {
-        color: 'var(--chakra-colors-gray3)',
-        lineHeight: ['1.25'],
+        color: 'gray.800', // Light mode color
+        _dark: {
+            color: 'gray.200', // Dark mode color
+        },
+        lineHeight: [ '1.25' ],
         fontWeight: '400',
     },
     defaultProps: {
