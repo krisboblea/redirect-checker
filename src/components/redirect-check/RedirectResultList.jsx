@@ -23,7 +23,7 @@ import {
   Tooltip,
   Divider,
 } from "@chakra-ui/react";
-import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp } from "react-icons/fa";
+import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
 import { FiZap } from "react-icons/fi";
 import { GiTurtle } from "react-icons/gi";
@@ -72,7 +72,7 @@ export default function RedirectResultList({ results }) {
               <Flex alignItems="center" width="100%">
                 <Icon as={FaArrowDown} color={arrowColor} boxSize={4} mx={4} />
               </Flex>
-              {!result.error ?
+              {!result.error_msg ?
               <Tooltip label={result?.finalUrl} placement="top">
                 <Text fontSize={getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
                   {truncateUrl(result?.finalUrl, 50)}
@@ -80,7 +80,7 @@ export default function RedirectResultList({ results }) {
                 </Tooltip>
                 :
                 <Text fontSize={getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
-                  {result?.error}
+                  {result?.error_msg}
                 </Text>
               }
             </VStack>
@@ -128,7 +128,7 @@ export default function RedirectResultList({ results }) {
                           <Td>{index + 1}</Td>
                           <Td>
                             <Text fontSize="sm" fontWeight="medium">
-                              {redirect.url}
+                              {redirect?.url}
                             </Text>
                           </Td>
                           <Td>
@@ -138,10 +138,10 @@ export default function RedirectResultList({ results }) {
                               px={2}
                               py={1}
                             >
-                              {redirect.http_code}
+                              {redirect?.http_code}
                             </Badge>
                           </Td>
-                          <Td>{redirect.alltime.toFixed(2)}s</Td>
+                          <Td>{redirect?.alltime?.toFixed(2) || 0}s</Td>
                           <Td>
                             <Accordion allowToggle>
                               <AccordionItem border="none">
@@ -155,19 +155,19 @@ export default function RedirectResultList({ results }) {
                                     <Flex>
                                       <Icon as={FaServer} mr={2} />
                                       <Text fontWeight="bold">IP:</Text>
-                                      <Text ml={2}>{redirect.ip}</Text>
+                                      <Text ml={2}>{redirect?.ip}</Text>
                                     </Flex>
                                     <Flex>
                                       <Icon as={FaLink} mr={2} />
                                       <Text fontWeight="bold">Scheme:</Text>
-                                      <Text ml={2}>{redirect.scheme}</Text>
+                                      <Text ml={2}>{redirect?.scheme}</Text>
                                     </Flex>
-                                    {redirect.scheme.toLowerCase() === 'https' && (
+                                    {redirect?.scheme?.toLowerCase() === 'https' && (
                                       <Flex>
-                                        <Icon as={FaClock} mr={2} />
-                                        <Text fontWeight="bold">SSL Verify Result:</Text>
+                                        <Icon as={FaLock} mr={2} />
+                                        <Text fontWeight="bold">SSL:</Text>
                                         <Text ml={2}>
-                                          {redirect.ssl_verify_result ? "Success" : "Failed"}
+                                          {redirect?.ssl_verify_result ? "Verified" : "Unverified"}
                                         </Text>
                                       </Flex>
                                     )}
@@ -184,7 +184,7 @@ export default function RedirectResultList({ results }) {
                                         borderRadius="md"
                                         overflowX="auto"
                                       >
-                                        {JSON.stringify(redirect.header, null, 2)}
+                                        {JSON.stringify(redirect?.header, null, 2)}
                                       </Box>
                                     </Box>
                                   </VStack>

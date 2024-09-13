@@ -18,12 +18,13 @@ async function handler(req, res) {
         url = `http://${url}`;
     }
 
+    const results = [];
+    let currentUrl = url;
+    let redirectCount = 0;
+    const maxRedirects = 5;
+    let proceed = true;
+
     try {
-        const results = [];
-        let currentUrl = url;
-        let redirectCount = 0;
-        const maxRedirects = 5;
-        let proceed = true;
 
         while (proceed && redirectCount < maxRedirects) {
             let start = new Date().getTime();
@@ -42,8 +43,6 @@ async function handler(req, res) {
                 url: currentUrl,
                 time: new Date().toISOString(),
                 succeed: response.status < 400,
-                error_no: response.status,
-                error_msg: response.statusText,
                 http_code: response.status,
                 redirect: response.headers[ 'location' ] || false,
                 alltime: (new Date().getTime() - start) / 1000,
@@ -65,10 +64,16 @@ async function handler(req, res) {
             }
         }
 
-        return res.status(200).json(results);
     } catch (error) {
-        return res.status(400).json({ error: 'An error occurred', details: error.message });
+        results.push({
+            url: url,
+            time: new Date().toISOString(),
+            succeed: false,
+            error_no: error.response?.status || 0,
+            error_msg: error.message,
+        });
     }
+    return res.status(200).json(results);
 }
 
 export default corsMiddleware(handler);
