@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import {
   Box,
   Button,
@@ -23,11 +24,21 @@ export default function RedirectChecker() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const toast = useToast();
+  const router = useRouter();
 
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const headingColor = useColorModeValue("gray.800", "white");
   const subheadingColor = useColorModeValue("gray.600", "gray.400");
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { url } = router.query;
+      if (url) {
+        setUrls(decodeURIComponent(url));
+      }
+    }
+  }, [router.isReady, router.query]);
 
   const handleCheck = async () => {
     setIsLoading(true);
