@@ -38,7 +38,7 @@ export default function Header() {
                 </Flex>
 
                 <Flex alignItems={"center"}>
-                    <Stack direction={"row"} spacing={1} display={{ base: "none", md: "flex" }}>
+                    <Stack direction={"row"} spacing={1} display={{ base: "none", lg: "flex" }}>
                         <NavLink href="/" icon={<FaHome />}>Home</NavLink>
                         <NavLink href="/check" icon={<FaCheckCircle />}>Redirect Check</NavLink>
                         <NavLink href="#" icon={<FaBolt />}>Speed Analysis</NavLink>
@@ -48,7 +48,7 @@ export default function Header() {
                         {colorMode === "light" ? <FaMoon /> : <FaSun />}
                     </Button>
                     <IconButton
-                        display={{ base: "flex", md: "none" }}
+                        display={{ base: "flex", lg: "none" }}
                         px={2}
                         onClick={onOpen}
                         icon={<FaBars />}

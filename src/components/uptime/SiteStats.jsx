@@ -40,7 +40,7 @@ const getResponseIcon = (responseTime) => {
 
 const StatItem = ({ label, value, icon }) => (
   <Tooltip label={label} placement="top">
-    <Stack {...styles.statItem} minWidth={{ base: "auto", md: "180px" }} p={{ base: 2, md: 4 }}>
+    <Stack {...styles.statItem} minWidth={{ base: "auto", md: "120px", lg: "180px" }} p={{ base: 2, md: 4 }}>
       {React.cloneElement(icon, { size: { base: 24, md: 32 } })}
       <Text fontWeight="bold" fontSize={{ base: "lg", md: getFluidFontSize(22, 26) }}>
         {value}

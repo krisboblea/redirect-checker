@@ -49,7 +49,6 @@ export const styles = {
         justifyContent: "center",
         borderRadius: "md",
         p: 4,
-        minWidth: "180px",
         bg: "gray.50",
         color: "gray.800",
         _dark: {

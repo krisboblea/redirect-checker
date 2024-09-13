@@ -6,6 +6,7 @@ import { FaBolt } from "react-icons/fa";
 import { styles } from "@/configs/uptime";
 import { getFluidFontSize, getFormattedTimeDiff } from "@/utils";
 import { FaClock } from "react-icons/fa";
+import { useDevice } from "@/hooks/useDevice";
 
 
 export default function SiteCard({ site, isFastest }) {
@@ -14,6 +15,7 @@ export default function SiteCard({ site, isFastest }) {
   const siteInfo = SITESMAPPING.find(site => site.id === token);
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
+  const {isMobile} = useDevice();
 
   return (
     <Box
@@ -29,9 +31,10 @@ export default function SiteCard({ site, isFastest }) {
         <Stack spacing={{ base: 2, md: 4 }} flex={1}>
           <SiteTitle alias={alias} name={siteInfo?.name} url={url} isFastest={isFastest} />
           <SiteLastCheck lastCheckAt={last_check_at} token={token} />
-          <SiteLinks url={url} token={token} official={siteInfo?.official} />
+          {!isMobile && <SiteLinks url={url} token={token} official={siteInfo?.official} />}
         </Stack>
         <SiteStats uptime={uptime} timings={timings} token={token} />
+        {isMobile && <SiteLinks url={url} token={token} official={siteInfo?.official} />}
       </Flex>
     </Box>
   );
@@ -39,21 +42,28 @@ export default function SiteCard({ site, isFastest }) {
 
 // Updated SiteTitle component
 const SiteTitle = ({ alias, name, url, isFastest }) => (
-  <Flex alignItems="center" gap={2} flexWrap="wrap">
-    <Heading
-      as="h4"
-      fontSize={{ base: "lg", sm: getFluidFontSize(20, 24) }}
-      fontWeight="600"
-    >
-      {name || alias || url}
-    </Heading>
-    {name && (alias || url) && (
-      <Text color="gray.600" fontSize={{ base: "sm", sm: getFluidFontSize(14, 16) }}>
-        ({alias || url})
-      </Text>
-    )}
+  <Flex
+    alignItems="center"
+    gap={2}
+    flexWrap={{ base: "wrap", md: "nowrap" }}
+    justifyContent="space-between"
+  >
+    <Flex alignItems="center" gap={2} flexWrap={{ base: "wrap", md: "nowrap" }}>
+      <Heading
+        as="h4"
+        fontSize={{ base: "lg", sm: getFluidFontSize(20, 24) }}
+        fontWeight="600"
+      >
+        {name || alias || url}
+      </Heading>
+      {name && (alias || url) && (
+        <Text color="gray.600" fontSize={{ base: "sm", sm: getFluidFontSize(14, 16) }}>
+          ({alias || url})
+        </Text>
+      )}
+    </Flex>
     {isFastest && (
-      <Badge {...styles.fastestBadge}>
+      <Badge {...styles.fastestBadge} flexShrink={0}>
         <FaBolt /> Fastest
       </Badge>
     )}

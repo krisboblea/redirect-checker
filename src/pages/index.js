@@ -1,13 +1,7 @@
 import Head from "next/head";
-import { Box, Container, VStack, Heading, Text, Button, useColorModeValue, Center, useColorMode, Switch } from "@chakra-ui/react";
-import { Link } from "@chakra-ui/next-js";
+import { Box, Container, VStack, Heading, Text, useColorModeValue } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
-import CardList from "@/components/uptime/CardList";
-import DataSources from "@/components/uptime/DataSources";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { FaRocket } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
 import Uptime from "@/components/uptime/Uptime";
 import { APP_NAME } from "@/configs/constant";
