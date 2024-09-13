@@ -20,17 +20,23 @@ import RedirectResultList from "./RedirectResultList";
 import { checkRedirects } from "./redirectUtils.jsx";
 
 export default function RedirectChecker() {
-  const [urls, setUrls] = useState('http://redirhub.com');
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const toast = useToast();
   const router = useRouter();
+  const [urls, setUrls] = useState('');
 
   const { bgColor, borderColor, headingColor, subheadingColor } = useColorModeValue(
     { bgColor: "white", borderColor: "gray.200", headingColor: "gray.800", subheadingColor: "gray.600" },
     { bgColor: "gray.800", borderColor: "gray.700", headingColor: "white", subheadingColor: "gray.400" }
   );
+
+  useEffect(() => {
+    if (router.isReady && router.query.url) {
+      setUrls(decodeURIComponent(router.query.url));
+    }
+  }, [router.isReady, router.query.url]);
 
   const handleCheck = useCallback(async () => {
     setIsLoading(true);
@@ -43,13 +49,6 @@ export default function RedirectChecker() {
     setIsLoading(false);
     scrollToResults();
   }, [urls, toast]);
-
-  useEffect(() => {
-    if (router.isReady && router.query.url) {
-      setUrls(decodeURIComponent(router.query.url));
-      handleCheck();
-    }
-  }, [router.isReady, router.query, handleCheck]);
 
   return (
     <Container maxW="container.xl" py={20}>
