@@ -1,9 +1,12 @@
-import { Box, Flex, HStack, Heading, Stack, Text, Badge, Tooltip, Button } from "@chakra-ui/react";
+import { Box, Flex, HStack, Heading, Stack, Text, Badge, Tooltip, Button, Icon } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 import { getFluidFontSize, getFormattedTimeDiff } from "@/utils";
 import CardListSkeleton from "./CardListSkeleton";
 import { FaCheckCircle, FaClock, FaBolt, FaCar, FaBicycle, FaRocket, FaExternalLinkAlt, FaInfoCircle } from "react-icons/fa";
+import { FiCheck, FiZap, FiTruck, FiBatteryCharging, FiClock } from "react-icons/fi";
+import { GiTurtle } from "react-icons/gi";
 import React from "react";
+import { SITESMAPPING } from "./sites";
 
 // Extracted styles to a separate object
 const styles = {
@@ -43,7 +46,7 @@ const styles = {
     bg: "gray.50",
     borderRadius: "md",
     p: 4, // Increased padding
-    minWidth: "120px", // Increased minimum width
+    minWidth: "180px", // Increased minimum width
   },
 };
 
@@ -93,6 +96,7 @@ export default function CardList({ sitesData = [] }) {
 const SiteCard = ({ site, isFastest }) => {
   const { token, url, alias, last_check_at, uptime } = site[0];
   const { timings } = site[1];
+  const siteInfo = SITESMAPPING.find(site => site.id === token);
 
   return (
     <Box
@@ -106,9 +110,9 @@ const SiteCard = ({ site, isFastest }) => {
     >
       <Flex direction={{ base: "column", md: "row" }} justifyContent="space-between" alignItems="stretch" gap={6}>
         <Stack spacing={4} flex={1}>
-          <SiteTitle alias={alias} url={url} isFastest={isFastest} />
+          <SiteTitle alias={alias} name={siteInfo?.name} url={url} isFastest={isFastest} />
           <SiteLastCheck lastCheckAt={last_check_at} token={token} />
-          <SiteLinks url={url} token={token} />
+          <SiteLinks url={url} token={token} official={siteInfo?.official} />
         </Stack>
         <SiteStats uptime={uptime} timings={timings} token={token} />
       </Flex>
@@ -117,15 +121,20 @@ const SiteCard = ({ site, isFastest }) => {
 };
 
 // Updated SiteTitle component
-const SiteTitle = ({ alias, url, isFastest }) => (
-  <Flex alignItems="center" gap={2}>
+const SiteTitle = ({ alias, name, url, isFastest }) => (
+  <Flex alignItems="center" gap={2} flexWrap="wrap">
     <Heading
       as="h4"
       fontSize={getFluidFontSize(20, 24)}
       fontWeight="600"
     >
-      {alias || url}
+      {name || alias || url}
     </Heading>
+    {name && (alias || url) && (
+      <Text color="gray.600" fontSize={getFluidFontSize(14, 16)}>
+        ({alias || url})
+      </Text>
+    )}
     {isFastest && (
       <Badge {...styles.fastestBadge}>
         <FaBolt /> Fastest
@@ -133,6 +142,8 @@ const SiteTitle = ({ alias, url, isFastest }) => (
     )}
   </Flex>
 );
+
+
 
 const SiteLastCheck = ({ lastCheckAt, token }) => (
     <Text
@@ -149,8 +160,7 @@ const SiteLastCheck = ({ lastCheckAt, token }) => (
     </Text>
 );
 
-const SiteLinks = ({ url, token }) => {
-  const officialUrl = generateOfficialUrl(url);
+const SiteLinks = ({ url, token, official }) => {
 
   return (
     <HStack spacing={2}>
@@ -172,7 +182,7 @@ const SiteLinks = ({ url, token }) => {
       <Tooltip label="Visit official website" placement="top">
         <Button
           as={Link}
-          href={officialUrl}
+          href={official}
           target="_blank"
           size="sm"
           colorScheme="green"
@@ -190,24 +200,40 @@ const SiteLinks = ({ url, token }) => {
 
 const SiteStats = ({ uptime, timings, token }) => {
   const responseTime = timings?.total || 0;
-  const isFastResponse = responseTime < 150;
+  const { icon, color } = getResponseIcon(responseTime);
 
   return (
     <HStack spacing={4} justifyContent="flex-end" flexWrap="wrap">
-      <StatItem label="Uptime" value={`${uptime}%`} icon={<FaCheckCircle color="green" />} />
+      <StatItem 
+        label="Uptime" 
+        value={`${uptime}%`} 
+        icon={<Icon as={FiZap} color="green.500" boxSize={8} />} 
+      />
       <StatItem 
         label="Response" 
         value={`${responseTime}ms`} 
-        icon={isFastResponse ? <FaBolt color="green" /> : <FaBicycle color="orange" />}
+        icon={<Icon as={icon} color={color} boxSize={8} />}
       />
     </HStack>
   );
 };
 
+const getResponseIcon = (responseTime) => {
+  if (responseTime <= 150) {
+    return { icon: FiZap, color: "green.500" };
+  } else if (responseTime <= 300) {
+    return { icon: FaCar, color: "blue.500" };
+  } else if (responseTime <= 500) {
+    return { icon: FaBicycle, color: "orange.500" };
+  } else {
+    return { icon: GiTurtle, color: "red.500" };
+  }
+};
+
 const StatItem = ({ label, value, icon }) => (
   <Tooltip label={label} placement="top">
     <Stack {...styles.statItem}>
-      {React.cloneElement(icon, { size: 24 })} {/* Increased icon size */}
+      {React.cloneElement(icon, { size: 32 })} {/* Increased icon size */}
       <Text fontWeight="bold" fontSize={getFluidFontSize(22, 26)}> {/* Increased font size */}
         {value}
       </Text>

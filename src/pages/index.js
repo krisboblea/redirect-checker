@@ -1,13 +1,14 @@
 import Head from "next/head";
-import { Box, Container, Flex, Heading, Text, Button, VStack, useColorModeValue, Center } from "@chakra-ui/react";
+import { Box, Container, VStack, Heading, Text, Button, useColorModeValue, Center } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { AppContainer } from "@/components/AppContainer";
-import { getFluidFontSize } from "@/utils";
-import CardList from "@/components/CardList";
-import DataSources from "@/components/DataSources";
+import MainLayout from "@/layouts/MainLayout";
+import { AppContainer } from "@/components/common/AppContainer";
+import CardList from "@/components/home/CardList";
+import DataSources from "@/components/home/DataSources";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaRocket } from "react-icons/fa";
+import { getFluidFontSize } from "@/utils";
 
 export default function Home() {
   const [ sitesData, setSitesData ] = useState({
@@ -34,7 +35,7 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <MainLayout>
       <Head>
         <title>Compare Redirect Service Speeds | Uptime & Response Times Comparison</title>
         <meta
@@ -50,42 +51,39 @@ export default function Home() {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Redirect Services Performance Comparison" />
-
       </Head>
-      <main>
-        <Box bgGradient={bgGradient} py={20}>
-          <Container maxW="container.xl">
-            <VStack spacing={8} alignItems="center" textAlign="center">
-              <Heading as="h1" fontSize={getFluidFontSize(36, 48)} fontWeight="800" lineHeight="1.2">
-                Redirect Services Performance Comparison
-              </Heading>
-              <Text fontSize={getFluidFontSize(18, 22)} maxW="800px" color={useColorModeValue("gray.600", "gray.300")}>
-                Discover which redirect service delivers the fastest response times and highest uptime with our real-time
-                comparison tool. Make data-driven decisions for your website&apos;s performance.
-              </Text>
-            </VStack>
-          </Container>
+      <Box bgGradient={bgGradient} py={20}>
+        <Container maxW="container.xl">
+          <VStack spacing={8} alignItems="center" textAlign="center">
+            <Heading as="h1" fontSize={getFluidFontSize(36, 48)} fontWeight="800" lineHeight="1.2">
+              Redirect Services Performance Comparison
+            </Heading>
+            <Text fontSize={getFluidFontSize(18, 22)} maxW="800px" color={useColorModeValue("gray.600", "gray.300")}>
+              Discover which redirect service delivers the fastest response times and highest uptime with our real-time
+              comparison tool. Make data-driven decisions for your website&apos;s performance.
+            </Text>
+          </VStack>
+        </Container>
+      </Box>
+      <AppContainer>
+        <Box my={12}>
+          <CardList sitesData={sitesData?.sites} />
         </Box>
-        <AppContainer>
-          <Box my={12}>
-            <CardList sitesData={sitesData?.sites} />
-          </Box>
-          <Center my={12}>
-            <Button
-              as={Link}
-              href="https://www.redirhub.com"
-              size="lg"
-              colorScheme="green"
-              rightIcon={<FaRocket />}
-              _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
-              transition="all 0.3s"
-            >
-              Get started with RedirHub
-            </Button>
-          </Center>
-          <DataSources sitesData={sitesData?.nodes} />
-        </AppContainer>
-      </main>
-    </>
+        <Center my={12}>
+          <Button
+            as={Link}
+            href="https://www.redirhub.com"
+            size="lg"
+            colorScheme="green"
+            rightIcon={<FaRocket />}
+            _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+            transition="all 0.3s"
+          >
+            Get started with RedirHub
+          </Button>
+        </Center>
+        <DataSources sitesData={sitesData?.nodes} />
+      </AppContainer>
+    </MainLayout>
   );
 }
