@@ -177,6 +177,7 @@ export default function RedirectResultList({ results }) {
                                         fontSize="xs"
                                         p={2}
                                         bg="gray.50"
+                                        _dark={{ bg: "gray.900" }}
                                         borderRadius="md"
                                         overflowX="auto"
                                       >

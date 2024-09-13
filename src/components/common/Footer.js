@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/configs/constant";
 import { Box, Container, Stack, Text, Link, useColorModeValue } from "@chakra-ui/react";
 import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
 
@@ -43,7 +44,7 @@ export default function Footer() {
                 align={{ base: "center", md: "center" }}
             >
                 <Text textAlign={{ base: "center", md: "left" }}>
-                    © {new Date().getFullYear()} RedirHub. All rights reserved
+                    © {new Date().getFullYear()} {APP_NAME}. All rights reserved
                 </Text>
                 <Stack direction={"row"} spacing={{ base: 4, md: 6 }}>
                     <SocialButton label={"Twitter"} href={"https://twitter.com/redirhub"}>
