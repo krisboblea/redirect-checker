@@ -30,7 +30,6 @@ export const styles = {
         py: 1,
         borderRadius: "full",
         fontWeight: "medium",
-        textTransform: "uppercase",
         bg: "blue.100",
         color: "blue.800",
         _dark: {
@@ -61,7 +60,7 @@ export const styles = {
         justifyContent: "center",
         bg: "gray.50",
         _dark: {
-            bg: "gray.700", // Dark mode background
+            bg: "gray.700",
         },
         borderRadius: "md",
         p: 4,

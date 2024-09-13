@@ -9,14 +9,22 @@ export async function checkRedirects(urlList, setProgress, toast) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: urlList[i] }),
       });
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch redirect data for ${urlList[i]}`);
+        results.push({
+          url: urlList[i],
+          chainNumber: 0,
+          statusCode: 0,
+          totalTime: 0,
+          error: data.details,
+        });
+        continue;
       }
 
-      const data = await response.json();
       results.push({
         url: urlList[i],
+        error: null,
         chainNumber: data.filter(item => /^30\d/.test(item.http_code)).length,
         statusCode: data[0].http_code,
         finalUrl: data[data.length - 1].url,

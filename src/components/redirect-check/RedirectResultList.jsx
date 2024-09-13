@@ -62,10 +62,7 @@ export default function RedirectResultList({ results }) {
                     {truncateUrl(result.url, 30)}
                   </Heading>
                 </Tooltip>
-                {/* <Badge colorScheme={result.chain[result.chain.length - 1].succeed ? "green" : "red"} {...styles.statusBadge}>
-                  {result.statusCode}
-                </Badge> */}
-                {getProviderBadge(result.chain[0].header)}
+                {getProviderBadge(result?.chain?.[0]?.header)}
                 {result === fastestResult && results.length > 1 && (
                   <Badge {...styles.fastestBadge}>
                     <FaBolt /> Fastest
@@ -75,11 +72,17 @@ export default function RedirectResultList({ results }) {
               <Flex alignItems="center" width="100%">
                 <Icon as={FaArrowDown} color={arrowColor} boxSize={4} mx={4} />
               </Flex>
-              <Tooltip label={result.chain[result.chain.length - 1].url} placement="top">
+              {!result.error ?
+              <Tooltip label={result?.finalUrl} placement="top">
                 <Text fontSize={getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
-                  {truncateUrl(result.chain[result.chain.length - 1].url, 40)}
+                  {truncateUrl(result?.finalUrl, 40)}
                 </Text>
-              </Tooltip>
+                </Tooltip>
+                :
+                <Text fontSize={getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
+                  {result?.error}
+                </Text>
+              }
             </VStack>
             <HStack spacing={4} justifyContent="flex-end" flexWrap="wrap">
               <StatItem
@@ -120,7 +123,7 @@ export default function RedirectResultList({ results }) {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {result.chain.map((redirect, index) => (
+                      {result?.chain?.map((redirect, index) => (
                         <Tr key={index}>
                           <Td>{index + 1}</Td>
                           <Td>
@@ -239,15 +242,15 @@ const StatItem = ({ label, value, icon }) => (
 
 // Helper function to truncate URLs
 function truncateUrl(url, maxLength) {
-  if (url.length <= maxLength) return url;
-  const start = url.substring(0, maxLength / 2 - 2);
-  const end = url.substring(url.length - maxLength / 2 + 2);
+  if (url?.length <= maxLength) return url;
+  const start = url?.substring(0, maxLength / 2 - 2);
+  const end = url?.substring(url?.length - maxLength / 2 + 2);
   return `${start}...${end}`;
 }
 
 // New function to get the provider badge
 const getProviderBadge = (headers) => {
-  const poweredBy = headers['x-powered-by'] || headers['X-Powered-By'];
+  const poweredBy = headers?.['x-powered-by'] || headers?.['X-Powered-By'];
   if (poweredBy) {
     return (
       <Badge colorScheme="blue" {...styles.providerBadge}>

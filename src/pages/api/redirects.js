@@ -56,7 +56,9 @@ async function handler(req, res) {
             results.push(result);
 
             if (response.headers[ 'location' ]) {
-                currentUrl = response.headers[ 'location' ];
+                // Handle both absolute and relative URLs
+                const locationUrl = new URL(response.headers[ 'location' ], currentUrl);
+                currentUrl = locationUrl.href;
                 redirectCount += 1;
             } else {
                 proceed = false;
