@@ -5,7 +5,7 @@ import { AppContainer } from "@/components/common/AppContainer";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
 import { APP_NAME } from "@/configs/constant";
 
-export default function RedirectCheck() {
+export default function RedirectCheckPage() {
     return (
         <MainLayout>
             <Head>

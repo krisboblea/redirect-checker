@@ -6,7 +6,7 @@ import { getFluidFontSize } from "@/utils";
 import Uptime from "@/components/uptime/Uptime";
 import { APP_NAME } from "@/configs/constant";
 
-export default function Home() {
+export default function UptimePage() {
 
     const bgGradient = useColorModeValue(
         "linear(to-r, blue.100, green.100)",

@@ -40,7 +40,6 @@ export default function SiteCard({ site, isFastest }) {
   );
 };
 
-// Updated SiteTitle component
 const SiteTitle = ({ alias, name, url, isFastest }) => (
   <Flex
     alignItems="center"
@@ -48,16 +47,30 @@ const SiteTitle = ({ alias, name, url, isFastest }) => (
     flexWrap={{ base: "wrap", md: "nowrap" }}
     justifyContent="space-between"
   >
-    <Flex alignItems="center" gap={2} flexWrap={{ base: "wrap", md: "nowrap" }}>
+    <Flex
+      alignItems="center"
+      gap={2}
+      flexWrap={{ base: "wrap", md: "nowrap" }}
+      maxWidth={{ base: "100%" }}
+    >
       <Heading
         as="h4"
         fontSize={{ base: "lg", sm: getFluidFontSize(20, 24) }}
         fontWeight="600"
+        whiteSpace="nowrap"
+        overflow="hidden"
+        textOverflow="ellipsis"
       >
         {name || alias || url}
       </Heading>
       {name && (alias || url) && (
-        <Text color="gray.600" fontSize={{ base: "sm", sm: getFluidFontSize(14, 16) }}>
+        <Text
+          color="gray.600"
+          fontSize={{ base: "sm", sm: getFluidFontSize(14, 16) }}
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
+        >
           ({alias || url})
         </Text>
       )}
