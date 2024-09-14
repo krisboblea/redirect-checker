@@ -22,8 +22,10 @@ import {
   HStack,
   Tooltip,
   Divider,
+  IconButton,
+  useToast,
 } from "@chakra-ui/react";
-import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock } from "react-icons/fa";
+import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock, FaExternalLinkAlt, FaShareAlt } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
 import { FiZap } from "react-icons/fi";
 import { GiTurtle } from "react-icons/gi";
@@ -34,6 +36,9 @@ import { useDevice } from '@/hooks/useDevice';
 export default function RedirectResultList({ results }) {
   const { isMobile } = useDevice();
   const arrowColor = useColorModeValue("gray.300", "gray.600");
+  const toast = useToast();
+  // Remove this line:
+  // const { onCopy } = useClipboard(""); // Initialize useClipboard hook
 
   // Find the fastest result
   const fastestResult = results.reduce((fastest, current) => {
@@ -41,6 +46,35 @@ export default function RedirectResultList({ results }) {
     const fastestTime = fastest ? fastest.totalTime : Infinity;
     return currentTime < fastestTime && !current.error_msg ? current : fastest;
   }, null);
+
+  const handleOpenUrl = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShareResult = (url) => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(url)}`;
+    // Replace onCopy with navigator.clipboard.writeText
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        toast({
+          title: "Share URL copied!",
+          description: "The result URL has been copied to your clipboard.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        console.error('Failed to copy: ', err);
+        toast({
+          title: "Failed to copy",
+          description: "An error occurred while copying the URL.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+  };
 
   return (
     <VStack spacing={6} align="stretch">
@@ -70,6 +104,22 @@ export default function RedirectResultList({ results }) {
                     <FaBolt /> Fastest
                   </Badge>
                 )}
+                <Tooltip label="Open URL in new tab">
+                  <IconButton
+                    icon={<FaExternalLinkAlt />}
+                    aria-label="Open URL"
+                    onClick={() => handleOpenUrl(result.url)}
+                    {...styles.iconButton}
+                  />
+                </Tooltip>
+                <Tooltip label="Copy share link">
+                  <IconButton
+                    icon={<FaShareAlt />}
+                    aria-label="Share result"
+                    onClick={() => handleShareResult(result.url)}
+                    {...styles.iconButton}
+                  />
+                </Tooltip>
               </Flex>
               <Flex alignItems="center" width="100%">
                 <Icon as={FaArrowDown} color={arrowColor} boxSize={isMobile ? 3 : 4} mx={isMobile ? 2 : 4} />

@@ -66,4 +66,17 @@ export const styles = {
         p: 4,
         minWidth: "120px",
     },
+    iconButton: {
+        variant: "ghost",
+        size: "sm",
+        transition: "all 0.2s",
+        colorScheme: "blue",
+        _hover: {
+            bg: 'blue.50',
+            color: 'blue.600',
+        },
+        _active: {
+            bg: 'blue.100',
+        },
+    },
 };
