@@ -22,7 +22,7 @@ export async function checkRedirects(urlList, setProgress, toast) {
         chainNumber: data.filter(item => /^30\d/.test(item.http_code)).length,
         statusCode: lastItem.http_code || lastItem.error_no,
         finalUrl: lastItem.url || urlList[i],
-        totalTime: data.reduce((sum, item) => sum + (item.alltime || 0), 0),
+        totalTime: data.filter(item => /^30\d/.test(item.http_code)).reduce((sum, item) => sum + (item.alltime || 0), 0),
         chain: data,
         error_msg: lastItem.error_msg,
       });
