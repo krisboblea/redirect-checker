@@ -9,7 +9,7 @@ export default function RedirectCheckPage() {
     return (
         <MainLayout>
             <Head>
-                <title>Bulk Redirect Checker: Analyze URL Chains & Speed | {APP_NAME}</title>
+                <title>Bulk Redirect Checker: Analyze URL Chains & Speed Compare | {APP_NAME}</title>
                 <meta
                     name="description"
                     content="Instantly check and analyze your URL redirects with our powerful tool. Uncover redirect chains, measure speed, and optimize your website's performance. Try our free redirect checker now!"
