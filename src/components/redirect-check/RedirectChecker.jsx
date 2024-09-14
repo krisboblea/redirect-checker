@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -33,6 +33,24 @@ export default function RedirectChecker() {
     { bgColor: "white", borderColor: "gray.200", headingColor: "gray.800", subheadingColor: "gray.600" },
     { bgColor: "gray.800", borderColor: "gray.700", headingColor: "white", subheadingColor: "gray.400" }
   );
+
+  const textareaRef = useRef(null);
+
+  const handleUrlsChange = (e) => {
+    setUrls(e.target.value);
+  };
+
+  const handleUrlsBlur = () => {
+    const lines = urls.split('\n');
+    const processedLines = lines.map(line => {
+      const trimmedLine = line.trim();
+      if (trimmedLine && !trimmedLine.startsWith('http://') && !trimmedLine.startsWith('https://')) {
+        return `http://${trimmedLine}`;
+      }
+      return trimmedLine;
+    });
+    setUrls(processedLines.join('\n'));
+  };
 
   useEffect(() => {
     if (router.isReady && router.query.url) {
@@ -82,9 +100,11 @@ export default function RedirectChecker() {
         >
           <VStack spacing={6}>
             <Textarea
+              ref={textareaRef}
               value={urls}
-              onChange={(e) => setUrls(e.target.value)}
-              placeholder="Enter URLs (one per line)&#10;e.g., https://example.com"
+              onChange={handleUrlsChange}
+              onBlur={handleUrlsBlur}
+              placeholder="Enter URLs (one per line)&#10;e.g., example.com"
               rows={isMobile ? 2 : 5}
               resize="vertical"
               bg={useColorModeValue("gray.50", "gray.700")}
