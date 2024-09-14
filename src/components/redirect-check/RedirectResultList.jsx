@@ -48,7 +48,7 @@ const DetailButton = ({ isOpen, onToggle, onShare }) => {
         variant="ghost"
         colorScheme="blue"
       >
-        {isOpen ? "Hide Details" : "View Details"}
+        Details
       </Button>
       <Button
         onClick={onShare}
