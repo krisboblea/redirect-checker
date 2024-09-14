@@ -25,7 +25,7 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock, FaExternalLinkAlt, FaShareAlt } from "react-icons/fa";
+import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock, FaExternalLinkAlt, FaShareAlt, FaArrowRight } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
 import { FiZap } from "react-icons/fi";
 import { GiTurtle } from "react-icons/gi";
@@ -122,19 +122,19 @@ export default function RedirectResultList({ results }) {
                 </Tooltip>
               </Flex>
               <Flex alignItems="center" width="100%">
-                <Icon as={FaArrowDown} color={arrowColor} boxSize={isMobile ? 3 : 4} mx={isMobile ? 2 : 4} />
-              </Flex>
-              {!result.error_msg ? (
-                <Tooltip label={result.finalUrl} placement="top">
-                  <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
-                    {truncateUrl(result.finalUrl, isMobile ? 40 : 50)}
+                <Icon as={FaArrowRight} color={arrowColor} boxSize={isMobile ? 3 : 4} mr={isMobile ? 2 : 4} />
+                {!result.error_msg ? (
+                  <Tooltip label={result.finalUrl} placement="top">
+                    <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
+                      {truncateUrl(result.finalUrl, isMobile ? 40 : 50)}
+                    </Text>
+                  </Tooltip>
+                ) : (
+                  <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" color="red.500">
+                    Error: {result.error_msg}
                   </Text>
-                </Tooltip>
-              ) : (
-                <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" color="red.500">
-                  Error: {result.error_msg}
-                </Text>
-              )}
+                )}
+              </Flex>
             </VStack>
             <HStack spacing={isMobile ? 2 : 4} justifyContent={isMobile ? "space-between" : "flex-end"} flexWrap="wrap">
               <StatItem
