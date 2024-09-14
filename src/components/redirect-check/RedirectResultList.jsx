@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   VStack,
@@ -24,8 +24,14 @@ import {
   Divider,
   IconButton,
   useToast,
+  Button,
+  ButtonGroup,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock, FaExternalLinkAlt, FaShareAlt, FaArrowRight } from "react-icons/fa";
+import { FaLink, FaClock, FaServer, FaChevronRight, FaBolt, FaCheckCircle, FaSmile, FaSadTear, FaArrowDown, FaThumbsUp, FaLock, FaExternalLinkAlt, FaShareAlt, FaArrowRight, FaChevronDown, FaEye, FaDownload, FaShare, FaEyeSlash } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
 import { FiZap } from "react-icons/fi";
 import { GiTurtle } from "react-icons/gi";
@@ -33,12 +39,34 @@ import { FaBicycle, FaCar, FaCode } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import { useDevice } from '@/hooks/useDevice';
 
+const DetailButton = ({ isOpen, onToggle, onShare }) => {
+  return (
+    <ButtonGroup size="sm" isAttached variant="outline">
+      <Button
+        onClick={onToggle}
+        leftIcon={isOpen ? <FaEyeSlash /> : <FaEye />}
+        variant="ghost"
+        colorScheme="blue"
+      >
+        {isOpen ? "Hide Details" : "View Details"}
+      </Button>
+      <Button
+        onClick={onShare}
+        leftIcon={<FaShare />}
+        variant="ghost"
+        colorScheme="blue"
+      >
+        Share
+      </Button>
+    </ButtonGroup>
+  );
+};
+
 export default function RedirectResultList({ results }) {
   const { isMobile } = useDevice();
   const arrowColor = useColorModeValue("gray.300", "gray.600");
   const toast = useToast();
-  // Remove this line:
-  // const { onCopy } = useClipboard(""); // Initialize useClipboard hook
+  const [showDetails, setShowDetails] = useState({});
 
   // Find the fastest result
   const fastestResult = results.reduce((fastest, current) => {
@@ -112,29 +140,30 @@ export default function RedirectResultList({ results }) {
                     {...styles.iconButton}
                   />
                 </Tooltip>
-                <Tooltip label="Copy share link">
-                  <IconButton
-                    icon={<FaShareAlt />}
-                    aria-label="Share result"
-                    onClick={() => handleShareResult(result.url)}
-                    {...styles.iconButton}
-                  />
-                </Tooltip>
               </Flex>
-              <Flex alignItems="center" width="100%">
-                <Icon as={FaArrowRight} color={arrowColor} boxSize={isMobile ? 3 : 4} mr={isMobile ? 2 : 4} />
-                {!result.error_msg ? (
-                  <Tooltip label={result.finalUrl} placement="top">
-                    <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
-                      {truncateUrl(result.finalUrl, isMobile ? 40 : 50)}
+              <VStack align="flex-start" spacing={isMobile ? 2 : 4} width="100%">
+                <Flex alignItems="center" width="100%">
+                  <Icon as={FaArrowRight} color={arrowColor} boxSize={isMobile ? 3 : 4} mr={isMobile ? 2 : 4} />
+                  {!result.error_msg ? (
+                    <Tooltip label={result.finalUrl} placement="top">
+                      <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" isTruncated maxWidth="100%">
+                        {truncateUrl(result.finalUrl, isMobile ? 40 : 50)}
+                      </Text>
+                    </Tooltip>
+                  ) : (
+                    <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" color="red.500">
+                      Error: {result.error_msg}
                     </Text>
-                  </Tooltip>
-                ) : (
-                  <Text fontSize={isMobile ? getFluidFontSize(14, 15) : getFluidFontSize(16, 17)} fontWeight="500" color="red.500">
-                    Error: {result.error_msg}
-                  </Text>
+                  )}
+                </Flex>
+                {(!result.error_msg && !isMobile) && (
+                  <DetailButton
+                    isOpen={showDetails[index]}
+                    onToggle={() => setShowDetails(prevState => ({ ...prevState, [index]: !prevState[index] }))}
+                    onShare={() => handleShareResult(result.url)}
+                  />
                 )}
-              </Flex>
+              </VStack>
             </VStack>
             <HStack spacing={isMobile ? 2 : 4} justifyContent={isMobile ? "space-between" : "flex-end"} flexWrap="wrap">
               <StatItem
@@ -156,106 +185,101 @@ export default function RedirectResultList({ results }) {
                 isMobile={isMobile}
               />
             </HStack>
+                {(!result.error_msg && isMobile) && (
+                  <DetailButton
+                    isOpen={showDetails[index]}
+                    onToggle={() => setShowDetails(prevState => ({ ...prevState, [index]: !prevState[index] }))}
+                    onShare={() => handleShareResult(result.url)}
+                  />
+                )}
           </Flex>
-          {!result.error_msg && (
-            <Accordion allowToggle mt={4}>
-              <AccordionItem border="none">
-                <AccordionButton px={0} _hover={{ bg: "transparent" }}>
-                  <Text color="blue.500" fontWeight="medium">
-                    Show Details
-                  </Text>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pb={4} px={0}>
-                  <Box overflowX="auto">
-                    <Table variant="simple" size="sm" style={{ minWidth: '800px' }}>
-                      <Thead>
-                        <Tr>
-                          <Th>Step</Th>
-                          <Th>URL</Th>
-                          <Th>Status</Th>
-                          <Th>Time</Th>
-                          <Th>Details</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {result?.chain?.map((redirect, index) => (
-                          <Tr key={index}>
-                            <Td>{index + 1}</Td>
-                            <Td>
-                              <Text fontSize="sm" fontWeight="medium">
-                                {redirect?.url}
+          {!result.error_msg && showDetails[index] && (
+            <Box mt={4} overflowX="auto">
+              <Table variant="simple" size="sm" style={{ minWidth: '800px' }}>
+                <Thead>
+                  <Tr>
+                    <Th>Step</Th>
+                    <Th>URL</Th>
+                    <Th>Status</Th>
+                    <Th>Time</Th>
+                    <Th>Details</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {result?.chain?.map((redirect, index) => (
+                    <Tr key={index}>
+                      <Td>{index + 1}</Td>
+                      <Td>
+                        <Text fontSize="sm" fontWeight="medium">
+                          {redirect?.url}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Badge
+                          colorScheme={redirect.succeed ? "green" : "red"}
+                          borderRadius="full"
+                          px={2}
+                          py={1}
+                        >
+                          {redirect?.http_code}
+                        </Badge>
+                      </Td>
+                      <Td>{redirect?.alltime?.toFixed(2) || 0}s</Td>
+                      <Td>
+                        <Accordion allowToggle>
+                          <AccordionItem border="none">
+                            <AccordionButton p={0} _hover={{ bg: "transparent" }}>
+                              <Text color="blue.500" fontSize="sm">
+                                View Details
                               </Text>
-                            </Td>
-                            <Td>
-                              <Badge
-                                colorScheme={redirect.succeed ? "green" : "red"}
-                                borderRadius="full"
-                                px={2}
-                                py={1}
-                              >
-                                {redirect?.http_code}
-                              </Badge>
-                            </Td>
-                            <Td>{redirect?.alltime?.toFixed(2) || 0}s</Td>
-                            <Td>
-                              <Accordion allowToggle>
-                                <AccordionItem border="none">
-                                  <AccordionButton p={0} _hover={{ bg: "transparent" }}>
-                                    <Text color="blue.500" fontSize="sm">
-                                      View Details
+                            </AccordionButton>
+                            <AccordionPanel pb={4}>
+                              <VStack align="stretch" spacing={2}>
+                                <Flex>
+                                  <Icon as={FaServer} mr={2} />
+                                  <Text fontWeight="bold">IP:</Text>
+                                  <Text ml={2}>{redirect?.ip}</Text>
+                                </Flex>
+                                <Flex>
+                                  <Icon as={FaLink} mr={2} />
+                                  <Text fontWeight="bold">Scheme:</Text>
+                                  <Text ml={2}>{redirect?.scheme}</Text>
+                                </Flex>
+                                {redirect?.scheme?.toLowerCase() === 'https' && (
+                                  <Flex>
+                                    <Icon as={FaLock} mr={2} />
+                                    <Text fontWeight="bold">SSL:</Text>
+                                    <Text ml={2}>
+                                      {redirect?.ssl_verify_result ? "Verified" : "Unverified"}
                                     </Text>
-                                  </AccordionButton>
-                                  <AccordionPanel pb={4}>
-                                    <VStack align="stretch" spacing={2}>
-                                      <Flex>
-                                        <Icon as={FaServer} mr={2} />
-                                        <Text fontWeight="bold">IP:</Text>
-                                        <Text ml={2}>{redirect?.ip}</Text>
-                                      </Flex>
-                                      <Flex>
-                                        <Icon as={FaLink} mr={2} />
-                                        <Text fontWeight="bold">Scheme:</Text>
-                                        <Text ml={2}>{redirect?.scheme}</Text>
-                                      </Flex>
-                                      {redirect?.scheme?.toLowerCase() === 'https' && (
-                                        <Flex>
-                                          <Icon as={FaLock} mr={2} />
-                                          <Text fontWeight="bold">SSL:</Text>
-                                          <Text ml={2}>
-                                            {redirect?.ssl_verify_result ? "Verified" : "Unverified"}
-                                          </Text>
-                                        </Flex>
-                                      )}
-                                      <Box>
-                                        <Text fontWeight="bold" mb={1}>
-                                          Headers:
-                                        </Text>
-                                        <Box
-                                          as="pre"
-                                          fontSize="xs"
-                                          p={2}
-                                          bg="gray.50"
-                                          _dark={{ bg: "gray.900" }}
-                                          borderRadius="md"
-                                          overflowX="auto"
-                                        >
-                                          {JSON.stringify(redirect?.header, null, 2)}
-                                        </Box>
-                                      </Box>
-                                    </VStack>
-                                  </AccordionPanel>
-                                </AccordionItem>
-                              </Accordion>
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </Box>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+                                  </Flex>
+                                )}
+                                <Box>
+                                  <Text fontWeight="bold" mb={1}>
+                                    Headers:
+                                  </Text>
+                                  <Box
+                                    as="pre"
+                                    fontSize="xs"
+                                    p={2}
+                                    bg="gray.50"
+                                    _dark={{ bg: "gray.900" }}
+                                    borderRadius="md"
+                                    overflowX="auto"
+                                  >
+                                    {JSON.stringify(redirect?.header, null, 2)}
+                                  </Box>
+                                </Box>
+                              </VStack>
+                            </AccordionPanel>
+                          </AccordionItem>
+                        </Accordion>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
           )}
         </Box>
       ))}
