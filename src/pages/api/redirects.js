@@ -1,5 +1,11 @@
 import axios from 'axios';
 import corsMiddleware from '@/middleware/corsMiddleware';
+import https from 'https';
+
+// Create a custom HTTPS agent that doesn't verify SSL certificates
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -37,6 +43,7 @@ async function handler(req, res) {
                 },
                 maxRedirects: 0,
                 validateStatus: null, // Resolve only if the status code is less than 500
+                httpsAgent: httpsAgent, // Add this line to disable SSL verification
             });
 
             const result = {
