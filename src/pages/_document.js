@@ -12,16 +12,6 @@ export default function Document() {
       </Head>
       <body>
         <Main />
-        <NextScript />
-        <Script
-          src="/weglot.min.js"
-          strategy="afterInteractive"
-          onLoad={() => {
-            Weglot.initialize({
-              api_key: 'YOUR_API_KEY'
-            });
-          }}
-        />
       </body>
     </Html>
   );
