@@ -24,10 +24,6 @@ export default function UptimePage() {
                     content="Find the fastest redirect services from RedirHub, Redirect.pizza, and EasyRedir with our comprehensive speed comparison tool. Check uptime, response times, and performance details in real-time."
                 />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.png" sizes="32x32" />
-                <link rel="icon" href="/favicon.png" sizes="192x192" />
-                <link rel="apple-touch-icon" href="/favicon.png" />
-                <meta name="msapplication-TileImage" content="/favicon.png" />
                 <meta property="og:image" content="/preview.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />

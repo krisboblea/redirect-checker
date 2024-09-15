@@ -80,4 +80,42 @@ export const styles = {
             bg: 'blue.100',
         },
     },
+    // Add new styles for the check page
+    checkPage: {
+        heroBox: {
+            bg: "blue.500",
+            p: 4,
+            borderRadius: "full",
+            mb: 6,
+            boxShadow: "lg",
+            _dark: {
+                bg: "blue.700",
+            },
+        },
+        heroIcon: {
+            w: 12,
+            h: 12,
+            color: "white",
+            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
+        },
+        heading: {
+            fontSize: { base: "3xl", md: "4xl", lg: "5xl" },
+            mb: 4,
+            fontWeight: "bold",
+            bgGradient: "linear(to-r, blue.400, purple.500)",
+            bgClip: "text",
+        },
+        description: {
+            fontSize: { base: "lg", md: "xl" },
+            maxW: "3xl",
+            lineHeight: "tall",
+            color: "gray.600",
+            _dark: {
+                color: "gray.300",
+            },
+        },
+        container: {
+            py: { base: 10, md: 16 },
+        },
+    },
 };

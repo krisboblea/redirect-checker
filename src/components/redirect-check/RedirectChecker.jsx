@@ -22,7 +22,7 @@ import RedirectResultList from "./RedirectResultList";
 import { checkRedirects } from "./redirectUtils.jsx";
 import { useDevice } from "@/hooks/useDevice";
 
-export default function RedirectChecker() {
+export default function RedirectChecker({children}) {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -31,9 +31,9 @@ export default function RedirectChecker() {
   const [urls, setUrls] = useState('');
   const { isMobile } = useDevice();
 
-  const { bgColor, borderColor, headingColor, subheadingColor } = useColorModeValue(
-    { bgColor: "white", borderColor: "gray.200", headingColor: "gray.800", subheadingColor: "gray.600" },
-    { bgColor: "gray.800", borderColor: "gray.700", headingColor: "white", subheadingColor: "gray.400" }
+  const { bgColor, borderColor } = useColorModeValue(
+    { bgColor: "white", borderColor: "gray.200"  },
+    { bgColor: "gray.800", borderColor: "gray.700" }
   );
 
   const textareaRef = useRef(null);
@@ -42,25 +42,19 @@ export default function RedirectChecker() {
     setUrls(e.target.value);
   };
 
-  const handleUrlsCorrect = () => {
-    const lines = urls.split('\n');
-    const processedLines = lines.map(line => {
-      const trimmedLine = line.trim();
-      if (trimmedLine && !trimmedLine.startsWith('http://') && !trimmedLine.startsWith('https://')) {
-        return `http://${trimmedLine}`;
-      }
-      return trimmedLine;
-    });
-    setUrls(processedLines.join('\n'));
-  };
-
-  useEffect(() => {
-    if (router.isReady && router.query.url) {
-      setUrls(decodeURIComponent(router.query.url));
-    }
-  }, [router.isReady, router.query.url]);
-
   const handleCheck = useCallback(async () => {
+    const handleUrlsCorrect = () => {
+      const lines = urls.split('\n');
+      const processedLines = lines.map(line => {
+        const trimmedLine = line.trim();
+        if (trimmedLine && !trimmedLine.startsWith('http://') && !trimmedLine.startsWith('https://')) {
+          return `http://${trimmedLine}`;
+        }
+        return trimmedLine;
+      });
+      setUrls(processedLines.join('\n'));
+    };
+
     handleUrlsCorrect();
     setIsLoading(true);
     setProgress(0);
@@ -70,7 +64,7 @@ export default function RedirectChecker() {
     setResults(newResults);
     setIsLoading(false);
     scrollToResults();
-  }, [urls, toast, handleUrlsCorrect]);
+  }, [urls, toast]);
 
   const handleShowExamples = () => {
     const exampleUrls = [
@@ -97,23 +91,7 @@ export default function RedirectChecker() {
   return (
     <Container maxW="container.xl" py={{base: 6, md: 20}}>
       <VStack spacing={{base: 8, md: 16}} align="stretch">
-        <Flex direction="column" align="center" textAlign="center">
-          <Box
-            bg="blue.500"
-            p={3}
-            borderRadius="full"
-            mb={4}
-            boxShadow="lg"
-          >
-            <Icon as={FaLink} w={8} h={8} color="white" />
-          </Box>
-          <Heading as="h1" size={{base: "2xl", md: "3xl"}} mb={3} color={headingColor} fontWeight="extrabold">
-            Redirect Checker
-          </Heading>
-          <Text fontSize={{base: "lg", md: "xl"}} color={subheadingColor} maxW="2xl" lineHeight="tall">
-            Analyze redirect chains and performance for multiple URLs at once.
-          </Text>
-        </Flex>
+        {children}
         <Box
           bg={bgColor}
           borderRadius="xl"

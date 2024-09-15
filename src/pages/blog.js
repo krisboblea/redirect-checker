@@ -23,8 +23,6 @@ export default function BlogPage() {
                     content="Our blog is currently under construction. Stay tuned for exciting content coming soon!"
                 />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.png" sizes="32x32" />
-                <link rel="icon" href="/favicon.png" sizes="192x192" />
             </Head>
             <Box bgGradient={bgGradient} py={20} minHeight="calc(100vh - 100px)" display="flex" alignItems="center">
                 <Container maxW="container.xl">
