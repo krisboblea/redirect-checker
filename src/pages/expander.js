@@ -44,7 +44,7 @@ export default function ShortURLExpanderPage() {
     return (
         <MainLayout>
             <Head>
-                <title>Short URL Expander: Reveal Full Links Instantly | {APP_NAME}</title>
+                <title>Bulk Short URL Expander: Reveal Full Links Instantly | {APP_NAME}</title>
                 <meta
                     name="description"
                     content="Instantly expand shortened URLs to reveal their full destination. Enhance your online safety and transparency with our free Short URL Expander tool. Try it now!"

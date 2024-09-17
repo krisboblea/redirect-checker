@@ -1,6 +1,6 @@
 import { Box, Flex, Button, useColorModeValue, Stack, useColorMode, Image, IconButton, useDisclosure } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { APP_LOGO, APP_NAME, HIDE_NAV, INDEX_PAGE } from "@/configs/constant";
+import { APP_LOGO, APP_LOGO_DARK, APP_NAME, HIDE_NAV, INDEX_PAGE } from "@/configs/constant";
 import { FaSun, FaMoon, FaHome, FaCheckCircle, FaBlog, FaBars, FaRocket, FaExpand } from "react-icons/fa";
 import NavLink from "./NavLink";
 import MobileDrawer from "./MobileDrawer";
@@ -52,7 +52,12 @@ export default function Header() {
 const Logo = () => (
     <Flex alignItems="center">
         <Link href="/">
-            <Image src={APP_LOGO} alt={APP_NAME} width={'auto'} height={'53px'} />
+            <Image
+                src={useColorModeValue(APP_LOGO, APP_LOGO_DARK)}
+                alt={APP_NAME}
+                width={'auto'}
+                height={'40px'}
+            />
         </Link>
     </Flex>
 );
