@@ -56,7 +56,7 @@ const Logo = () => (
                 src={useColorModeValue(APP_LOGO, APP_LOGO_DARK)}
                 alt={APP_NAME}
                 width={'auto'}
-                height={'40px'}
+                height={{ base: "34px", lg: "40px" }}
             />
         </Link>
     </Flex>
