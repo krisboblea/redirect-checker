@@ -3,6 +3,7 @@ export const APP_LOGO = process.env.NEXT_PUBLIC_APP_LOGO || '/logo.png';
 export const APP_LOGO_DARK = process.env.NEXT_PUBLIC_APP_LOGO || '/logo-dark.png';
 export const INDEX_PAGE = process.env.NEXT_PUBLIC_INDEX || 'uptime';
 export const HIDE_NAV = process.env.NEXT_PUBLIC_HIDE_NAV || false;
+export const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_MODE || false;
 export const UPTIME_API_BASE = process.env.API_BASE || 'https://api.uptimerobot.com/v2/';
 export const UPTIME_API_KEY = process.env.API_KEY || 'your-api-key';
 export const UPTIME_SITES = process.env.SITES || '["your-site-token"]';
