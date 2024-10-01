@@ -47,6 +47,7 @@ async function handler(req, res) {
                 http_time: httpTime,
                 https_result: httpsStatus,
                 https_time: httpsTime,
+                total_time: totalTime,
                 error: {
                     https: httpsError,
                     http: httpError
@@ -54,8 +55,7 @@ async function handler(req, res) {
                 debug: {
                     https: httpsDebugInfo,
                     http: httpDebugInfo
-                },
-                total_time: totalTime
+                }
             });
         });
     });
