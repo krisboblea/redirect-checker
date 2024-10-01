@@ -6,7 +6,7 @@ import { AppContainer } from "@/components/common/AppContainer";
 import { APP_NAME } from "@/configs/constant";
 import { FaLink, FaSearch } from "react-icons/fa";
 import { styles } from "@/configs/checker";
-import FAQSection from "@/components/redirect-check/FAQSection";
+import FAQSection from "@/components/common/FAQSection";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
 
 export default function ShortURLExpanderPage() {

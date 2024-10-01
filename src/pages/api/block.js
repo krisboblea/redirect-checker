@@ -5,7 +5,7 @@ import rateLimitMiddleware from '@/middleware/rateLimitMiddleware.js';
 import { exec } from 'child_process';
 
 async function handler(req, res) {
-    const { domain, ip = '75.2.48.81' } = req.query; // Default IP
+    const { domain, ip = '75.2.48.81' } = req.body; // Default IP
 
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' }); // Handle non-GET requests

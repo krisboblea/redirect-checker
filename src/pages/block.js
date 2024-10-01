@@ -9,6 +9,7 @@ import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import { FaQuestionCircle, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import FAQSection from "@/components/common/FAQSection";
+import BlockChecker from "@/components/block-check/BlockChecker";
 
 export default function RedirectCheckPage() {
 
@@ -80,7 +81,7 @@ export default function RedirectCheckPage() {
             </Head>
             <AppContainer>
                 <Box my={12}>
-                    <RedirectChecker icon={FaLink} buttonText="Check Redirects" examples={[ "http://redirhub.com", "http://google.com", "http://twitter.com" ]}>
+                    <BlockChecker icon={FaLink} buttonText="Check Redirects" examples={[ "http://redirhub.com", "http://google.com", "http://twitter.com" ]}>
                         <Flex direction="column" align="center" textAlign="center">
                             <Box {...styles.checkPage.heroBox}>
                                 <Icon as={FaLink} {...styles.checkPage.heroIcon} />
@@ -92,7 +93,7 @@ export default function RedirectCheckPage() {
                                 Analyze redirect chains and performance for multiple URLs at once.
                             </Text>
                         </Flex>
-                    </RedirectChecker>
+                    </BlockChecker>
                     <FAQSection data={faqData} />
                 </Box>
             </AppContainer>
