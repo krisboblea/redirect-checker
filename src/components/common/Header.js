@@ -4,6 +4,9 @@ import { APP_LOGO, APP_LOGO_DARK, APP_NAME, HIDE_NAV, INDEX_PAGE } from "@/confi
 import { FaSun, FaMoon, FaHome, FaCheckCircle, FaBlog, FaBars, FaRocket, FaExpand } from "react-icons/fa";
 import NavLink from "./NavLink";
 import MobileDrawer from "./MobileDrawer";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 function navUrl(page) {
     if (INDEX_PAGE === page || page === 'home') {
@@ -13,6 +16,9 @@ function navUrl(page) {
 }
 
 export default function Header() {
+
+    const { t, i18n } = useTranslation();
+    const { locale } = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const bgColor = useColorModeValue("white", "gray.800");
@@ -32,8 +38,13 @@ export default function Header() {
         id: link.id,
         href: navUrl(link.id),
         icon: link.icon,
-        label: link.label,
+        label: t(`tool.${link.id}`, link.label),
     }));
+
+    useEffect(() => {
+        console.log('locale', locale);
+        i18n.changeLanguage(locale);
+    }, [ locale, i18n ]);
 
     return (
         <Box bg={bgColor} px={4} boxShadow="sm" position="sticky" top={0} zIndex="sticky" borderBottom={1} borderStyle={'solid'} borderColor={borderColor}>

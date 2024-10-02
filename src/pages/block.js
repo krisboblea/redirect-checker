@@ -3,94 +3,62 @@ import Head from "next/head";
 import { Box, Flex, Heading, Icon, Text, Accordion, AccordionItem, AccordionButton, AccordionPanel, Grid, GridItem, VStack, Button, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
-import RedirectChecker from "@/components/redirect-check/RedirectChecker";
-import { APP_NAME } from "@/configs/constant";
-import { FaLink } from "react-icons/fa";
-import { styles } from "@/configs/checker";
-import { FaQuestionCircle, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
-import FAQSection from "@/components/common/FAQSection";
 import BlockChecker from "@/components/block-check/BlockChecker";
+import { APP_NAME } from "@/configs/constant";
+import { FaLink, FaShieldVirus } from "react-icons/fa";
+import { styles } from "@/configs/checker";
+import FAQSection from "@/components/common/FAQSection";
 
-export default function RedirectCheckPage() {
+export default function DomainBlockPage() {
 
     const faqData = [
         {
-            "question": "What is a URL redirect and why is it important?",
-            "answer": "A URL redirect sends users and search engines from one web address to another. Redirects are crucial when moving content, rebranding, or changing domains, as they ensure users reach the correct page and prevent broken links. Proper use of redirects helps maintain SEO rankings and provides a smooth user experience."
+            "question": "What is the Domain Block by GFW China tool?",
+            "answer": "The Domain Block by GFW China tool helps users check if a specific domain is blocked by the Great Firewall of China. It provides insights into accessibility issues for users in China."
         },
         {
-            "question": "How do redirects affect my website's SEO?",
-            "answer": "Redirects can influence SEO if not used correctly. 301 redirects are preferred for permanent changes because they pass most of the original page’s link equity (ranking power) to the new URL. Misusing redirects, such as creating long redirect chains, can slow down your website and negatively impact its ranking in search engine results."
+            "question": "How does the Great Firewall of China work?",
+            "answer": "The Great Firewall of China is a system of internet censorship that blocks access to certain foreign websites and slows down cross-border internet traffic. It is used to control the information available to Chinese citizens."
         },
         {
-            "question": "What are 301 and 302 redirects, and when should I use them?",
-            "answer": "301 Redirects: Permanent redirects that transfer most of the original URL’s link equity to the new URL, which is best for SEO when content has permanently moved. 302 Redirects: Temporary redirects that do not pass link equity, suitable for situations where the original page will return, such as maintenance or temporary changes. Using the correct redirect type ensures your site maintains search rankings and provides a seamless user experience."
+            "question": "Why is it important to check if a domain is blocked?",
+            "answer": "Checking if a domain is blocked is crucial for businesses and individuals who want to ensure their content is accessible to users in China. Blocked domains can lead to loss of traffic and engagement."
         },
         {
-            "question": "What is a redirect chain, and why should it be optimized?",
-            "answer": "A redirect chain occurs when a URL is redirected multiple times before reaching the final destination. For example, URL A redirects to URL B, which then redirects to URL C. These chains can slow down your website, affect SEO, and harm user experience. Optimizing or eliminating unnecessary redirects ensures faster page load times and better search engine rankings."
+            "question": "How can I use the Domain Block tool?",
+            "answer": "Simply enter the domain you wish to check in the provided input field and click the 'Check Domain' button. The tool will analyze the domain's accessibility from within China."
         },
         {
-            "question": "How can I check if my redirects are working properly?",
-            "answer": "You can use our Bulk Redirect Checker to easily analyze if your redirects are working as intended. It provides detailed insights into the type of redirect (301, 302, etc.), how many redirects are in a chain, and the speed of each redirect. This helps you ensure your redirects are efficient and SEO-friendly."
+            "question": "What should I do if my domain is blocked?",
+            "answer": "If your domain is blocked, consider using alternative domains, VPN services, or other methods to ensure your content reaches users in China."
         },
         {
-            "question": "Can long redirect chains negatively impact my site’s performance?",
-            "answer": "Yes, long redirect chains can slow down your website’s performance and decrease your SEO rankings. Every additional redirect adds load time, which can frustrate users and result in search engines penalizing your site for slow performance. Use our tool to analyze and reduce these chains for optimal performance."
-        },
-        {
-            "question": "Why is it important to monitor redirects after a website migration?",
-            "answer": "After a website migration, it’s crucial to monitor your redirects to ensure users and search engines are being directed to the correct URLs. Failing to set up proper redirects can result in broken links, lost traffic, and a drop in search engine rankings. Regularly using a redirect checker ensures everything is functioning smoothly post-migration."
-        },
-        {
-            "question": "How can I fix broken redirects on my website?",
-            "answer": "Broken redirects occur when a URL points to a page that no longer exists or is not properly redirected. You can fix them by identifying the broken links with a redirect checker and then updating the redirects to point to the correct or most relevant page. This will restore link equity and improve both SEO and user experience."
-        },
-        {
-            "question": "How do redirects impact page speed and user experience?",
-            "answer": "Each redirect adds a small delay in loading the final page. If you have multiple redirects (redirect chains), it can significantly slow down the page load time, leading to poor user experience. Slow-loading pages often lead to higher bounce rates and lower SEO rankings. Regularly checking and optimizing redirects is essential for maintaining fast page speeds."
-        },
-        {
-            "question": "Can I use FindRedirect.com to track both HTTP and HTTPS redirects?",
-            "answer": "Yes, our Bulk Redirect Checker can track both HTTP and HTTPS redirects, helping you identify whether your URLs are correctly transitioning to secure protocols. Ensuring proper HTTPS redirects is vital for security, SEO, and user trust, as modern browsers and search engines prioritize HTTPS over HTTP."
+            "question": "Can I check multiple domains at once?",
+            "answer": "Yes, our tool allows you to check multiple domains simultaneously, providing a comprehensive overview of their accessibility."
         }
     ];
 
     return (
         <MainLayout>
             <Head>
-                <title>Bulk Redirect Checker: Analyze URL Chains & Speed Compare | {APP_NAME}</title>
+                <title>Domain Block Checker: Verify Accessibility in China | {APP_NAME}</title>
                 <meta
                     name="description"
-                    content="Instantly check and analyze your URL redirects with our powerful tool. Uncover redirect chains, measure speed, and optimize your website's performance. Try our free redirect checker now!"
+                    content="Check if your domain is blocked by the Great Firewall of China. Ensure your content is accessible to users in China with our reliable tool."
                 />
-                <script type="application/ld+json">
-                    {JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "FAQPage",
-                        "mainEntity": faqData.map(({ question, answer }) => ({
-                            "@type": "Question",
-                            "name": question,
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": answer
-                            }
-                        }))
-                    })}
-                </script>
             </Head>
             <AppContainer>
                 <Box my={12}>
-                    <BlockChecker icon={FaLink} buttonText="Check Redirects" examples={[ "http://redirhub.com", "http://google.com", "http://twitter.com" ]}>
+                    <BlockChecker icon={FaLink} buttonText="Check Domain" examples={[ "example.com", "test.com", "sample.com" ]}>
                         <Flex direction="column" align="center" textAlign="center">
                             <Box {...styles.checkPage.heroBox}>
-                                <Icon as={FaLink} {...styles.checkPage.heroIcon} />
+                                <Icon as={FaShieldVirus} {...styles.checkPage.heroIcon} />
                             </Box>
                             <Heading as="h1" {...styles.checkPage.heading}>
-                                Redirect Checker
+                                Domain Block Checker
                             </Heading>
                             <Text {...styles.checkPage.description}>
-                                Analyze redirect chains and performance for multiple URLs at once.
+                                Verify if your domain is accessible from China and avoid potential traffic loss.
                             </Text>
                         </Flex>
                     </BlockChecker>

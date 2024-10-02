@@ -8,3 +8,6 @@ export const UPTIME_API_BASE = process.env.API_BASE || 'https://api.uptimerobot.
 export const UPTIME_API_KEY = process.env.API_KEY || 'your-api-key';
 export const UPTIME_SITES = process.env.SITES || '["your-site-token"]';
 export const UPTIME_CACHE_EXPIRES = process.env.CACHE_EXPIRES_AFTER_SECONDS || 3600;
+
+export const TRANSLATION_URL = process.env.TRANSLATION_URL;
+export const TRANSLATION_MISSING_URL = process.env.TRANSLATION_MISSING_URL;
