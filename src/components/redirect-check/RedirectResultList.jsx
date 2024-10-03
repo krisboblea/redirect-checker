@@ -38,8 +38,10 @@ import { GiTurtle } from "react-icons/gi";
 import { FaBicycle, FaCar, FaCode } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import { useDevice } from '@/hooks/useDevice';
+import { useTranslation } from "react-i18next";
 
 const DetailButton = ({ isOpen, onToggle, onShare }) => {
+  const {t} = useTranslation();
   return (
     <ButtonGroup size="sm" isAttached variant="outline">
       <Button
@@ -48,7 +50,7 @@ const DetailButton = ({ isOpen, onToggle, onShare }) => {
         variant="ghost"
         colorScheme="blue"
       >
-        Details
+        {t('tool.details', 'Details')}
       </Button>
       <Button
         onClick={onShare}
@@ -56,13 +58,14 @@ const DetailButton = ({ isOpen, onToggle, onShare }) => {
         variant="ghost"
         colorScheme="blue"
       >
-        Share
+        {t('tool.share', 'Share')}
       </Button>
     </ButtonGroup>
   );
 };
 
 export default function RedirectResultList({ results }) {
+  const {t} = useTranslation();
   const { isMobile } = useDevice();
   const arrowColor = useColorModeValue("gray.300", "gray.600");
   const toast = useToast();
@@ -85,8 +88,8 @@ export default function RedirectResultList({ results }) {
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
         toast({
-          title: "Share URL copied!",
-          description: "The result URL has been copied to your clipboard.",
+          title: t('tool.share-url-copied', 'Share URL copied!'),
+          description: t('tool.share-url-copied-description', 'The result URL has been copied to your clipboard.'),
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -107,7 +110,7 @@ export default function RedirectResultList({ results }) {
   return (
     <VStack spacing={6} align="stretch">
       <Heading as="h2" size={isMobile ? "lg" : "xl"} mb={4}>
-        Redirect Analysis Results
+        {t('tool.analysis-results', 'Analysis Results')}
       </Heading>
       {results.map((result, index) => (
         <Box
@@ -129,7 +132,7 @@ export default function RedirectResultList({ results }) {
                 {getProviderBadge(result?.chain?.[0]?.header)}
                 {result === fastestResult && results.length > 1 && (
                   <Badge {...styles.fastestBadge}>
-                    <FaBolt /> Fastest
+                    <FaBolt /> {t('tool.fastest', 'Fastest')}
                   </Badge>
                 )}
                 <Tooltip label="Open URL in new tab">
@@ -167,19 +170,19 @@ export default function RedirectResultList({ results }) {
             </VStack>
             <HStack spacing={isMobile ? 2 : 4} justifyContent={isMobile ? "space-between" : "flex-end"} flexWrap="wrap">
               <StatItem
-                label="Status"
+                label={t('tool.redirect-status', 'Status')}
                 value={result.statusCode || "N/A"}
                 icon={<Icon as={FaCode} color={result.error_msg ? "red.500" : "purple.500"} boxSize={isMobile ? 6 : 8} />}
                 isMobile={isMobile}
               />
               <StatItem
-                label="Redirects"
+                label={t('tool.redirects-count', 'Redirects')}
                 value={result.chainNumber}
                 icon={getRedirectIcon(result.chainNumber, isMobile)}
                 isMobile={isMobile}
               />
               <StatItem
-                label="Response"
+                label={t('tool.response-time', 'Response')}
                 value={result.error_msg ? "N/A" : `${result.totalTime.toFixed(2)}s`}
                 icon={getResponseIcon(result.totalTime * 1000, isMobile)}
                 isMobile={isMobile}
@@ -198,11 +201,11 @@ export default function RedirectResultList({ results }) {
               <Table variant="simple" size="sm" style={{ minWidth: '800px' }}>
                 <Thead>
                   <Tr>
-                    <Th>Step</Th>
-                    <Th>URL</Th>
-                    <Th>Status</Th>
-                    <Th>Time</Th>
-                    <Th>Details</Th>
+                    <Th>{t('tool.redirect-step', 'Step')}</Th>
+                    <Th>{t('tool.redirect-url', 'URL')}</Th>
+                    <Th>{t('tool.redirect-status', 'Status')}</Th>
+                    <Th>{t('tool.redirect-time', 'Time')}</Th>
+                    <Th>{t('tool.redirect-details', 'Details')}</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -230,7 +233,7 @@ export default function RedirectResultList({ results }) {
                           <AccordionItem border="none">
                             <AccordionButton p={0} _hover={{ bg: "transparent" }}>
                               <Text color="blue.500" fontSize="sm">
-                                View Details
+                                {t('tool.redirect-view-details', 'View Details')}
                               </Text>
                             </AccordionButton>
                             <AccordionPanel pb={4}>

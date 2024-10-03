@@ -11,6 +11,8 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
 
-    res.setHeader('Cache-Control', 'public, max-age=3600');
+    if (process.env.NODE_ENV === 'production') {
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+    }
     res.status(response.status).json(data);
 }

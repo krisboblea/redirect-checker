@@ -17,8 +17,10 @@ import {
 import { FaSearch } from "react-icons/fa";
 import BlockResultList from "./BlockResultList";
 import { checkBlocks } from "./checkBlocks.js";
+import { useTranslation } from "react-i18next";
 
 export default function BlockChecker({ children, buttonText }) {
+  const {t} = useTranslation();
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -47,7 +49,7 @@ export default function BlockChecker({ children, buttonText }) {
           <Textarea
             value={urls}
             onChange={handleUrlsChange}
-            placeholder="Enter domains (one per line)"
+            placeholder={t('tool.block-checker-placeholder', 'Enter domains (one per line)')}
             rows={5}
           />
           <Button
@@ -55,7 +57,7 @@ export default function BlockChecker({ children, buttonText }) {
             colorScheme="blue"
             onClick={handleCheck}
             isLoading={isLoading}
-            loadingText="Checking..."
+            loadingText={t('tool.checking', 'Checking...')}
             width="full"
             mt={4}
           >

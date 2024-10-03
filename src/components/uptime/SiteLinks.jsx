@@ -2,8 +2,11 @@ import { HStack, Button, Tooltip } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 import { FaExternalLinkAlt, FaInfoCircle } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
+import { useTranslation } from "react-i18next";
 
 export default function SiteLinks({ url, token, official }) {
+  const {t} = useTranslation();
+
   return (
     <HStack spacing={2}>
       <Tooltip label="View full details" placement="top">
@@ -18,7 +21,7 @@ export default function SiteLinks({ url, token, official }) {
           fontWeight="normal"
           fontSize={{ base: "xs", sm: getFluidFontSize(14, 16) }}
         >
-          Details
+          {t('tool.details', 'Details')}
         </Button>
       </Tooltip>
       <Tooltip label="Visit official website" placement="top">
@@ -33,7 +36,7 @@ export default function SiteLinks({ url, token, official }) {
           fontWeight="normal"
           fontSize={{ base: "xs", sm: getFluidFontSize(14, 16) }}
         >
-          Website
+          {t('tool.website', 'Website')}
         </Button>
       </Tooltip>
     </HStack>

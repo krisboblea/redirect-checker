@@ -5,20 +5,22 @@ import { styles } from "@/configs/uptime";
 import React from "react";
 import { FaBicycle, FaCar } from "react-icons/fa";
 import { GiTurtle } from "react-icons/gi";
+import { useTranslation } from 'react-i18next';
 
 export default function SiteStats({ uptime, timings, token }) {
+  const { t } = useTranslation();
   const responseTime = timings?.total || 0;
   const { icon, color } = getResponseIcon(responseTime);
 
   return (
     <HStack spacing={{ base: 2, md: 4 }} justifyContent={{ base: "space-between", md: "flex-end" }} flexWrap="wrap" width="100%">
       <StatItem 
-        label="Uptime" 
+        label={t('tool.uptime', 'Uptime')} 
         value={`${uptime}%`} 
         icon={<Icon as={FiCheck} color="green.500" boxSize={{ base: 6, md: 8 }} />} 
       />
       <StatItem 
-        label="Response" 
+        label={t('tool.response', 'Response')} 
         value={`${responseTime}ms`} 
         icon={<Icon as={icon} color={color} boxSize={{ base: 6, md: 8 }} />}
       />

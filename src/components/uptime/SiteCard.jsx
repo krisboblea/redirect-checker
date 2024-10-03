@@ -7,9 +7,10 @@ import { styles } from "@/configs/uptime";
 import { getFluidFontSize, getFormattedTimeDiff } from "@/utils";
 import { FaClock } from "react-icons/fa";
 import { useDevice } from "@/hooks/useDevice";
-
+import { useTranslation } from 'react-i18next';
 
 export default function SiteCard({ site, isFastest }) {
+  const { t } = useTranslation();
   const { token, url, alias, last_check_at, uptime } = site[0];
   const { timings } = site[1];
   const siteInfo = SITESMAPPING.find(site => site.id === token);
@@ -29,8 +30,8 @@ export default function SiteCard({ site, isFastest }) {
     >
       <Flex direction={{ base: "column", md: "row" }} justifyContent="space-between" alignItems="stretch" gap={{ base: 4, md: 6 }}>
         <Stack spacing={{ base: 2, md: 4 }} flex={1}>
-          <SiteTitle alias={alias} name={siteInfo?.name} url={url} isFastest={isFastest} />
-          <SiteLastCheck lastCheckAt={last_check_at} token={token} />
+          <SiteTitle alias={alias} name={siteInfo?.name} url={url} isFastest={isFastest} t={t} />
+          <SiteLastCheck lastCheckAt={last_check_at} token={token} t={t} />
           {!isMobile && <SiteLinks url={url} token={token} official={siteInfo?.official} />}
         </Stack>
         <SiteStats uptime={uptime} timings={timings} token={token} />
@@ -40,7 +41,7 @@ export default function SiteCard({ site, isFastest }) {
   );
 };
 
-const SiteTitle = ({ alias, name, url, isFastest }) => (
+const SiteTitle = ({ alias, name, url, isFastest, t }) => (
   <Flex
     alignItems="center"
     gap={2}
@@ -77,13 +78,13 @@ const SiteTitle = ({ alias, name, url, isFastest }) => (
     </Flex>
     {isFastest && (
       <Badge {...styles.fastestBadge} flexShrink={0}>
-        <FaBolt /> Fastest
+        <FaBolt /> {t('tool.fastest', 'Fastest')}
       </Badge>
     )}
   </Flex>
 );
 
-const SiteLastCheck = ({ lastCheckAt, token }) => (
+const SiteLastCheck = ({ lastCheckAt, token, t }) => (
   <Text
     href={`https://updown.io/${token}`}
     target="_blank"
@@ -94,6 +95,6 @@ const SiteLastCheck = ({ lastCheckAt, token }) => (
     gap={2}
   >
     <FaClock />
-    Last check: {getFormattedTimeDiff(lastCheckAt)}
+    {t('tool.last-check', 'Last check:')} {getFormattedTimeDiff(lastCheckAt)}
   </Text>
 );

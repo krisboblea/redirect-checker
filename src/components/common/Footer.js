@@ -1,6 +1,6 @@
-import { APP_NAME } from "@/configs/constant";
+import { APP_NAME, GITHUB_URL, LINKEDIN_URL, TELEGRAM_URL, X_URL } from "@/configs/constant";
 import { Box, Container, Stack, Text, Link, useColorModeValue } from "@chakra-ui/react";
-import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaTwitter, FaGithub, FaLinkedin, FaTelegram } from "react-icons/fa";
 
 const SocialButton = ({ children, label, href }) => {
     return (
@@ -47,15 +47,26 @@ export default function Footer() {
                     © {new Date().getFullYear()} {APP_NAME}. All rights reserved
                 </Text>
                 <Stack direction={"row"} spacing={{ base: 4, md: 6 }}>
-                    <SocialButton label={"Twitter"} href={"https://twitter.com/redirhub"}>
-                        <FaTwitter />
-                    </SocialButton>
-                    <SocialButton label={"GitHub"} href={"https://github.com/redirhub"}>
-                        <FaGithub />
-                    </SocialButton>
-                    <SocialButton label={"LinkedIn"} href={"https://www.linkedin.com/company/redirhub"}>
-                        <FaLinkedin />
-                    </SocialButton>
+                    {X_URL && (
+                        <SocialButton label={"Twitter"} href={X_URL}>
+                            <FaTwitter />
+                        </SocialButton>
+                    )}
+                    {GITHUB_URL && (
+                        <SocialButton label={"GitHub"} href={GITHUB_URL}>
+                            <FaGithub />
+                        </SocialButton>
+                    )}
+                    {LINKEDIN_URL && (
+                        <SocialButton label={"LinkedIn"} href={LINKEDIN_URL}>
+                            <FaLinkedin />
+                        </SocialButton>
+                    )}
+                    {TELEGRAM_URL && (
+                        <SocialButton label={"Telegram"} href={TELEGRAM_URL}>
+                            <FaTelegram />
+                        </SocialButton>
+                    )}
                 </Stack>
             </Container>
         </Box>

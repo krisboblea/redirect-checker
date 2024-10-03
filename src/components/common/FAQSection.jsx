@@ -2,6 +2,8 @@ import { useState, useMemo } from "react";
 import { Box, Flex, Heading, Icon, Text, Grid, GridItem, VStack, Input, InputGroup, InputLeftElement, Button, useColorModeValue } from "@chakra-ui/react";
 import { FaQuestionCircle, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { QUESTION_URL } from "@/configs/constant";
 
 // Styles object
 const styles = {
@@ -56,6 +58,8 @@ const styles = {
 };
 
 export default function FAQSection({ data }) {
+
+    const {t} = useTranslation();
     const [openIndices, setOpenIndices] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -84,18 +88,17 @@ export default function FAQSection({ data }) {
         <Box bg={bgColor} {...styles.container}>
             <VStack spacing={8} align="stretch">
                 <Heading {...styles.heading}>
-                    Frequently Asked Questions
+                    {t('tool.faq-title', 'Frequently Asked Questions')}
                 </Heading>
                 <Text {...styles.subText} color={textColor}>
-                    Find answers to common questions about this tool. 
-                    Can&apos;t find what you&apos;re looking for? Contact our support team for more help.
+                    {t('tool.faq-subtext', "Find answers to common questions about this tool. Can't find what you're looking for? Contact our support team for more help.")}
                 </Text>
                 <InputGroup {...styles.searchInput}>
                     <InputLeftElement pointerEvents="none">
                         <Icon as={FaSearch} color="gray.300" />
                     </InputLeftElement>
                     <Input 
-                        placeholder="Search FAQs..." 
+                        placeholder={t('tool.faq-search-placeholder', 'Search FAQs...')} 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         bg={cardBgColor}
@@ -131,13 +134,13 @@ export default function FAQSection({ data }) {
                 </Grid>
                 {filteredFAQs.length === 0 && (
                     <Text {...styles.noResults}>
-                        No matching questions found. Please try a different search term.
+                        {t('tool.faq-no-results', 'No matching questions found. Please try a different search term.')}
                     </Text>
                 )}
                 <Box textAlign="center">
-                    <Link href={'https://findredirect.featurebase.app'} target="_blank">
+                    <Link href={QUESTION_URL} target="_blank">
                         <Button {...styles.contactButton}>
-                            Still have questions? 
+                            {t('tool.faq-contact-button', 'Still have questions?')}
                         </Button>
                     </Link>
                 </Box>

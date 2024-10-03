@@ -51,9 +51,8 @@ export function LanguageMenu() {
                     <MenuItem
                         key={lang.value}
                         onClick={() => router.push(router.pathname, router.asPath, { locale: lang.value })}
-                        borderRadius={'full'}
+                        borderRadius={'md'}
                     >
-                        <FaCircle mr={5} size='8' colorScheme='primary' />
                         <Box {...textStyles}>
                             {lang.text}
                         </Box>

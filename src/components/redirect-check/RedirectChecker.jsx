@@ -21,8 +21,10 @@ import { SiApple } from "react-icons/si"; // Import the Apple icon for Cmd
 import RedirectResultList from "./RedirectResultList";
 import { checkRedirects } from "./redirectUtils.jsx";
 import { useDevice } from "@/hooks/useDevice";
+import { useTranslation } from "react-i18next";
 
 export default function RedirectChecker({children, icon, buttonText, examples}) {
+  const {t} = useTranslation();
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -30,7 +32,7 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
   const router = useRouter();
   const [urls, setUrls] = useState('');
   const { isMobile } = useDevice();
-  const placeholder = "Enter URLs (one per line) e.g., " + examples[0];
+  const placeholder = t('tool.redirect-placeholder', "Enter URLs (one per line) e.g., ")  + examples[0];
 
   const { bgColor, borderColor } = useColorModeValue(
     { bgColor: "white", borderColor: "gray.200"  },
@@ -140,7 +142,7 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
                 _active={{ bg: "blue.100" }}
                 transition="all 0.2s"
               >
-                Examples
+                {t('tool.examples-button', 'Examples')}
               </Button>
             </Box>
             <Button
@@ -148,7 +150,7 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
               colorScheme="blue"
               onClick={handleCheck}
               isLoading={isLoading}
-              loadingText="Checking..."
+              loadingText={t('tool.checking', 'Checking...')}
               width={{ base: "full", md: "auto" }}
               size={{base: "md", md: "lg"}}
               fontWeight="bold"

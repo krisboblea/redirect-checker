@@ -50,12 +50,6 @@ export default extendTheme({
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
         fontWeight: 300,
-        bg: "gray.50", // Light mode background
-        color: "gray.800", // Light mode text color
-        _dark: {
-          bg: "gray.800", // Dark mode background
-          color: "gray.200", // Dark mode text color
-        },
       },
       a: {
         color: "teal.500", // Link color

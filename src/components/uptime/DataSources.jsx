@@ -1,15 +1,22 @@
 import { Box, Flex, Grid, GridItem, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import { getFluidFontSize } from "@/utils";
+import { Trans, useTranslation } from 'react-i18next';
 
 export default function DataSources({ sitesData = {} }) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Box maxW="90%" mx="auto" mt="50px" p="20px">
         <Stack>
           <Heading fontSize={getFluidFontSize(20, 26)} fontWeight="500">
-            Data Sources
+            {t('tool.uptime-data-sources', 'Data Sources')}
           </Heading>
-          <Text>Performance data are tested by updown.io from {Object?.keys(sitesData)?.length} locations.</Text>
+          <Text>
+            <Trans i18nKey="tool.uptime-data-sources-text" t={t}>
+              Performance data are tested by updown.io from {{n: Object?.keys(sitesData)?.length}} locations.
+            </Trans>
+          </Text>
         </Stack>
         <Grid mt="30px" gap="15px" gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))">
           {Object?.keys(sitesData)?.map((sourceKey) => {

@@ -4,8 +4,10 @@ import DataSources from "@/components/uptime/DataSources";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { styles } from "@/configs/uptime";
+import { useTranslation } from 'react-i18next';
 
 export default function Uptime() {
+    const { t } = useTranslation();
     const [ sitesData, setSitesData ] = useState({
         nodes: {},
         sites: []
@@ -13,7 +15,7 @@ export default function Uptime() {
 
     async function fetchDataSources() {
         try {
-            const apiRouteResponse = await axios.get("api/uptime");
+            const apiRouteResponse = await axios.get("/api/uptime");
             setSitesData(apiRouteResponse.data.data);
         } catch (error) {
             console.error(error);
@@ -34,7 +36,7 @@ export default function Uptime() {
                     href="https://www.redirhub.com"
                     {...styles.getStartedButton}
                 >
-                    Get started with RedirHub
+                    {t('tool.get-started', 'Get started with RedirHub')}
                 </Button>
             </Center>
             <DataSources sitesData={sitesData?.nodes} />
