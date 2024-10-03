@@ -18,3 +18,5 @@ export const GITHUB_URL = process.env.NEXT_PUBLIC_GITHUB_URL;
 export const LINKEDIN_URL = process.env.NEXT_PUBLIC_LINKEDIN_URL;
 export const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL;
 export const NAVS = process.env.NEXT_PUBLIC_NAVS;
+export const EXAMPLE_REDIRECT_URL = process.env.NEXT_PUBLIC_EXAMPLE_REDIRECT_URL;
+export const EXAMPLE_EXPANDER_URL = process.env.NEXT_PUBLIC_EXAMPLE_EXPANDER_URL;

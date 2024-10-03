@@ -4,7 +4,7 @@ import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
-import { APP_NAME } from "@/configs/constant";
+import { APP_NAME, EXAMPLE_REDIRECT_URL } from "@/configs/constant";
 import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
@@ -81,7 +81,7 @@ export default function RedirectCheckPage() {
             </Head>
             <AppContainer>
                 <Box my={12}>
-                    <RedirectChecker icon={FaLink} buttonText={t('tool.redirect-check-button', 'Check Redirects')} examples={[ "http://redirhub.com", "http://google.com", "http://twitter.com" ]}>
+                    <RedirectChecker icon={FaLink} buttonText={t('tool.redirect-check-button', 'Check Redirects')} examples={[ EXAMPLE_REDIRECT_URL, "http://google.com", "http://twitter.com" ].filter(Boolean)}>
                         <Flex direction="column" align="center" textAlign="center">
                             <Box {...styles.checkPage.heroBox}>
                                 <Icon as={FaLink} {...styles.checkPage.heroIcon} />

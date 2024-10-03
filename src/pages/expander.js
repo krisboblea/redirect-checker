@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
-import { APP_NAME } from "@/configs/constant";
+import { APP_NAME, EXAMPLE_EXPANDER_URL } from "@/configs/constant";
 import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
@@ -80,7 +80,7 @@ export default function ShortURLExpanderPage() {
             </Head>
             <AppContainer>
                 <Box my={12}>
-                    <RedirectChecker icon={FaLink} buttonText={t('tool.expander-button', 'Expand Short URLs')} examples={[ "http://bit.ly/try", "https://rbnd.ly/booked", "https://6x.work/zeMJ" ]}>
+                    <RedirectChecker icon={FaLink} buttonText={t('tool.expander-button', 'Expand Short URLs')} examples={[ EXAMPLE_EXPANDER_URL, "http://bit.ly/try", "https://rbnd.ly/booked" ].filter(Boolean)}>
                         <Flex direction="column" align="center" textAlign="center">
                             <Box {...styles.checkPage.heroBox}>
                                 <Icon as={FaLink} {...styles.checkPage.heroIcon} />
