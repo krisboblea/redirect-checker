@@ -6,6 +6,7 @@
     "uptime-heading": "Redirect Services Performance Comparison",
     "uptime-subheading": "Discover which redirect service delivers the fastest response times and highest uptime with our real-time comparison tool. Make data-driven decisions for your website's performance.",
     "uptime-data-sources": "Data Sources",
-    "uptime-data-sources-text": "Performance data are tested by updown.io from {{n}} locations."
+    "uptime-data-sources-text": "Performance data are tested by updown.io from {{n}} locations.",
+    "get-started": "Get started with RedirHub"
   }
 }

@@ -2,7 +2,7 @@ import { INDEX_PAGE } from "@/configs/constant";
 import RedirectCheckPage from "./redirect";
 import UptimePage from "./uptime";
 import DomainBlockPage from "./block";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 
 const Home = () => {
@@ -20,10 +20,10 @@ const Home = () => {
   }
 }
 
-export const getServerSideProps = async ({ locale }) => ({
-  props: {
-    ...await serverSideTranslations(locale, [ 'common' ]),
-  },
-})
+// export const getServerSideProps = async ({ locale }) => ({
+//   props: {
+//     ...await serverSideTranslations(locale, [ 'common' ]),
+//   },
+// })
 
 export default Home;
