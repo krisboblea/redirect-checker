@@ -5,7 +5,7 @@ import { AppContainer } from "@/components/common/AppContainer";
 import { getFluidFontSize } from "@/utils";
 import Uptime from "@/components/uptime/Uptime";
 import { APP_NAME } from "@/configs/constant";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function UptimePage() {
 

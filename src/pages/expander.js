@@ -8,7 +8,7 @@ import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function ShortURLExpanderPage() {
     const { t } = useTranslation();
@@ -99,3 +99,4 @@ export default function ShortURLExpanderPage() {
         </MainLayout>
     );
 }
+

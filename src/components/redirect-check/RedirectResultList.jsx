@@ -38,7 +38,7 @@ import { GiTurtle } from "react-icons/gi";
 import { FaBicycle, FaCar, FaCode } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import { useDevice } from '@/hooks/useDevice';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 const DetailButton = ({ isOpen, onToggle, onShare }) => {
   const {t} = useTranslation();

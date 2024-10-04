@@ -21,7 +21,7 @@ import { SiApple } from "react-icons/si"; // Import the Apple icon for Cmd
 import RedirectResultList from "./RedirectResultList";
 import { checkRedirects } from "./redirectUtils.jsx";
 import { useDevice } from "@/hooks/useDevice";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function RedirectChecker({children, icon, buttonText, examples}) {
   const {t} = useTranslation();

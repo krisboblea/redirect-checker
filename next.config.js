@@ -1,7 +1,5 @@
+const { i18n } = require('./next-i18next.config')
+
 module.exports = {
-  i18n: {
-    locales: [ 'en', 'zh', 'pt' ],
-    defaultLocale: process.env.NEXT_PUBLIC_LOCALE || 'en',
-    localeDetection: false,
-  },
+  i18n
 }

@@ -20,7 +20,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { FaCheckCircle, FaTimesCircle, FaExternalLinkAlt } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function BlockResultList({ results }) {
   const {t} = useTranslation();

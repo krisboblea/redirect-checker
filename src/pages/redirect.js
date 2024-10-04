@@ -8,7 +8,7 @@ import { APP_NAME, EXAMPLE_REDIRECT_URL } from "@/configs/constant";
 import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function RedirectCheckPage() {
     const { t } = useTranslation();

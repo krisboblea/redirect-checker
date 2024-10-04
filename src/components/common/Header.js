@@ -4,10 +4,10 @@ import { APP_LOGO, APP_LOGO_DARK, APP_NAME, HIDE_NAV, INDEX_PAGE, NAVS } from "@
 import { FaSun, FaMoon, FaHome, FaCheckCircle, FaBlog, FaBars, FaRocket, FaExpand } from "react-icons/fa";
 import NavLink from "./NavLink";
 import MobileDrawer from "./MobileDrawer";
-import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import { LanguageMenu } from "./LanguageMenu";
+import { useTranslation } from "next-i18next";
 
 function navUrl(page) {
     if (INDEX_PAGE === page || page === 'home') {
@@ -50,8 +50,7 @@ export default function Header() {
     }));
 
     useEffect(() => {
-        console.log('locale', locale);
-        i18n.changeLanguage(locale);
+        // i18n.changeLanguage(locale);
     }, [ locale, i18n ]);
 
     return (

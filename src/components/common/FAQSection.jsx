@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Box, Flex, Heading, Icon, Text, Grid, GridItem, VStack, Input, InputGroup, InputLeftElement, Button, useColorModeValue } from "@chakra-ui/react";
 import { FaQuestionCircle, FaChevronDown, FaChevronUp, FaSearch } from "react-icons/fa";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { QUESTION_URL } from "@/configs/constant";
 
 // Styles object

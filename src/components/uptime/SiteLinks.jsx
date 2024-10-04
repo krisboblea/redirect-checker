@@ -2,7 +2,7 @@ import { HStack, Button, Tooltip } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 import { FaExternalLinkAlt, FaInfoCircle } from "react-icons/fa";
 import { getFluidFontSize } from "@/utils";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function SiteLinks({ url, token, official }) {
   const {t} = useTranslation();
