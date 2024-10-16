@@ -61,7 +61,7 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
     handleUrlsCorrect();
     setIsLoading(true);
     setProgress(0);
-    const urlList = urls.split("\n").filter((url) => url.trim() !== "");
+    const urlList = urls.split("\n").filter((url) => url.trim() !== "").slice(0, 20);
 
     const newResults = await checkRedirects(urlList, setProgress, toast);
     setResults(newResults);
