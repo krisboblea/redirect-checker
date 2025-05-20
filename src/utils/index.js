@@ -1,3 +1,7 @@
+import fetch from 'node-fetch';
+import https from 'https';
+import { TRANSLATION_URL } from '@/configs/constant';
+
 /**
  * Generates a UUID in the version 4 format.
  * @returns {string} A UUID string.
@@ -108,10 +112,13 @@ export function getFormattedTimeDiff(inputDatetime) {
   return "just now";
 }
 
-export async function fetchTranslationsFromApi(locale, baseUrl = '') {
-  const url = `${baseUrl}/api/translation/${locale}`;
-  const res = await fetch(url);
-  const common = await res.json()
+export async function fetchTranslationsFromApi(locale) {
+  const url = TRANSLATION_URL.replace('{{lng}}', locale);
+  const response = await fetch(url, {
+      agent: new https.Agent({ rejectUnauthorized: false }) // Disable SSL certificate verification
+  });
+  const common = await response.json();
+
   return { common }
 }
 
