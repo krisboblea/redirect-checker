@@ -1,21 +1,50 @@
 // next-i18next.config.js
-const path = require('path');
+const HttpBackend = require('i18next-http-backend/cjs')
+const ChainedBackend = require('i18next-chained-backend').default
 
+const path = require('path');
+const isBrowser = typeof window !== 'undefined'
+const isDev = process.env.NODE_ENV === 'development'
 const allLanguages = [ "en", "de", "es", "fr", "it", "pt", "ja", "zh", "ko" ];
+
+class NoLoadHttpBackend extends HttpBackend {
+    read(language, namespace, callback) {
+        // Prevent loading by returning empty object
+        return callback(null, {}) // or callback(null, undefined)
+    }
+}
 
 module.exports = {
     i18n: {
         locales: allLanguages,
         defaultLocale: 'en',
-        localeDetection: true,
+        // localeDetection: true,
     },
-    localePath: path.resolve('./public/locales'), // server + build-time only
-    reloadOnPrerender: false,
-    saveMissing: false,
+    backend: {
+        backendOptions: [
+            {
+                loadPath: '', // disabled
+                addPath: '/api/translation/missing',
+                allowedAddOrUpdateHosts: () => '/api/translation/missing',
+                projectId: 'c129fb28-4614-4731-b76e-c6ca068a4f60',
+                apiKey: 'ad0d830f-0c5a-4d85-9e67-14a8f69e51fc',
+                referenceLng: 'en',
+            }
+        ],
+        backends: isBrowser ? [ NoLoadHttpBackend ] : [],
+    },
+    partialBundledLanguages: isBrowser && true,
+    use: isBrowser ? [ ChainedBackend ] : [],
+    debug: isDev,
+    localePath: isBrowser ? path.resolve('./public/locales') : 'public/locales',
+    reloadOnPrerender: isDev,
+    saveMissing: true,
     interpolation: {
         escapeValue: false,
     },
     react: {
-        useSuspense: false,
+        bindI18n: 'languageChanged loaded',
+        useSuspense: false
     },
+    serializeConfig: false,
 }
