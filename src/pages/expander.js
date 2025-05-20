@@ -9,7 +9,6 @@ import FAQSection from "@/components/common/FAQSection";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { fetchTranslationsFromApi, mergeI18nProps } from "@/utils";
 
 export default function ShortURLExpanderPage() {
     const { t } = useTranslation();
@@ -102,12 +101,9 @@ export default function ShortURLExpanderPage() {
 }
 
 export async function getStaticProps({ locale }) {
-    const resources = await fetchTranslationsFromApi(locale);
-    const baseTranslations = await serverSideTranslations(locale, ['common']);
-    
-    const data = mergeI18nProps(baseTranslations, resources, locale, 'common')
-    
     return {
-        props: data
-    }
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    };
 }

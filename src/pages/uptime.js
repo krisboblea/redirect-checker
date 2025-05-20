@@ -7,7 +7,6 @@ import Uptime from "@/components/uptime/Uptime";
 import { APP_NAME } from "@/configs/constant";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { fetchTranslationsFromApi, mergeI18nProps } from "@/utils";
 
 export default function UptimePage() {
 
@@ -54,12 +53,9 @@ export default function UptimePage() {
 }
 
 export async function getStaticProps({ locale }) {
-    const resources = await fetchTranslationsFromApi(locale);
-    const baseTranslations = await serverSideTranslations(locale, ['common']);
-    
-    const data = mergeI18nProps(baseTranslations, resources, locale, 'common')
-    
     return {
-        props: data
-    }
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    };
 }

@@ -1,7 +1,3 @@
-import fetch from 'node-fetch';
-import https from 'https';
-import { TRANSLATION_URL } from '@/configs/constant';
-
 /**
  * Generates a UUID in the version 4 format.
  * @returns {string} A UUID string.
@@ -110,35 +106,4 @@ export function getFormattedTimeDiff(inputDatetime) {
 
   // If less than a minute, return "just now"
   return "just now";
-}
-
-export async function fetchTranslationsFromApi(locale) {
-  const url = TRANSLATION_URL.replace('{{lng}}', locale);
-  const response = await fetch(url, {
-      agent: new https.Agent({ rejectUnauthorized: false }) // Disable SSL certificate verification
-  });
-  const common = await response.json();
-
-  return { common }
-}
-
-export function mergeI18nProps(baseTranslations, resources, locale, namespace) {
-  const mergedNamespace = {
-    ...baseTranslations._nextI18Next.initialI18nStore[locale][namespace],
-    ...resources[namespace],
-  };
-
-  return {
-    ...baseTranslations,
-    _nextI18Next: {
-      ...baseTranslations._nextI18Next,
-      initialI18nStore: {
-        ...baseTranslations._nextI18Next.initialI18nStore,
-        [locale]: {
-          ...baseTranslations._nextI18Next.initialI18nStore[locale],
-          [namespace]: mergedNamespace,
-        },
-      },
-    },
-  };
 }

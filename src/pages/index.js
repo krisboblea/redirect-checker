@@ -3,7 +3,6 @@ import RedirectCheckPage from "./redirect";
 import UptimePage from "./uptime";
 import DomainBlockPage from "./block";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { fetchTranslationsFromApi, mergeI18nProps } from "@/utils";
 
 const Home = () => {
   switch (INDEX_PAGE) {
@@ -20,14 +19,11 @@ const Home = () => {
 }
 
 export async function getStaticProps({ locale }) {
-  const resources = await fetchTranslationsFromApi(locale);
-  const baseTranslations = await serverSideTranslations(locale, ['common']);
-  
-  const data = mergeI18nProps(baseTranslations, resources, locale, 'common')
-  
   return {
-    props: data
-  }
+    props: {
+        ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }
 
 export default Home;

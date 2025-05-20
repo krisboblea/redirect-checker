@@ -5,7 +5,6 @@ import MainLayout from "@/layouts/MainLayout";
 import { getFluidFontSize } from "@/utils";
 import { APP_NAME } from "@/configs/constant";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { fetchTranslationsFromApi, mergeI18nProps } from "@/utils";
 
 export default function BlogPage() {
     const bgGradient = useColorModeValue(
@@ -44,12 +43,9 @@ export default function BlogPage() {
 }
 
 export async function getStaticProps({ locale }) {
-    const resources = await fetchTranslationsFromApi(locale);
-    const baseTranslations = await serverSideTranslations(locale, ['common']);
-    
-    const data = mergeI18nProps(baseTranslations, resources, locale, 'common')
-    
     return {
-        props: data
-    }
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    };
 }
