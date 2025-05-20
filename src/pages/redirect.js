@@ -103,8 +103,7 @@ export default function RedirectCheckPage() {
 }
 
 export async function getStaticProps({ locale }) {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const resources = await fetchTranslationsFromApi(locale, baseUrl);
+    const resources = await fetchTranslationsFromApi(locale);
     const baseTranslations = await serverSideTranslations(locale, ['common']);
     
     const data = mergeI18nProps(baseTranslations, resources, locale, 'common')
