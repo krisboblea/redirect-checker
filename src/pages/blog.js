@@ -3,12 +3,8 @@ import { useRouter } from "next/router";
 import { Box, Container, VStack, Heading, Text, useColorModeValue, Icon } from "@chakra-ui/react";
 import { FaTools } from "react-icons/fa";
 import MainLayout from "@/layouts/MainLayout";
-import { getFluidFontSize } from "@/utils";
-import { 
-    APP_NAME, 
-    ALL_LOCALES, 
-    APP_BASE_URL 
-} from "@/configs/constant";
+import { generateHrefLangsAndCanonicalTag, getFluidFontSize } from "@/utils";
+import { APP_NAME } from "@/configs/constant";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 export default function BlogPage() {
@@ -20,11 +16,6 @@ export default function BlogPage() {
     );
     const headingColor = useColorModeValue("gray.800", "white");
     const title = `Blog Under Construction | ${APP_NAME}`;
-    const getHrefForLocale = (loc) => {
-        return loc === 'en' 
-            ? `${APP_BASE_URL}${asPath}` 
-            : `${APP_BASE_URL}/${loc}${asPath}`;
-    };
 
     return (
         <MainLayout>
@@ -35,20 +26,8 @@ export default function BlogPage() {
                     content="Our blog is currently under construction. Stay tuned for exciting content coming soon!"
                 />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                {/* hreflang tags */}
-                {ALL_LOCALES.map((loc) => (
-                    <link
-                        key={loc}
-                        rel="alternate"
-                        hrefLang={loc}
-                        href={getHrefForLocale(loc)}
-                    />
-                ))}
-                {/* canonical tag */}
-                <link
-                    rel="canonical"
-                    href={getHrefForLocale(locale || 'en')}
-                />
+                {/* hreflangs and canonical tag */}
+                {generateHrefLangsAndCanonicalTag(locale, asPath)}
             </Head>
             <Box bgGradient={bgGradient} py={20} minHeight="calc(100vh - 100px)" display="flex" alignItems="center">
                 <Container maxW="container.xl">

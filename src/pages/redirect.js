@@ -4,17 +4,13 @@ import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
-import { 
-    APP_NAME, 
-    EXAMPLE_REDIRECT_URL, 
-    ALL_LOCALES, 
-    APP_BASE_URL 
-} from "@/configs/constant";
+import { APP_NAME, EXAMPLE_REDIRECT_URL } from "@/configs/constant";
 import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { generateHrefLangsAndCanonicalTag } from "@/utils";
 
 export default function RedirectCheckPage() {
     const { t } = useTranslation();
@@ -63,11 +59,6 @@ export default function RedirectCheckPage() {
         }
     ];
     const title = `${t('tool.redirect-title', 'Bulk Redirect Checker: Analyze URL Chains & Speed Compare')} | ${APP_NAME}`;
-    const getHrefForLocale = (loc) => {
-        return loc === 'en' 
-            ? `${APP_BASE_URL}${asPath}` 
-            : `${APP_BASE_URL}/${loc}${asPath}`;
-    };
 
     return (
         <MainLayout>
@@ -77,20 +68,8 @@ export default function RedirectCheckPage() {
                     name="description"
                     content={t('tool.redirect-description', "Instantly check and analyze your URL redirects with our powerful tool. Uncover redirect chains, measure speed, and optimize your website's performance. Try our free redirect checker now!")}
                 />
-                {/* hreflang tags */}
-                {ALL_LOCALES.map((loc) => (
-                    <link
-                        key={loc}
-                        rel="alternate"
-                        hrefLang={loc}
-                        href={getHrefForLocale(loc)}
-                    />
-                ))}
-                {/* canonical tag */}
-                <link
-                    rel="canonical"
-                    href={getHrefForLocale(locale || 'en')}
-                />
+                {/* hreflangs and canonical tag */}
+                {generateHrefLangsAndCanonicalTag(locale, asPath)}
                 <script type="application/ld+json">
                     {JSON.stringify({
                         "@context": "https://schema.org",

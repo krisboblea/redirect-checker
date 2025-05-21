@@ -3,18 +3,14 @@ import { useRouter } from "next/router";
 import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
-import { 
-    APP_NAME, 
-    EXAMPLE_EXPANDER_URL, 
-    ALL_LOCALES, 
-    APP_BASE_URL 
-} from "@/configs/constant";
+import { APP_NAME, EXAMPLE_EXPANDER_URL } from "@/configs/constant";
 import { FaLink } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { generateHrefLangsAndCanonicalTag } from "@/utils";
 
 export default function ShortURLExpanderPage() {
     const { t } = useTranslation();
@@ -63,11 +59,6 @@ export default function ShortURLExpanderPage() {
         }
     ];
     const title = `${t('tool.expander-title', 'Bulk Short URL Expander: Reveal Full Links Instantly')} | ${APP_NAME}`;
-    const getHrefForLocale = (loc) => {
-        return loc === 'en' 
-            ? `${APP_BASE_URL}${asPath}` 
-            : `${APP_BASE_URL}/${loc}${asPath}`;
-    };
 
     return (
         <MainLayout>
@@ -77,20 +68,8 @@ export default function ShortURLExpanderPage() {
                     name="description"
                     content={t('tool.expander-description', "Instantly expand shortened URLs to reveal their full destination. Enhance your online safety and transparency with our free Short URL Expander tool. Try it now!")}
                 />
-                {/* hreflang tags */}
-                {ALL_LOCALES.map((loc) => (
-                    <link
-                        key={loc}
-                        rel="alternate"
-                        hrefLang={loc}
-                        href={getHrefForLocale(loc)}
-                    />
-                ))}
-                {/* canonical tag */}
-                <link
-                    rel="canonical"
-                    href={getHrefForLocale(locale || 'en')}
-                />
+                {/* hreflangs and canonical tag */}
+                {generateHrefLangsAndCanonicalTag(locale, asPath)}
                 <script type="application/ld+json">
                     {JSON.stringify({
                         "@context": "https://schema.org",

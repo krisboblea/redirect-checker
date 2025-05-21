@@ -4,16 +4,13 @@ import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
 import BlockChecker from "@/components/block-check/BlockChecker";
-import { 
-    APP_NAME, 
-    ALL_LOCALES, 
-    APP_BASE_URL 
-} from "@/configs/constant";
+import { APP_NAME } from "@/configs/constant";
 import { FaLink, FaShieldVirus } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { generateHrefLangsAndCanonicalTag } from "@/utils";
 
 export default function DomainBlockPage() {
     const { t } = useTranslation();
@@ -46,11 +43,6 @@ export default function DomainBlockPage() {
         }
     ];
     const title = `${t('tool.block-title', 'Domain Block Checker: Verify Accessibility in China')} | ${APP_NAME}`;
-    const getHrefForLocale = (loc) => {
-        return loc === 'en' 
-            ? `${APP_BASE_URL}${asPath}` 
-            : `${APP_BASE_URL}/${loc}${asPath}`;
-    };
 
     return (
         <MainLayout>
@@ -60,20 +52,8 @@ export default function DomainBlockPage() {
                     name="description"
                     content={t('tool.block-description', "Check if your domain is blocked by the Great Firewall of China. Ensure your content is accessible to users in China with our reliable tool.")}
                 />
-                {/* hreflang tags */}
-                {ALL_LOCALES.map((loc) => (
-                    <link
-                        key={loc}
-                        rel="alternate"
-                        hrefLang={loc}
-                        href={getHrefForLocale(loc)}
-                    />
-                ))}
-                {/* canonical tag */}
-                <link
-                    rel="canonical"
-                    href={getHrefForLocale(locale || 'en')}
-                />
+                {/* hreflangs and canonical tag */}
+                {generateHrefLangsAndCanonicalTag(locale, asPath)}
             </Head>
             <AppContainer>
                 <Box my={12}>
