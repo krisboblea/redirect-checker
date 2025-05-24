@@ -70,20 +70,23 @@ export default function RedirectCheckPage() {
                 />
                 {/* hreflangs and canonical tag */}
                 {generateHrefLangsAndCanonicalTag(locale, asPath)}
-                <script type="application/ld+json">
-                    {JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "FAQPage",
-                        "mainEntity": faqData.map(({ question, answer }) => ({
-                            "@type": "Question",
-                            "name": question,
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": answer
-                            }
-                        }))
-                    })}
-                </script>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            "mainEntity": faqData.map(({ question, answer }) => ({
+                                "@type": "Question",
+                                "name": question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": answer
+                                }
+                            }))
+                        })
+                    }}
+                />
             </Head>
             <AppContainer>
                 <Box my={12}>
@@ -110,7 +113,7 @@ export default function RedirectCheckPage() {
 export async function getStaticProps({ locale }) {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common'])),
+            ...(await serverSideTranslations(locale, [ 'common' ])),
         },
     };
 }
