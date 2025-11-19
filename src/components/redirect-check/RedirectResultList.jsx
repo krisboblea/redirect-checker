@@ -82,9 +82,9 @@ export default function RedirectResultList({ results }) {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handleShareResult = (url) => {
-    const shareUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(url)}`;
-    // Replace onCopy with navigator.clipboard.writeText
+  const handleShare = (urls) => {
+    const urlString = Array.isArray(urls) ? urls.join(',') : urls;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(urlString)}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
         toast({
@@ -107,11 +107,25 @@ export default function RedirectResultList({ results }) {
       });
   };
 
+  const handleShareResult = (url) => handleShare(url);
+  const handleShareAllResults = () => handleShare(results.map(result => result.url));
+
   return (
     <VStack spacing={6} align="stretch">
-      <Heading as="h2" size={isMobile ? "lg" : "xl"} mb={4}>
-        {t('tool.analysis-results', 'Analysis Results')}
-      </Heading>
+      <Flex justifyContent="space-between" alignItems="center" mb={4} flexWrap="wrap" gap={2}>
+        <Heading as="h2" size={isMobile ? "lg" : "xl"}>
+          {t('tool.analysis-results', 'Analysis Results')}
+        </Heading>
+        <Button
+          leftIcon={<FaShareAlt />}
+          onClick={handleShareAllResults}
+          variant="outline"
+          colorScheme="blue"
+          size={isMobile ? "sm" : "md"}
+        >
+          {t('tool.share-all', 'Share All')}
+        </Button>
+      </Flex>
       {results.map((result, index) => (
         <Box
           {...styles.card}

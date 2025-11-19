@@ -27,6 +27,8 @@ export default function BlockChecker({ children, buttonText }) {
   const toast = useToast();
   const router = useRouter();
   const [urls, setUrls] = useState('');
+  const autoRunTimerRef = useRef(null);
+  const hasProcessedQueryRef = useRef(false);
 
   const handleUrlsChange = (e) => {
     setUrls(e.target.value);
@@ -40,6 +42,36 @@ export default function BlockChecker({ children, buttonText }) {
     await checkBlocks({ urlList, setProgress, toast, setResults });
     setIsLoading(false);
   }, [urls, toast]);
+
+  useEffect(() => {
+    if (router.isReady && !hasProcessedQueryRef.current) {
+      const { url } = router.query;
+      if (url) {
+        hasProcessedQueryRef.current = true;
+        // Handle both single and multiple URLs (comma-separated)
+        const decodedUrl = decodeURIComponent(url);
+        const urlList = decodedUrl.includes(',') ? decodedUrl.split(',') : [decodedUrl];
+        const processedUrls = urlList.map(u => u.trim()).join('\n');
+        setUrls(processedUrls);
+        // Auto-run checks for shared URLs after state is set
+        autoRunTimerRef.current = setTimeout(async () => {
+          // Manually trigger the check logic
+          setIsLoading(true);
+          setProgress(0);
+          const urlsToCheck = processedUrls.split("\n").filter((url) => url.trim() !== "");
+          await checkBlocks({ urlList: urlsToCheck, setProgress, toast, setResults });
+          setIsLoading(false);
+          scrollToResults();
+        }, 300);
+      }
+    }
+
+    return () => {
+      if (autoRunTimerRef.current) {
+        clearTimeout(autoRunTimerRef.current);
+      }
+    };
+  }, [router.isReady, router.query, toast]);
 
   return (
     <Container maxW="container.xl" py={{ base: 6, md: 20 }}>
@@ -82,4 +114,19 @@ export default function BlockChecker({ children, buttonText }) {
       </VStack>
     </Container>
   );
+}
+
+function scrollToResults() {
+  setTimeout(() => {
+    const resultsElement = document.getElementById('block-results');
+    if (resultsElement) {
+      const elementPosition = resultsElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - 150;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, 100);
 }

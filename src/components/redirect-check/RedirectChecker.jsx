@@ -40,6 +40,9 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
   );
 
   const textareaRef = useRef(null);
+  const shouldAutoRunRef = useRef(false);
+  const autoRunTimerRef = useRef(null);
+  const hasProcessedQueryRef = useRef(false);
 
   const handleUrlsChange = (e) => {
     setUrls(e.target.value);
@@ -55,18 +58,23 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
         }
         return trimmedLine;
       });
-      setUrls(processedLines.join('\n'));
+      // Only update URLs if this is not from a shared link auto-run
+      if (!shouldAutoRunRef.current) {
+        setUrls(processedLines.join('\n'));
+      }
+      return processedLines;
     };
 
-    handleUrlsCorrect();
+    const processedLines = handleUrlsCorrect();
     setIsLoading(true);
     setProgress(0);
-    const urlList = urls.split("\n").filter((url) => url.trim() !== "").slice(0, 20);
+    const urlList = processedLines.filter((url) => url.trim() !== "").slice(0, 20);
 
     const newResults = await checkRedirects(urlList, setProgress, toast);
     setResults(newResults);
     setIsLoading(false);
     scrollToResults();
+    shouldAutoRunRef.current = false;
   }, [urls, toast]);
 
   const handleShowExamples = () => {
@@ -88,13 +96,45 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
   );
 
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && !hasProcessedQueryRef.current) {
       const { url } = router.query;
       if (url) {
-        setUrls(decodeURIComponent(url));
+        hasProcessedQueryRef.current = true;
+        // Handle both single and multiple URLs (comma-separated)
+        const decodedUrl = decodeURIComponent(url);
+        const urlList = decodedUrl.includes(',') ? decodedUrl.split(',') : [decodedUrl];
+        const processedUrls = urlList.map(line => {
+          const trimmedLine = line.trim();
+          if (trimmedLine && !trimmedLine.startsWith('http://') && !trimmedLine.startsWith('https://')) {
+            return `http://${trimmedLine}`;
+          }
+          return trimmedLine;
+        }).join('\n');
+        setUrls(processedUrls);
+        // Set flag to prevent handleCheck from modifying URLs
+        shouldAutoRunRef.current = true;
+        // Auto-run checks for shared URLs after state is set
+        autoRunTimerRef.current = setTimeout(() => {
+          // Manually trigger the check logic
+          setIsLoading(true);
+          setProgress(0);
+          const urlsToCheck = processedUrls.split('\n').filter((url) => url.trim() !== "").slice(0, 20);
+          checkRedirects(urlsToCheck, setProgress, toast).then(newResults => {
+            setResults(newResults);
+            setIsLoading(false);
+            scrollToResults();
+            shouldAutoRunRef.current = false;
+          });
+        }, 300);
       }
     }
-  }, [router.isReady, router.query]);
+
+    return () => {
+      if (autoRunTimerRef.current) {
+        clearTimeout(autoRunTimerRef.current);
+      }
+    };
+  }, [router.isReady, router.query, toast]);
 
   return (
     <Container maxW="container.xl" py={{base: 6, md: 20}}>
@@ -189,7 +229,13 @@ function scrollToResults() {
   setTimeout(() => {
     const resultsElement = document.getElementById('redirect-results');
     if (resultsElement) {
-      resultsElement.scrollIntoView({ behavior: 'smooth' });
+      const elementPosition = resultsElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - 150;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   }, 100);
 }
