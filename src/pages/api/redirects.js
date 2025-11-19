@@ -7,8 +7,15 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false
 });
 
+// Calculate dynamic timeout based on URL count
+function getTimeout(urlCount) {
+  if (urlCount <= 5) return 3000;      // 1-5 URLs: 3 seconds
+  if (urlCount <= 20) return 5000;     // 6-20 URLs: 5 seconds
+  return 8000;                         // >20 URLs: 8 seconds
+}
+
 // Function to check a single URL
-async function checkSingleUrl(url) {
+async function checkSingleUrl(url, timeout = 5000) {
     url = url.trim();
 
     // fix url if it doesn't have a scheme
@@ -29,7 +36,7 @@ async function checkSingleUrl(url) {
             const response = await axios({
                 method: 'get',
                 url: currentUrl,
-                timeout: 5000, // 30 seconds timeout
+                timeout: timeout,
                 headers: {
                     'User-Agent': 'FindRedirect_Checker/1.0',
                 },
@@ -92,9 +99,12 @@ async function handler(req, res) {
         }
 
         try {
+            // Calculate dynamic timeout based on batch size
+            const timeout = getTimeout(urlsToCheck.length);
+
             // Process all URLs in parallel
             const results = await Promise.all(
-                urlsToCheck.map(singleUrl => checkSingleUrl(singleUrl))
+                urlsToCheck.map(singleUrl => checkSingleUrl(singleUrl, timeout))
             );
             return res.status(200).json(results);
         } catch (error) {
@@ -102,7 +112,8 @@ async function handler(req, res) {
         }
     } else if (url) {
         // Single URL mode (backward compatibility)
-        const results = await checkSingleUrl(url);
+        const timeout = getTimeout(1);
+        const results = await checkSingleUrl(url, timeout);
         return res.status(200).json(results);
     } else {
         return res.status(400).json({ error: 'URL or URLs parameter is required' });
