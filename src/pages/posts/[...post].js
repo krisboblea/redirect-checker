@@ -27,7 +27,6 @@ export default function PostPage({ postData }) {
   const router = useRouter();
   const { locale, asPath } = router;
 
-  // Handle 404
   if (!postData) {
     return (
       <MainLayout>
@@ -47,6 +46,11 @@ export default function PostPage({ postData }) {
   }
 
   const title = `${postData.title} | ${APP_NAME}`;
+  const description = postData.excerpt || postData.title;
+  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ""}${asPath}`;
+  const ogImage = postData.image
+    ? urlFor(postData.image).width(1200).height(630).url()
+    : `${process.env.NEXT_PUBLIC_SITE_URL || ""}/images/og-default.jpg`;
 
   const formattedDate = postData.publishedAt
     ? new Date(postData.publishedAt).toLocaleDateString("en-US", {
@@ -56,14 +60,111 @@ export default function PostPage({ postData }) {
       })
     : "";
 
+  const publishedTime = postData.publishedAt
+    ? new Date(postData.publishedAt).toISOString()
+    : "";
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: postData.title,
+    description: description,
+    image: ogImage,
+    datePublished: publishedTime,
+    dateModified: publishedTime,
+    author: postData.author
+      ? {
+          "@type": "Person",
+          name: postData.author.name,
+          ...(postData.author.image && {
+            image: urlFor(postData.author.image).width(200).height(200).url(),
+          }),
+        }
+      : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: APP_NAME,
+      logo: {
+        "@type": "ImageObject",
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
+    keywords: postData.tags?.join(", "),
+  };
+
+  const faqSchema =
+    postData.faqs && postData.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: postData.faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
     <MainLayout>
       <Head>
         <title>{title}</title>
-        {postData.excerpt && (
-          <meta name="description" content={postData.excerpt} />
-        )}
+        <meta name="title" content={title} />
+        <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={postData.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content={APP_NAME} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={postData.title} />
+        {publishedTime && (
+          <meta property="article:published_time" content={publishedTime} />
+        )}
+        {postData.author?.name && (
+          <meta property="article:author" content={postData.author.name} />
+        )}
+        {postData.tags &&
+          postData.tags.map((tag, index) => (
+            <meta key={index} property="article:tag" content={tag} />
+          ))}
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={postData.title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={postData.title} />
+
+        {postData.author?.name && (
+          <meta name="author" content={postData.author.name} />
+        )}
+        {postData.tags && (
+          <meta name="keywords" content={postData.tags.join(", ")} />
+        )}
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        />
+
+        {faqSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        )}
+
         {generateHrefLangsAndCanonicalTag(locale, asPath)}
       </Head>
 
@@ -74,7 +175,6 @@ export default function PostPage({ postData }) {
         py={10}
       >
         <article>
-          {/* Header */}
           <Box as="header" mb={10}>
             <Heading
               as="h1"
@@ -152,7 +252,6 @@ export default function PostPage({ postData }) {
             )}
           </Box>
 
-          {/* Featured Image */}
           {postData.image && (
             <Box
               mb={12}
@@ -170,7 +269,6 @@ export default function PostPage({ postData }) {
             </Box>
           )}
 
-          {/* Content */}
           {postData.content && (
             <Box
               mb={12}
@@ -221,7 +319,6 @@ export default function PostPage({ postData }) {
             </Box>
           )}
 
-          {/* FAQs Section */}
           {postData.faqs && postData.faqs.length > 0 && (
             <Box as="section" mt={16}>
               <Divider mb={8} />
@@ -271,7 +368,37 @@ export default function PostPage({ postData }) {
   );
 }
 
-export async function getServerSideProps({ params, locale }) {
+export async function getStaticPaths() {
+  const SLUGS_QUERY = `*[
+    _type == "post" && defined(slug.current)
+  ][0...50] {
+    "slug": slug.current
+  }`;
+
+  const allLanguages = ["en", "de", "es", "fr", "it", "pt", "ja", "zh", "ko"];
+
+  try {
+    const posts = await client.fetch(SLUGS_QUERY);
+
+    const paths = posts.map((post) => ({
+      params: { post: [post.slug] },
+      locale: "en",
+    }));
+
+    return {
+      paths,
+        fallback: "blocking",
+    };
+  } catch (error) {
+    console.error("Error fetching post slugs:", error);
+    return {
+      paths: [],
+      fallback: "blocking",
+    };
+  }
+}
+
+export async function getStaticProps({ params, locale }) {
   const POST_QUERY = `*[
     _type == "post" && slug.current == $slug
   ][0] {
@@ -290,7 +417,6 @@ export async function getServerSideProps({ params, locale }) {
     faqs
   }`;
 
-  // Extract slug from catch-all route
   const slug = params.post ? params.post[0] : null;
 
   if (!slug) {
@@ -313,11 +439,12 @@ export async function getServerSideProps({ params, locale }) {
         postData,
         ...(await serverSideTranslations(locale, ["common"])),
       },
+      revalidate: 60,
     };
   } catch (error) {
-    console.error("Error fetching post:", error);
     return {
       notFound: true,
+      revalidate: 10,
     };
   }
 }

@@ -13,17 +13,27 @@ export default function IndexPage({ posts }) {
   const { locale, asPath } = router;
 
   const title = `Blog Posts | ${APP_NAME}`;
+  const description =
+    "Explore our latest blog posts and articles about web development, design, and more.";
+  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ""}${asPath}`;
 
   return (
     <MainLayout>
       <Head>
         <title>{title}</title>
-        <meta
-          name="description"
-          content="Explore our latest blog posts and articles about web development, design, and more."
-        />
+        <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* hreflangs and canonical tag */}
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content={APP_NAME} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+
         {generateHrefLangsAndCanonicalTag(locale, asPath)}
       </Head>
       <Box
@@ -69,7 +79,7 @@ export default function IndexPage({ posts }) {
   );
 }
 
-export async function getServerSideProps({ locale }) {
+export async function getStaticProps({ locale }) {
   const POSTS_QUERY = `*[
     _type == "post" && defined(slug.current)
   ] | order(publishedAt desc)[0...12] {
@@ -93,14 +103,15 @@ export async function getServerSideProps({ locale }) {
         posts: posts || [],
         ...(await serverSideTranslations(locale, ["common"])),
       },
+        revalidate: 60,
     };
   } catch (error) {
-    console.error("Error fetching posts:", error);
     return {
       props: {
         posts: [],
         ...(await serverSideTranslations(locale, ["common"])),
       },
+      revalidate: 60,
     };
   }
 }
