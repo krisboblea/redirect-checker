@@ -30,15 +30,15 @@ function LanguageSwitcherComponent({ document, schemaType }) {
   const [translating, setTranslating] = useState(false);
 
   useEffect(() => {
-    if (document?.baseSlug) {
-      fetchTranslations(document.baseSlug);
+    if (document?.slug?.current) {
+      fetchTranslations(document.slug.current);
     }
-  }, [document?.baseSlug]);
+  }, [document?.slug?.current]);
 
-  const fetchTranslations = async (baseSlug) => {
+  const fetchTranslations = async (slug) => {
     setLoading(true);
     try {
-      const query = `*[_type == "post" && baseSlug == $baseSlug]{
+      const query = `*[_type == "post" && slug.current == $slug]{
         _id,
         locale,
         title,
@@ -46,7 +46,7 @@ function LanguageSwitcherComponent({ document, schemaType }) {
       }`;
 
       const result = await fetch(
-        `/api/sanity/query?query=${encodeURIComponent(query)}&baseSlug=${baseSlug}`
+        `/api/sanity/query?query=${encodeURIComponent(query)}&slug=${slug}`
       ).then((res) => res.json());
 
       setTranslations(result || []);
@@ -84,8 +84,8 @@ function LanguageSwitcherComponent({ document, schemaType }) {
 
       if (response.ok) {
         alert('Translation completed! Refresh to see the new translations.');
-        if (document.baseSlug) {
-          fetchTranslations(document.baseSlug);
+        if (document.slug?.current) {
+          fetchTranslations(document.slug.current);
         }
       } else {
         alert(`Translation failed: ${result.error}`);
@@ -166,10 +166,10 @@ function LanguageSwitcherComponent({ document, schemaType }) {
           </Text>
         )}
 
-        {!document?.baseSlug && document?._id && (
+        {!document?.slug?.current && document?._id && (
           <Card padding={2} tone="caution">
             <Text size={1}>
-              ⚠️ Please set a Base Slug to enable translations.
+              ⚠️ Please set a Slug to enable translations.
             </Text>
           </Card>
         )}

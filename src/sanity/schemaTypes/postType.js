@@ -27,23 +27,17 @@ export const postType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'baseSlug',
-      type: 'string',
-      title: 'Base Slug',
-      description: 'Common slug shared across all language versions',
+      name: 'slug',
+      type: 'slug',
+      title: 'Slug',
+      description: 'URL slug - same across all language versions of this article',
+      options: {source: 'title'},
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'title',
       type: 'string',
       title: 'Title',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'slug',
-      type: 'slug',
-      title: 'Slug',
-      options: {source: 'title'},
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -112,10 +106,10 @@ export const postType = defineType({
     select: {
       title: 'title',
       locale: 'locale',
-      baseSlug: 'baseSlug',
+      slug: 'slug',
       media: 'image',
     },
-    prepare({title, locale, baseSlug, media}) {
+    prepare({title, locale, slug, media}) {
       const localeLabels = {
         en: '🇬🇧 EN',
         es: '🇪🇸 ES',
@@ -128,7 +122,7 @@ export const postType = defineType({
       }
       return {
         title: title,
-        subtitle: `${localeLabels[locale] || locale} • ${baseSlug}`,
+        subtitle: `${localeLabels[locale] || locale} • ${slug?.current || slug}`,
         media,
       }
     },

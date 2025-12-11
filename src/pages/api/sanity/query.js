@@ -6,13 +6,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { query, baseSlug } = req.query;
+    const { query, slug } = req.query;
 
     if (!query) {
       return res.status(400).json({ error: 'Query parameter is required' });
     }
 
-    const result = await client.fetch(query, { baseSlug });
+    const result = await client.fetch(query, { slug });
 
     return res.status(200).json(result);
   } catch (error) {

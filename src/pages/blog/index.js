@@ -106,8 +106,8 @@ export default function IndexPage({ posts }) {
 
 export async function getStaticProps({ locale }) {
   const POSTS_QUERY = `*[
-    _type == "post" && 
-    defined(slug.current) && 
+    _type == "post" &&
+    defined(slug.current) &&
     locale == $locale
   ] | order(publishedAt desc)[0...12] {
     _id,
@@ -117,7 +117,6 @@ export async function getStaticProps({ locale }) {
     image,
     publishedAt,
     locale,
-    baseSlug,
     author->{
       name,
       image

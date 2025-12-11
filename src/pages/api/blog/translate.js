@@ -108,9 +108,9 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
   }
 
   const existingTranslation = await sanityClient.fetch(
-    `*[_type == "post" && baseSlug == $baseSlug && locale == $locale][0]`,
+    `*[_type == "post" && slug.current == $slug && locale == $locale][0]`,
     {
-      baseSlug: sourceDoc.baseSlug,
+      slug: sourceDoc.slug.current,
       locale: targetLocale,
     }
   );
@@ -118,11 +118,10 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
   const translatedDoc = {
     _type: 'post',
     locale: targetLocale,
-    baseSlug: sourceDoc.baseSlug,
     title: translatedTitle,
     slug: {
       _type: 'slug',
-      current: sourceDoc.slug.current, 
+      current: sourceDoc.slug.current,
     },
     excerpt: translatedExcerpt,
     content: translatedContent,
@@ -172,7 +171,6 @@ export default async function handler(req, res) {
         publishedAt,
         author,
         faqs,
-        baseSlug,
         locale
       }`,
       { id: documentId }

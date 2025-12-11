@@ -474,8 +474,8 @@ export async function getStaticProps({ params, locale }) {
 
   try {
     const POST_QUERY = `*[
-      _type == "post" && 
-      slug.current == $slug && 
+      _type == "post" &&
+      slug.current == $slug &&
       locale == $locale
     ][0] {
       _id,
@@ -487,7 +487,6 @@ export async function getStaticProps({ params, locale }) {
       image,
       publishedAt,
       locale,
-      baseSlug,
       author->{
         name,
         image
@@ -508,15 +507,15 @@ export async function getStaticProps({ params, locale }) {
     }
 
     const TRANSLATIONS_QUERY = `*[
-      _type == "post" && 
-      baseSlug == $baseSlug
+      _type == "post" &&
+      slug.current == $slug
     ] {
       locale,
       "slug": slug.current
     }`;
 
     const availableTranslations = await client.fetch(TRANSLATIONS_QUERY, {
-      baseSlug: postData.baseSlug,
+      slug: postData.slug.current,
     });
 
     return {

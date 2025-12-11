@@ -1,9 +1,9 @@
 /**
  * Migration Script: Add i18n fields to existing blog posts
- * 
- * This script adds the `locale` and `baseSlug` fields to all existing
- * blog posts that don't have them yet.
- * 
+ *
+ * This script adds the `locale` field to all existing blog posts that don't have it yet.
+ * Note: The slug field should already exist as it's part of the original schema.
+ *
  * Run: node scripts/migrate-posts-i18n.js
  */
 
@@ -41,24 +41,23 @@ async function migratePosts() {
 
     for (const post of posts) {
       try {
-        const baseSlug = post.slug?.current;
+        const slug = post.slug?.current;
 
-        if (!baseSlug) {
+        if (!slug) {
           console.error(`❌ Skipping ${post._id}: No slug found`);
           errorCount++;
           continue;
         }
 
-        // Update post with i18n fields
+        // Add locale to existing posts
         await client
           .patch(post._id)
           .set({
             locale: 'en', // All existing posts are English by default
-            baseSlug: baseSlug,
           })
           .commit();
 
-        console.log(`✓ Migrated: "${post.title}" → baseSlug: ${baseSlug}`);
+        console.log(`✓ Migrated: "${post.title}" → slug: ${slug}, locale: en`);
         successCount++;
       } catch (error) {
         console.error(`❌ Error migrating ${post._id}:`, error.message);
