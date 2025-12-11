@@ -319,6 +319,12 @@ export default function PostPage({ postData }) {
                   mt: 4,
                   color: "gray.900",
                 },
+                "& h4": {
+                  fontSize: { base: "lg", md: "xl" },
+                  fontWeight: "bold",
+                  mt: 4,
+                  color: "gray.900",
+                },
                 "& ul, & ol": {
                   pl: 6,
                 },
