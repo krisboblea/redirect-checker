@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {LANGUAGES, defaultLocale, getLocaleLabel} from '../../config/i18n'
 
 export const postType = defineType({
   name: 'post',
@@ -11,19 +12,13 @@ export const postType = defineType({
       title: 'Language',
       description: 'Language of this document',
       options: {
-        list: [
-          {title: 'English', value: 'en'},
-          {title: 'Spanish', value: 'es'},
-          {title: 'French', value: 'fr'},
-          {title: 'German', value: 'de'},
-          {title: 'Italian', value: 'it'},
-          {title: 'Chinese', value: 'zh'},
-          {title: 'Arabic', value: 'ar'},
-          {title: 'Japanese', value: 'ja'},
-        ],
+        list: LANGUAGES.map(lang => ({
+          title: lang.title,
+          value: lang.id,
+        })),
         layout: 'dropdown',
       },
-      initialValue: 'en',
+      initialValue: defaultLocale,
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -110,19 +105,9 @@ export const postType = defineType({
       media: 'image',
     },
     prepare({title, locale, slug, media}) {
-      const localeLabels = {
-        en: '🇬🇧 EN',
-        es: '🇪🇸 ES',
-        fr: '🇫🇷 FR',
-        de: '🇩🇪 DE',
-        it: '🇮🇹 IT',
-        zh: '🇨🇳 ZH',
-        ar: '🇸🇦 AR',
-        ja: '🇯🇵 JA',
-      }
       return {
         title: title,
-        subtitle: `${localeLabels[locale] || locale} • ${slug?.current || slug}`,
+        subtitle: `${getLocaleLabel(locale)} • ${slug?.current || slug}`,
         media,
       }
     },

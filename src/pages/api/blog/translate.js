@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client';
 import OpenAI from 'openai';
+import { LANGUAGES, allLanguages } from '../../../config/i18n';
 
 const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -13,17 +14,12 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const SUPPORTED_LOCALES = ['es', 'fr', 'de', 'it', 'zh', 'ar', 'ja'];
+const SUPPORTED_LOCALES = allLanguages.filter(locale => locale !== 'en');
 
-const LOCALE_NAMES = {
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
-  it: 'Italian',
-  zh: 'Chinese (Simplified)',
-  ar: 'Arabic',
-  ja: 'Japanese',
-};
+const LOCALE_NAMES = LANGUAGES.reduce((acc, lang) => {
+  acc[lang.id] = lang.title;
+  return acc;
+}, {});
 
 
 async function translatePortableText(content, targetLocale) {

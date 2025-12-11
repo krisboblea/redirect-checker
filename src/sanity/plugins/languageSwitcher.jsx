@@ -1,28 +1,17 @@
 import { definePlugin } from 'sanity';
 import { Button, Card, Flex, Stack, Text } from '@sanity/ui';
 import { useState, useEffect } from 'react';
+import { LANGUAGES } from '../../config/i18n';
 
-const LOCALE_FLAGS = {
-  en: '🇬🇧',
-  es: '🇪🇸',
-  fr: '🇫🇷',
-  de: '🇩🇪',
-  it: '🇮🇹',
-  zh: '🇨🇳',
-  ar: '🇸🇦',
-  ja: '🇯🇵',
-};
+const LOCALE_FLAGS = LANGUAGES.reduce((acc, lang) => {
+  acc[lang.id] = lang.flag;
+  return acc;
+}, {});
 
-const LOCALE_NAMES = {
-  en: 'English',
-  es: 'Spanish',
-  fr: 'French',
-  de: 'German',
-  it: 'Italian',
-  zh: 'Chinese',
-  ar: 'Arabic',
-  ja: 'Japanese',
-};
+const LOCALE_NAMES = LANGUAGES.reduce((acc, lang) => {
+  acc[lang.id] = lang.title;
+  return acc;
+}, {});
 
 function LanguageSwitcherComponent({ document, schemaType }) {
   const [translations, setTranslations] = useState([]);
@@ -33,7 +22,7 @@ function LanguageSwitcherComponent({ document, schemaType }) {
     if (document?.slug?.current) {
       fetchTranslations(document.slug.current);
     }
-  }, [document?.slug?.current]);
+  }, [document?.slug]);
 
   const fetchTranslations = async (slug) => {
     setLoading(true);

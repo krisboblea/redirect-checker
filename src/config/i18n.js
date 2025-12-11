@@ -1,0 +1,39 @@
+// Centralized i18n configuration
+// Used by both Next.js and Sanity
+
+const LANGUAGES = [
+  { id: 'en', title: 'English', flag: '🇬🇧' },
+  { id: 'de', title: 'German', flag: '🇩🇪' },
+  { id: 'es', title: 'Spanish', flag: '🇪🇸' },
+  { id: 'fr', title: 'French', flag: '🇫🇷' },
+  { id: 'it', title: 'Italian', flag: '🇮🇹' },
+  { id: 'pt', title: 'Portuguese', flag: '🇵🇹' },
+  { id: 'ja', title: 'Japanese', flag: '🇯🇵' },
+  { id: 'zh', title: 'Chinese', flag: '🇨🇳' },
+  { id: 'ko', title: 'Korean', flag: '🇰🇷' },
+  { id: 'ar', title: 'Arabic', flag: '🇸🇦' },
+];
+
+const allLanguages = LANGUAGES.map(lang => lang.id);
+
+const defaultLocale = 'en';
+
+const getLocaleLabel = (locale) => {
+  const lang = LANGUAGES.find(l => l.id === locale);
+  return lang ? `${lang.flag} ${lang.id.toUpperCase()}` : locale;
+};
+
+// CommonJS export
+module.exports = {
+  LANGUAGES,
+  allLanguages,
+  defaultLocale,
+  getLocaleLabel,
+};
+
+// ES module export
+module.exports.LANGUAGES = LANGUAGES;
+module.exports.allLanguages = allLanguages;
+module.exports.defaultLocale = defaultLocale;
+module.exports.getLocaleLabel = getLocaleLabel;
+

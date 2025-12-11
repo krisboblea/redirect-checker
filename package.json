@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --ext .js,.jsx --fix",
     "prepare": "husky",
     "generate-locales": "node scripts/generate-locales.js",
-    "postbuild": "next-sitemap"
+    "postbuild": "next-sitemap",
+    "migrate:remove-baseSlug": "node scripts/remove-baseSlug.js"
   },
   "lint-staged": {
     "*.js": "eslint --fix"

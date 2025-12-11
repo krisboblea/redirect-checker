@@ -12,19 +12,31 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { FaGlobe } from 'react-icons/fa';
+import { LANGUAGES } from '../../config/i18n';
 
-const LANGUAGE_CONFIG = {
-  en: { label: 'English', flag: '🇬🇧', nativeName: 'English' },
-  es: { label: 'Spanish', flag: '🇪🇸', nativeName: 'Español' },
-  fr: { label: 'French', flag: '🇫🇷', nativeName: 'Français' },
-  de: { label: 'German', flag: '🇩🇪', nativeName: 'Deutsch' },
-  it: { label: 'Italian', flag: '🇮🇹', nativeName: 'Italiano' },
-  zh: { label: 'Chinese', flag: '🇨🇳', nativeName: '中文' },
-  ar: { label: 'Arabic', flag: '🇸🇦', nativeName: 'العربية' },
-  ja: { label: 'Japanese', flag: '🇯🇵', nativeName: '日本語' },
-  pt: { label: 'Portuguese', flag: '🇵🇹', nativeName: 'Português' },
-  ko: { label: 'Korean', flag: '🇰🇷', nativeName: '한국어' },
+// Map to native language names
+const NATIVE_NAMES = {
+  en: 'English',
+  es: 'Español',
+  fr: 'Français',
+  de: 'Deutsch',
+  it: 'Italiano',
+  zh: '中文',
+  ar: 'العربية',
+  ja: '日本語',
+  pt: 'Português',
+  ko: '한국어',
 };
+
+// Transform centralized config to component format
+const LANGUAGE_CONFIG = LANGUAGES.reduce((acc, lang) => {
+  acc[lang.id] = {
+    label: lang.title,
+    flag: lang.flag,
+    nativeName: NATIVE_NAMES[lang.id] || lang.title,
+  };
+  return acc;
+}, {});
 
 
 export default function LanguageSwitcher({ availableTranslations, currentSlug }) {

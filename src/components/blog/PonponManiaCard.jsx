@@ -1,12 +1,13 @@
 import { Box, Heading, Text, Link, Image, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
-import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { urlFor } from "@/sanity/lib/image";
 
 const MotionBox = motion(Box);
 
 export default function PonponManiaCard({ post, reverse = false }) {
+  const router = useRouter();
   const { title, excerpt, slug, publishedAt, image } = post;
 
   const formattedDate = publishedAt
@@ -72,22 +73,22 @@ export default function PonponManiaCard({ post, reverse = false }) {
             )}
 
             <MotionBox whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-              <NextLink href={`/blog/${slug.current}`} passHref legacyBehavior>
-                <Link
-                  display="inline-flex"
-                  alignItems="center"
-                  gap={2}
-                  fontSize="md"
-                  fontWeight="600"
-                  color="gray.900"
-                  textDecoration="underline"
-                  textUnderlineOffset="4px"
-                  _hover={{ color: "#7D65DB" }}
-                >
-                  <FiArrowRight />
-                  Read Article
-                </Link>
-              </NextLink>
+              <Link
+                display="inline-flex"
+                alignItems="center"
+                gap={2}
+                fontSize="md"
+                fontWeight="600"
+                color="gray.900"
+                textDecoration="underline"
+                textUnderlineOffset="4px"
+                cursor="pointer"
+                onClick={() => router.push(`/blog/${slug.current}`)}
+                _hover={{ color: "#7D65DB" }}
+              >
+                <FiArrowRight />
+                Read Article
+              </Link>
             </MotionBox>
           </Box>
 
@@ -97,27 +98,24 @@ export default function PonponManiaCard({ post, reverse = false }) {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <NextLink href={`/blog/${slug.current}`} passHref legacyBehavior>
-              <Link>
-                <Box
-                  position="relative"
-                  borderRadius="16px"
-                  overflow="hidden"
-                  boxShadow="0 20px 60px rgba(0, 0, 0, 0.15)"
-                  cursor="pointer"
-                >
-                  <Image
-                    src={imageUrl}
-                    alt={title}
-                    w="100%"
-                    h="auto"
-                    minH={'380px'}
-                    maxH={'380px'}
-                    objectFit="cover"
-                  />
-                </Box>
-              </Link>
-            </NextLink>
+            <Box
+              position="relative"
+              borderRadius="16px"
+              overflow="hidden"
+              boxShadow="0 20px 60px rgba(0, 0, 0, 0.15)"
+              cursor="pointer"
+              onClick={() => router.push(`/blog/${slug.current}`)}
+            >
+              <Image
+                src={imageUrl}
+                alt={title}
+                w="100%"
+                h="auto"
+                minH={'380px'}
+                maxH={'380px'}
+                objectFit="cover"
+              />
+            </Box>
           </MotionBox>
         </Flex>
       </MotionBox>

@@ -1,3 +1,5 @@
+import { allLanguages, defaultLocale } from '../config/i18n';
+
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'FindRedirect';
 export const APP_LOGO = process.env.NEXT_PUBLIC_APP_LOGO || '/logo.png';
 export const APP_LOGO_DARK = process.env.NEXT_PUBLIC_APP_LOGO || '/logo-dark.png';
@@ -20,6 +22,7 @@ export const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL;
 export const NAVS = process.env.NEXT_PUBLIC_NAVS;
 export const EXAMPLE_REDIRECT_URL = process.env.NEXT_PUBLIC_EXAMPLE_REDIRECT_URL;
 export const EXAMPLE_EXPANDER_URL = process.env.NEXT_PUBLIC_EXAMPLE_EXPANDER_URL;
-export const ALL_LOCALES = process.env.NEXT_PUBLIC_LOCALES?.split(',') || [ "en", "de", "es", "fr", "it", "pt", "ja", "zh", "ko" ];
-export const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en';
+
+export const ALL_LOCALES = process.env.NEXT_PUBLIC_LOCALES?.split(',') || allLanguages;
+export const LOCALE = process.env.NEXT_PUBLIC_LOCALE || defaultLocale;
 export const APP_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
