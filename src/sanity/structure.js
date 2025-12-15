@@ -5,6 +5,7 @@ export const structure = (S) =>
     .title('Content')
     .items([
       S.listItem()
+        .id('posts-root')
         .title('Posts')
         .icon(() => '📝')
         .child(
@@ -12,6 +13,7 @@ export const structure = (S) =>
             .title('Posts by Language')
             .items([
               S.listItem()
+                .id('posts-all')
                 .title('All Posts')
                 .icon(() => '🌐')
                 .child(
@@ -22,11 +24,12 @@ export const structure = (S) =>
               S.divider(),
               ...LANGUAGES.map((lang) =>
                 S.listItem()
-                  .title(`${lang.flag} ${lang.title}`)
+                  .id(`posts-${lang.id}`)
+                  .title(`${lang.flag} ${lang.nativeName || lang.title}`)
                   .icon(() => lang.flag)
                   .child(
                     S.documentTypeList('post')
-                      .title(`${lang.title} Posts`)
+                      .title(`${lang.nativeName || lang.title} Posts`)
                       .filter('_type == "post" && locale == $locale')
                       .params({ locale: lang.id })
                       .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])

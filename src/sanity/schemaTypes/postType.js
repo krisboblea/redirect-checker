@@ -13,7 +13,7 @@ export const postType = defineType({
       description: 'Language of this document',
       options: {
         list: LANGUAGES.map(lang => ({
-          title: lang.title,
+          title: lang.nativeName || lang.title,
           value: lang.id,
         })),
         layout: 'dropdown',
@@ -28,6 +28,14 @@ export const postType = defineType({
       description: 'URL slug - same across all language versions of this article',
       options: {source: 'title'},
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'sourceSlug',
+      type: 'string',
+      title: 'Source Slug',
+      description: 'Original English slug used to group translations',
+      readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: 'title',

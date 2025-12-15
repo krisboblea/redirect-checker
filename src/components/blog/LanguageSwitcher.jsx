@@ -14,26 +14,12 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { FaGlobe } from 'react-icons/fa';
 import { LANGUAGES } from '../../config/i18n';
 
-// Map to native language names
-const NATIVE_NAMES = {
-  en: 'English',
-  es: 'Español',
-  fr: 'Français',
-  de: 'Deutsch',
-  it: 'Italiano',
-  zh: '中文',
-  ar: 'العربية',
-  ja: '日本語',
-  pt: 'Português',
-  ko: '한국어',
-};
-
 // Transform centralized config to component format
 const LANGUAGE_CONFIG = LANGUAGES.reduce((acc, lang) => {
   acc[lang.id] = {
     label: lang.title,
     flag: lang.flag,
-    nativeName: NATIVE_NAMES[lang.id] || lang.title,
+    nativeName: lang.nativeName || lang.title,
   };
   return acc;
 }, {});
@@ -41,7 +27,7 @@ const LANGUAGE_CONFIG = LANGUAGES.reduce((acc, lang) => {
 
 export default function LanguageSwitcher({ availableTranslations, currentSlug }) {
   const router = useRouter();
-  const { locale, pathname } = router;
+  const { locale } = router;
 
   if (!availableTranslations || availableTranslations.length <= 1) {
     return null; 

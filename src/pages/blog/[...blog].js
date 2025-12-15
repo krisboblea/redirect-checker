@@ -487,6 +487,7 @@ export async function getStaticProps({ params, locale }) {
       _id,
       title,
       slug,
+      sourceSlug,
       excerpt,
       tags,
       content,
@@ -512,16 +513,21 @@ export async function getStaticProps({ params, locale }) {
       };
     }
 
+    const baseSlug = postData.sourceSlug || postData.slug.current;
+
     const TRANSLATIONS_QUERY = `*[
       _type == "post" &&
-      slug.current == $slug
+      (
+        sourceSlug == $baseSlug ||
+        slug.current == $baseSlug
+      )
     ] {
       locale,
       "slug": slug.current
     }`;
 
     const availableTranslations = await client.fetch(TRANSLATIONS_QUERY, {
-      slug: postData.slug.current,
+      baseSlug,
     });
 
     return {

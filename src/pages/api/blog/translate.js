@@ -17,9 +17,21 @@ const openai = new OpenAI({
 const SUPPORTED_LOCALES = allLanguages.filter(locale => locale !== 'en');
 
 const LOCALE_NAMES = LANGUAGES.reduce((acc, lang) => {
-  acc[lang.id] = lang.title;
+  acc[lang.id] = lang.nativeName || lang.title;
   return acc;
 }, {});
+
+const slugify = (text) => {
+  if (!text) return '';
+
+  return text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 96) || 'post';
+};
 
 
 async function translatePortableText(content, targetLocale) {
@@ -92,8 +104,8 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
     targetLocale
   );
 
-  let translatedFaqs = null;
-  if (sourceDoc.faqs && sourceDoc.faqs.length > 0) {
+  let translatedFaqs = [];
+  if (Array.isArray(sourceDoc.faqs) && sourceDoc.faqs.length > 0) {
     translatedFaqs = await Promise.all(
       sourceDoc.faqs.map(async (faq) => ({
         question: await translateText(faq.question, targetLocale),
@@ -103,10 +115,18 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
     );
   }
 
+  const baseSlug = sourceDoc.sourceSlug || sourceDoc.slug?.current;
+  const translatedSlug = slugify(translatedTitle) || baseSlug;
+
   const existingTranslation = await sanityClient.fetch(
-    `*[_type == "post" && slug.current == $slug && locale == $locale][0]`,
+    `*[_type == "post" && locale == $locale && (
+      sourceSlug == $baseSlug ||
+      slug.current == $baseSlug ||
+      slug.current == $translatedSlug
+    )][0]`,
     {
-      slug: sourceDoc.slug.current,
+      baseSlug,
+      translatedSlug,
       locale: targetLocale,
     }
   );
@@ -117,11 +137,12 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
     title: translatedTitle,
     slug: {
       _type: 'slug',
-      current: sourceDoc.slug.current,
+      current: translatedSlug,
     },
+    sourceSlug: baseSlug,
     excerpt: translatedExcerpt,
-    content: translatedContent,
-    tags: sourceDoc.tags, // Keep tags as is
+    content: Array.isArray(translatedContent) ? translatedContent : [],
+    tags: Array.isArray(sourceDoc.tags) ? sourceDoc.tags : [],
     image: sourceDoc.image, 
     publishedAt: sourceDoc.publishedAt,
     author: sourceDoc.author,
@@ -138,11 +159,7 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
   }
 }
 
-/**
- * Main API handler
- */
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -154,12 +171,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Document ID is required' });
     }
 
-    // Fetch the source document (English)
     const sourceDoc = await sanityClient.fetch(
       `*[_id == $id][0]{
         _id,
         title,
         slug,
+        sourceSlug,
         excerpt,
         content,
         tags,
@@ -182,7 +199,15 @@ export default async function handler(req, res) {
       });
     }
 
-    // Determine which locales to translate to
+    const baseSlug = sourceDoc.sourceSlug || sourceDoc.slug?.current;
+
+    if (!sourceDoc.sourceSlug && baseSlug) {
+      await sanityClient
+        .patch(sourceDoc._id)
+        .set({ sourceSlug: baseSlug })
+        .commit();
+    }
+
     const locales = targetLocales || SUPPORTED_LOCALES;
 
     // Translate to all target locales
@@ -197,10 +222,9 @@ export default async function handler(req, res) {
         });
       } catch (error) {
         console.error(`Error translating to ${locale}:`, error);
-        results.push({
-          locale,
-          status: 'error',
-          error: error.message,
+        return res.status(error.status || 500).json({
+          error: `Failed to translate to ${locale}`,
+          details: error.message || 'Unknown translation error',
         });
       }
     }

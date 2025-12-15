@@ -9,7 +9,7 @@ const LOCALE_FLAGS = LANGUAGES.reduce((acc, lang) => {
 }, {});
 
 const LOCALE_NAMES = LANGUAGES.reduce((acc, lang) => {
-  acc[lang.id] = lang.title;
+  acc[lang.id] = lang.nativeName || lang.title;
   return acc;
 }, {});
 
@@ -70,14 +70,26 @@ function LanguageSwitcherComponent({ document, schemaType }) {
       });
 
       const result = await response.json();
+      if (!response.ok) {
+        alert(`Translation failed: ${result?.error || 'Unknown error'}`);
+        return;
+      }
 
-      if (response.ok) {
-        alert('Translation completed! Refresh to see the new translations.');
-        if (document.slug?.current) {
-          fetchTranslations(document.slug.current);
-        }
-      } else {
-        alert(`Translation failed: ${result.error}`);
+      const failures = (result?.results || []).filter(
+        (entry) => entry.status === 'error'
+      );
+
+      if (failures.length > 0) {
+        const details = failures
+          .map((f) => `${LOCALE_NAMES[f.locale] || f.locale}: ${f.error}`)
+          .join('; ');
+        alert(`Some translations failed: ${details}`);
+        return;
+      }
+
+      alert('Translation completed! Refresh to see the new translations.');
+      if (document.slug?.current) {
+        fetchTranslations(document.slug.current);
       }
     } catch (error) {
       console.error('Translation error:', error);
