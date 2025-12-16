@@ -23,8 +23,7 @@ if (missing.length) {
 }
 
 const WP_API_BASE =
-  process.env.WORDPRESS_API_BASE ||
-  'https://managed-builder.redirhub.com/wp-json/wp/v2';
+  process.env.WORDPRESS_API_BASE;
 const DEFAULT_LOCALE = process.env.WORDPRESS_DEFAULT_LOCALE || 'en';
 const PAGE_SIZE = 50;
 
@@ -181,15 +180,7 @@ const mapPostToSanity = async (post) => {
 };
 
 async function migrate() {
-  console.log('🚀 Starting WordPress → Sanity migration\n');
-  console.log(`• WordPress API: ${WP_API_BASE}`);
-  console.log(
-    `• Sanity project: ${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${process.env.NEXT_PUBLIC_SANITY_DATASET}`,
-  );
-  console.log(`• Locale: ${DEFAULT_LOCALE}\n`);
-
   const posts = await fetchAllPosts();
-  console.log(`Found ${posts.length} posts to process\n`);
 
   let success = 0;
   let failures = 0;
@@ -198,7 +189,6 @@ async function migrate() {
     try {
       const doc = await mapPostToSanity(post);
       await sanity.createOrReplace(doc);
-      console.log(`✓ Migrated "${doc.title}" (${doc.slug.current})`);
       success += 1;
     } catch (error) {
       console.error(`❌ Failed "${post.slug || post.id}": ${error.message}`);
@@ -206,10 +196,6 @@ async function migrate() {
     }
   }
 
-  console.log('\n📊 Migration summary');
-  console.log(`   ✓ Success: ${success}`);
-  console.log(`   ⚠️  Failures: ${failures}`);
-  console.log('Done.');
 }
 
 migrate().catch((error) => {
