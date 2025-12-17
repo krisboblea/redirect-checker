@@ -71,10 +71,23 @@ export default function PostPage({ postData }) {
 
   const title = `${postData.title} | ${APP_NAME}`;
   const description = postData.excerpt || postData.title;
+  const firstContentImage =
+    postData.content?.find?.((block) => block._type === "image") || null;
+  const primaryImage = postData.image || firstContentImage;
   const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ""}${asPath}`;
-  const ogImage = postData.image
-    ? urlFor(postData.image).width(1200).height(630).url()
+  const ogImage = primaryImage
+    ? urlFor(primaryImage).width(1200).height(630).url()
     : `${process.env.NEXT_PUBLIC_SITE_URL || ""}/images/og-default.jpg`;
+  const heroImage = primaryImage
+    ? {
+      src: urlFor(primaryImage).width(1200).height(630).url(),
+      alt:
+        primaryImage?.alt ||
+        primaryImage?.caption ||
+        postData.title ||
+        "Post image",
+    }
+    : null;
 
   const formattedDate = postData.publishedAt
     ? new Date(postData.publishedAt).toLocaleDateString("en-US", {
@@ -325,7 +338,7 @@ export default function PostPage({ postData }) {
             </Flex>
           </Box>
 
-          {postData.image && (
+          {heroImage && (
             <Box
               mb={12}
               borderRadius="16px"
@@ -333,11 +346,11 @@ export default function PostPage({ postData }) {
               boxShadow="0 20px 60px rgba(0, 0, 0, 0.15)"
             >
               <Image
-                src={urlFor(postData.image).width(1200).height(550).url()}
-                alt={postData.title}
+                src={heroImage.src}
+                alt={heroImage.alt}
                 style={{ objectFit: "cover" }}
                 width={1200}
-                height={550}
+                height={630}
               />
             </Box>
           )}
