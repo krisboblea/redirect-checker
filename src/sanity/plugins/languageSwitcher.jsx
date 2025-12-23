@@ -1,6 +1,6 @@
 import { definePlugin } from 'sanity';
 import { Button, Card, Flex, Stack, Text } from '@sanity/ui';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { LANGUAGES } from '../../config/i18n';
 
 const LOCALE_FLAGS = LANGUAGES.reduce((acc, lang) => {
@@ -17,14 +17,9 @@ function LanguageSwitcherComponent({ document, schemaType }) {
   const [translations, setTranslations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [translating, setTranslating] = useState(false);
+  const lastFetchedSlug = useRef(null);
 
-  useEffect(() => {
-    if (document?.slug?.current) {
-      fetchTranslations(document.slug.current);
-    }
-  }, [document?.slug]);
-
-  const fetchTranslations = async (slug) => {
+  const fetchTranslations = async (slug, signal) => {
     setLoading(true);
     try {
       const query = `*[_type == "post" && slug.current == $slug]{
@@ -35,16 +30,39 @@ function LanguageSwitcherComponent({ document, schemaType }) {
       }`;
 
       const result = await fetch(
-        `/api/sanity/query?query=${encodeURIComponent(query)}&slug=${slug}`
+        `/api/sanity/query?query=${encodeURIComponent(query)}&slug=${slug}`,
+        { signal }
       ).then((res) => res.json());
 
       setTranslations(result || []);
     } catch (error) {
+      if (error.name === 'AbortError') return;
       console.error('Error fetching translations:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Debounce fetches while slug input is being edited to avoid blocking INP
+  useEffect(() => {
+    const slug = document?.slug?.current;
+    const hasId = Boolean(document?._id);
+
+    if (!hasId || !slug || slug === lastFetchedSlug.current) return;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      lastFetchedSlug.current = slug;
+      fetchTranslations(slug, controller.signal);
+    }, 300);
+
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+    // We intentionally omit translations from deps to only react to slug/id changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [document?._id, document?.slug?.current]);
 
   const handleTranslate = async () => {
     if (!document._id) {
