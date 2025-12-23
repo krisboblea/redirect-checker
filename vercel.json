@@ -1,12 +1,15 @@
 {
   "crons": [
     {
-      "path": "/api/cron",
+      "path": "/api/process-translations",
       "schedule": "*/5 * * * *"
     }
   ],
   "functions": {
-    "src/pages/api/queue/translate": {
+    "src/pages/api/process-translations.js": {
+      "maxDuration": 300
+    },
+    "src/pages/api/translate-post.js": {
       "maxDuration": 300
     }
   }

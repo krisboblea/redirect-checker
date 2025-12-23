@@ -1,6 +1,6 @@
 import { createClient } from '@sanity/client';
 import OpenAI from 'openai';
-import { allLanguages } from '../../../config/i18n';
+import { allLanguages } from '../../config/i18n';
 
 const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -194,6 +194,12 @@ export async function processTranslationJob(documentId, targetLocales) {
       });
     }
   }
+
+  // Mark the source document as no longer needing translation
+  await sanityClient
+    .patch(documentId)
+    .set({ needsTranslation: false })
+    .commit();
 
   console.log(`[Queue] Translation complete for document: ${documentId}`);
   return { success: true, results };

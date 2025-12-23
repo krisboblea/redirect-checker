@@ -7,7 +7,6 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './src/sanity/env'
 import {schema} from './src/sanity/schemaTypes'
 import {structure} from './src/sanity/structure'
-import { languageSwitcherPlugin } from '@/sanity/plugins/languageSwitcher'
 
 export default defineConfig({
   basePath: '/studio',
@@ -17,6 +16,5 @@ export default defineConfig({
   plugins: [
     structureTool({structure}),
     visionTool({defaultApiVersion: apiVersion}),
-    languageSwitcherPlugin(),
   ],
 })

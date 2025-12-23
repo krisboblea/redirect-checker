@@ -116,6 +116,14 @@ export const postType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'needsTranslation',
+      type: 'boolean',
+      title: 'Needs Translation',
+      description: 'Check this box to queue this post for automatic translation to all supported languages',
+      initialValue: false,
+      hidden: ({document}) => document?.locale !== 'en',
+    }),
+    defineField({
       name: 'author',
       type: 'reference',
       title: 'Author',
