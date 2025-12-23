@@ -141,7 +141,7 @@ async function createTranslatedDocument(sourceDoc, targetLocale) {
 }
 
 export async function processTranslationJob(documentId, targetLocales) {
-  console.log(`[Queue] Processing translation for document: ${documentId}`);
+  console.log(`[Translate Post] Processing translation for document: ${documentId}`);
 
   const sourceDoc = await sanityClient.fetch(
     `*[_id == $id][0]{
@@ -162,13 +162,13 @@ export async function processTranslationJob(documentId, targetLocales) {
 
   if (!sourceDoc) {
     const message = `Document not found: ${documentId}`;
-    console.error(`[Queue] ${message}`);
+    console.error(`[Translate Post] ${message}`);
     throw new Error(message);
   }
 
   if (sourceDoc.locale !== 'en') {
     const message = 'Only English documents can be translated';
-    console.error(`[Queue] ${message}`);
+    console.error(`[Translate Post] ${message}`);
     throw new Error(message);
   }
 
@@ -177,16 +177,16 @@ export async function processTranslationJob(documentId, targetLocales) {
 
   for (const locale of locales) {
     try {
-      console.log(`[Queue] Translating to ${locale}...`);
+      console.log(`[Translate Post] Translating to ${locale}...`);
       const translatedDoc = await createTranslatedDocument(sourceDoc, locale);
       results.push({
         locale,
         status: 'success',
         documentId: translatedDoc._id,
       });
-      console.log(`[Queue] ✓ Translated to ${locale}`);
+      console.log(`[Translate Post] ✓ Translated to ${locale}`);
     } catch (error) {
-      console.error(`[Queue] Error translating to ${locale}:`, error);
+      console.error(`[Translate Post] Error translating to ${locale}:`, error);
       results.push({
         locale,
         status: 'error',
@@ -201,7 +201,7 @@ export async function processTranslationJob(documentId, targetLocales) {
     .set({ needsTranslation: false })
     .commit();
 
-  console.log(`[Queue] Translation complete for document: ${documentId}`);
+  console.log(`[Translate Post] Translation complete for document: ${documentId}`);
   return { success: true, results };
 }
 
