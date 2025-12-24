@@ -12,27 +12,39 @@ const sanityClient = createClient({
 const MAX_JOBS_PER_RUN = 10;
 
 export default async function handler(req, res) {
-  if (req.method !== 'GET') {
+  if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const ranAt = new Date().toISOString();
+  const docId = req.query.docId || req.body?.docId;
 
   try {
-    // Find English posts that need translation
-    const postsNeedingTranslation = await sanityClient.fetch(
-      `*[_type == "post" && locale == "en" && needsTranslation == true][0...${MAX_JOBS_PER_RUN}]{
-        _id,
-        title
-      }`
-    );
+    let postsToProcess = [];
+
+    if (docId) {
+      // Trigger translation for a single document
+      const post = await sanityClient.fetch(`*[_id == $id][0]{ _id, title }`, { id: docId });
+      if (!post) {
+        return res.status(404).json({ ok: false, error: 'Document not found' });
+      }
+      postsToProcess.push(post);
+    } else {
+      // Trigger translation for multiple posts needing translation
+      postsToProcess = await sanityClient.fetch(
+        `*[_type == "post" && locale == "en" && needsTranslation == true][0...${MAX_JOBS_PER_RUN}]{
+          _id,
+          title
+        }`
+      );
+    }
 
     let processed = 0;
     const results = [];
 
-    for (const post of postsNeedingTranslation) {
+    for (const post of postsToProcess) {
       try {
-        console.log(`[Cron] Processing translation for: ${post.title} (${post._id})`);
+        console.log(`[API] Processing translation for: ${post.title} (${post._id})`);
 
         const result = await processTranslationJob(post._id, null);
 

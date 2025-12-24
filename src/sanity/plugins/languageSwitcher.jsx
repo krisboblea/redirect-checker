@@ -8,6 +8,7 @@ function LanguageSwitcherComponent({ document, documentId }) {
   const router = useRouter();
   const [translations, setTranslations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [jobLoading, setJobLoading] = useState(false);
 
   useEffect(() => {
     const slug = document?.slug?.current;
@@ -91,12 +92,42 @@ function LanguageSwitcherComponent({ document, documentId }) {
           </Flex>
         )}
 
-        {currentLocale === 'en' && translations.length === 1 && (
-          <Card padding={2} tone="caution" radius={2}>
-            <Text size={1}>
-              💡 Tip: Check "Needs Translation" and save to translate this post to all languages
-            </Text>
-          </Card>
+        {currentLocale === 'en' && (
+        <Button
+          mode="ghost"
+          tone="positive"
+          fontSize={1}
+          padding={2}
+          disabled={jobLoading}
+          onClick={() => {
+            setJobLoading(true);
+
+            fetch(`/api/process-translations?docId=${document?._id}`, { method: 'POST' })
+              .catch((err) => {
+                console.error(err);
+                alert('Failed to trigger translation job');
+              })
+              .finally(() => {
+                setJobLoading(false);
+                // Reload translations after job completes
+                if (document?.slug?.current) {
+                  setLoading(true);
+                  const query = `*[_type == "post" && slug.current == $slug]{ _id, locale, title }`;
+                  fetch(`/api/sanity/query?query=${encodeURIComponent(query)}&slug=${document.slug.current}`)
+                    .then((res) => res.json())
+                    .then((data) => setTranslations(data || []))
+                    .catch((err) => console.error('Error fetching translations:', err))
+                    .finally(() => setLoading(false));
+                }
+              });
+          }}
+          text={
+            <Flex align="center" gap={2}>
+              {jobLoading && <span>⏳</span>}
+              <span>AI Translate</span>
+            </Flex>
+          }
+        />
         )}
       </Stack>
     </Card>

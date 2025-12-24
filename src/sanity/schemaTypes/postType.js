@@ -1,5 +1,5 @@
-import {defineField, defineType} from 'sanity'
-import {LANGUAGES, defaultLocale, getLocaleLabel} from '../../config/i18n'
+import { defineField, defineType } from 'sanity'
+import { LANGUAGES, defaultLocale, getLocaleLabel } from '../../config/i18n'
 
 export const postType = defineType({
   name: 'post',
@@ -77,17 +77,17 @@ export const postType = defineType({
       name: 'tags',
       type: 'array',
       title: 'Tags',
-      of: [{type: 'string'}],
+      of: [ { type: 'string' } ],
     }),
     defineField({
       name: 'content',
       type: 'array',
       title: 'Content',
       of: [
-        {type: 'block'},
+        { type: 'block' },
         {
           type: 'image',
-          options: {hotspot: true},
+          options: { hotspot: true },
           fields: [
             {
               name: 'alt',
@@ -123,7 +123,7 @@ export const postType = defineType({
       name: 'author',
       type: 'reference',
       title: 'Author',
-      to: [{type: 'author'}],
+      to: [ { type: 'author' } ],
     }),
     defineField({
       name: 'faqs',
@@ -134,13 +134,13 @@ export const postType = defineType({
         {
           type: 'object',
           fields: [
-            {name: 'question', type: 'string', title: 'Question'},
-            {name: 'answer', type: 'text', title: 'Answer'},
+            { name: 'question', type: 'string', title: 'Question' },
+            { name: 'answer', type: 'text', title: 'Answer' },
           ],
           preview: {
-            select: {title: 'question', subtitle: 'answer'},
-            prepare({title, subtitle}) {
-              return {title, subtitle}
+            select: { title: 'question', subtitle: 'answer' },
+            prepare({ title, subtitle }) {
+              return { title, subtitle }
             },
           },
         },
@@ -151,9 +151,9 @@ export const postType = defineType({
       name: 'needsTranslation',
       type: 'boolean',
       title: 'Needs Translation',
-      description: 'Check this box to queue this post for automatic translation to all supported languages',
+      description: 'Auto translate post in background',
       initialValue: false,
-      hidden: ({document}) => document?.locale !== 'en',
+      hidden: ({ document }) => document?.locale !== 'en',
     }),
   ],
   preview: {
@@ -163,7 +163,7 @@ export const postType = defineType({
       slug: 'slug',
       media: 'image',
     },
-    prepare({title, locale, slug, media}) {
+    prepare({ title, locale, slug, media }) {
       return {
         title: title,
         subtitle: `${getLocaleLabel(locale)} • ${slug?.current || slug}`,

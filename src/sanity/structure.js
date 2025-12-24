@@ -1,44 +1,33 @@
-import { LANGUAGES } from '../config/i18n';
+import { LANGUAGES, defaultLocale } from '../config/i18n';
 
-export const structure = (S) =>
-  S.list()
+export const structure = (S) => {
+  // Get language from sessionStorage (client-side), default to 'en'
+  let selectedLanguage = defaultLocale;
+  if (typeof window !== 'undefined') {
+    const saved = sessionStorage.getItem('studio-lang');
+    selectedLanguage = saved || defaultLocale;
+  }
+
+  // Find the selected language info
+  const selectedLang = LANGUAGES.find(l => l.id === selectedLanguage) || LANGUAGES[0];
+
+  return S.list()
     .title('Content')
     .items([
       S.listItem()
-        .id('posts-root')
+        .id('posts')
         .title('Posts')
         .icon(() => '📝')
         .child(
-          S.list()
-            .title('Posts by Language')
-            .items([
-              S.listItem()
-                .id('posts-all')
-                .title('All Posts')
-                .icon(() => '🌐')
-                .child(
-                  S.documentTypeList('post')
-                    .title('All Posts')
-                    .filter('_type == "post"')
-                ),
-              S.divider(),
-              ...LANGUAGES.map((lang) =>
-                S.listItem()
-                  .id(`posts-${lang.id}`)
-                  .title(`${lang.flag} ${lang.nativeName || lang.title}`)
-                  .icon(() => lang.flag)
-                  .child(
-                    S.documentTypeList('post')
-                      .title(`${lang.nativeName || lang.title} Posts`)
-                      .filter('_type == "post" && locale == $locale')
-                      .params({ locale: lang.id })
-                      .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])
-                  )
-              ),
-            ])
+          S.documentTypeList('post')
+            .title(`Posts - ${selectedLang.flag} ${selectedLang.nativeName || selectedLang.title}`)
+            .filter('_type == "post" && locale == $locale')
+            .params({ locale: selectedLanguage })
+            .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])
         ),
       S.divider(),
       ...S.documentTypeListItems().filter(
         (listItem) => listItem.getId() !== 'post'
       ),
-    ])
+    ]);
+};
