@@ -1,11 +1,11 @@
 // next-i18next.config.js
 const HttpBackend = require('i18next-http-backend/cjs')
 const ChainedBackend = require('i18next-chained-backend').default
+const { allLanguages, defaultLocale } = require('./src/config/i18n')
 
 const path = require('path');
 const isBrowser = typeof window !== 'undefined'
 const isDev = process.env.NODE_ENV === 'development'
-const allLanguages = [ "en", "de", "es", "fr", "it", "pt", "ja", "zh", "ko" ];
 
 class NoLoadHttpBackend extends HttpBackend {
     read(language, namespace, callback) {
@@ -17,7 +17,7 @@ class NoLoadHttpBackend extends HttpBackend {
 module.exports = {
     i18n: {
         locales: allLanguages,
-        defaultLocale: process.env.NEXT_PUBLIC_LOCALE || 'en',
+        defaultLocale: process.env.NEXT_PUBLIC_LOCALE || defaultLocale,
         // localeDetection: true,
     },
     backend: {
@@ -37,7 +37,7 @@ module.exports = {
     use: isBrowser ? [ ChainedBackend ] : [],
     debug: isDev,
     localePath: isBrowser ? path.resolve('./public/locales') : 'public/locales',
-    reloadOnPrerender: isDev,
+    revalidate: isDev,
     saveMissing: true,
     interpolation: {
         escapeValue: false,
