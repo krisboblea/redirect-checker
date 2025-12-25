@@ -19,8 +19,8 @@ export default function PostCard({ post }) {
       display="flex"
       alignItems="start"
       justifyContent="center"
-      py={{ base: 4, md: 8 }}
-      my={3}
+      py={{ base: 2, md: 4 }}
+      my={0}
     >
       <MotionBox
         initial={{ opacity: 0, y: 20 }}
@@ -101,7 +101,6 @@ export default function PostCard({ post }) {
               <PostMetadata
                 publishedAt={publishedAt}
                 author={author}
-                tags={tags}
                 compact={true}
               />
             </Box>

@@ -54,7 +54,7 @@ export default function TableOfContents({ content }) {
     <Box
       as="aside"
       position="sticky"
-      top="120px"
+      top="100px"
       height="fit-content"
       maxH="calc(100vh - 40px)"
       overflowY="auto"

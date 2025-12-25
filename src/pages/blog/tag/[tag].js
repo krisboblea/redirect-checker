@@ -9,10 +9,9 @@ import { denormalizeTag } from "@/utils/blogHelpers";
 
 const PER_PAGE = 12;
 
-export default function TagPage({ tag, posts, pagination }) {
+export default function TagPage({ tag, displayTag, posts, pagination }) {
   const { t } = useTranslation();
   const { currentPage, totalPages } = pagination;
-  const displayTag = tag.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 
   return (
     <BlogListLayout
@@ -39,8 +38,13 @@ export default function TagPage({ tag, posts, pagination }) {
 }
 
 export async function getServerSideProps({ locale, params, query }) {
-  const tag = decodeURIComponent(params.tag);
-  const denormalizedTag = denormalizeTag(tag);
+  const tagSlug = params.tag;
+  const denormalizedTag = denormalizeTag(tagSlug);
+
+  // For display: capitalize first letter of each word for English tags
+  const displayTag = /[^\x00-\x7F]/.test(denormalizedTag)
+    ? denormalizedTag // Non-ASCII (Chinese, etc.) - use as is
+    : denormalizedTag.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 
   const rawPage = typeof query.page === "string" ? query.page : "1";
   const currentPage = Math.max(Number.parseInt(rawPage, 10) || 1, 1);
@@ -61,7 +65,8 @@ export async function getServerSideProps({ locale, params, query }) {
   if (totalCount === 0) {
     return {
       props: {
-        tag,
+        tag: tagSlug,
+        displayTag,
         posts: [],
         pagination: { currentPage: 1, totalPages: 1 },
         ...(await serverSideTranslations(locale, [ "common" ])),
@@ -107,7 +112,8 @@ export async function getServerSideProps({ locale, params, query }) {
 
     return {
       props: {
-        tag,
+        tag: tagSlug,
+        displayTag,
         posts: posts || [],
         pagination: { currentPage: safePage, totalPages },
         ...(await serverSideTranslations(locale, [ "common" ])),
@@ -117,7 +123,8 @@ export async function getServerSideProps({ locale, params, query }) {
     console.error("Error fetching tag posts:", error);
     return {
       props: {
-        tag,
+        tag: tagSlug,
+        displayTag,
         posts: [],
         pagination: { currentPage: 1, totalPages: 1 },
         ...(await serverSideTranslations(locale, [ "common" ])),

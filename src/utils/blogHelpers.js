@@ -27,9 +27,32 @@ export const formatPostDate = (dateString, locale = "en-US", format = "short") =
 };
 
 export const normalizeTag = (tag) => {
-  return tag.toLowerCase().trim().replace(/\s+/g, "-");
+  // For tags with non-ASCII characters (like Chinese), just encode them
+  // For English tags, convert to lowercase and replace spaces with dashes
+  const trimmed = tag.trim();
+
+  // Check if tag contains non-ASCII characters
+  if (/[^\x00-\x7F]/.test(trimmed)) {
+    // For non-ASCII (Chinese, Japanese, etc.), just encode it
+    return encodeURIComponent(trimmed);
+  }
+
+  // For ASCII tags, normalize to lowercase with dashes
+  return trimmed.toLowerCase().replace(/\s+/g, "-");
 };
 
 export const denormalizeTag = (tagSlug) => {
+  // Try to decode URI component first (for Chinese tags)
+  try {
+    const decoded = decodeURIComponent(tagSlug);
+    // If decoded is different from original, it was encoded, return decoded
+    if (decoded !== tagSlug) {
+      return decoded;
+    }
+  } catch (e) {
+    // If decoding fails, continue with dash replacement
+  }
+
+  // For English tags, replace dashes with spaces
   return tagSlug.replace(/-/g, " ");
 };
