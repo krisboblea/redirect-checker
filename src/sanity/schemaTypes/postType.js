@@ -1,5 +1,9 @@
 import { defineField, defineType } from 'sanity'
 import { LANGUAGES, defaultLocale, getLocaleLabel } from '../../config/i18n'
+import { AITitleInput } from '../components/AITitleInput'
+import { AIExcerptInput } from '../components/AIExcerptInput'
+import { AITagsInput } from '../components/AITagsInput'
+import { AIFAQsInput } from '../components/AIFAQsInput'
 
 export const postType = defineType({
   name: 'post',
@@ -10,6 +14,9 @@ export const postType = defineType({
       name: 'title',
       type: 'string',
       title: 'Title',
+      components: {
+        input: AITitleInput,
+      },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -57,12 +64,18 @@ export const postType = defineType({
       type: 'text',
       title: 'Excerpt',
       description: 'A brief description of the post',
+      components: {
+        input: AIExcerptInput,
+      },
     }),
     defineField({
       name: 'tags',
       type: 'array',
       title: 'Tags',
       of: [ { type: 'string' } ],
+      components: {
+        input: AITagsInput,
+      },
     }),
     defineField({
       name: 'content',
@@ -130,6 +143,9 @@ export const postType = defineType({
           },
         },
       ],
+      components: {
+        input: AIFAQsInput,
+      },
       validation: (rule) => rule.max(5),
     }),
     defineField({

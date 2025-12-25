@@ -368,9 +368,7 @@ export default function PostPage({ postData }) {
                     </Box>
                   )}
 
-                  {/* Author Box */}
-                  <AuthorBox author={postData.author} />
-
+                  {/* FAQ Section */}
                   {postData.faqs && postData.faqs.length > 0 && (
                     <Box as="section" mt={10}>
                       <Divider mb={6} />
@@ -446,6 +444,9 @@ export default function PostPage({ postData }) {
                       </Accordion>
                     </Box>
                   )}
+
+                  {/* Author Box */}
+                  <AuthorBox author={postData.author} />
                 </article>
               </Container>
             </Box>
