@@ -231,7 +231,7 @@ export function AIAssistantAction(props) {
             {mode === 'generate' && generatedPost && (
               <>
                 <Text size={1} muted>
-                  Review the generated content below. Click "Insert Post" to add it to your document.
+                  Review the generated content below. Click `Insert Post` to add it to your document.
                 </Text>
 
                 <Stack space={4}>
