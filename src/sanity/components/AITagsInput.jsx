@@ -1,4 +1,3 @@
-import { ArrayOfPrimitivesInput } from 'sanity'
 import { AIFieldGenerator } from './AIFieldGenerator'
 
 export function AITagsInput(props) {
@@ -8,9 +7,7 @@ export function AITagsInput(props) {
       value={props.value}
       onChange={props.onChange}
     >
-      <div style={{ flex: 1 }}>
-        <ArrayOfPrimitivesInput {...props} />
-      </div>
+      {props.renderDefault(props)}
     </AIFieldGenerator>
   )
 }

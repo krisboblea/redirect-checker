@@ -1,4 +1,3 @@
-import { StringInput } from 'sanity'
 import { AIFieldGenerator } from './AIFieldGenerator'
 
 export function AITitleInput(props) {
@@ -8,9 +7,7 @@ export function AITitleInput(props) {
       value={props.value}
       onChange={props.onChange}
     >
-      <div style={{ flex: 1 }}>
-        <StringInput {...props} />
-      </div>
+      {props.renderDefault(props)}
     </AIFieldGenerator>
   )
 }

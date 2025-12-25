@@ -1,4 +1,3 @@
-import { ArrayInput } from 'sanity'
 import { AIFieldGenerator } from './AIFieldGenerator'
 
 export function AIFAQsInput(props) {
@@ -8,9 +7,7 @@ export function AIFAQsInput(props) {
       value={props.value}
       onChange={props.onChange}
     >
-      <div style={{ flex: 1 }}>
-        <ArrayInput {...props} />
-      </div>
+      {props.renderDefault(props)}
     </AIFieldGenerator>
   )
 }
