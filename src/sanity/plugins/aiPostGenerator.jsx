@@ -284,13 +284,24 @@ export const aiPostGeneratorPlugin = () => {
   return {
     name: 'ai-post-generator',
     document: {
-      actions: (prev, { schemaType }) => {
+      actions: (prev, context) => {
+        const { schemaType, draft } = context
+
         // Only add to post documents
         if (schemaType !== 'post') {
           return prev
         }
 
-        return [AIPostGeneratorAction, ...prev]
+        // Show first if content is empty, otherwise add at end
+        const hasContent = draft?.content && draft.content.length > 0
+
+        if (!hasContent) {
+          // Content is empty - put Generate with AI at beginning
+          return [AIPostGeneratorAction, ...prev]
+        } else {
+          // Content exists - add at end (AI Field Suggestions will be first)
+          return [...prev, AIPostGeneratorAction]
+        }
       },
     },
   }

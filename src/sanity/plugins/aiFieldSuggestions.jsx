@@ -274,13 +274,24 @@ export const aiFieldSuggestionsPlugin = () => {
   return {
     name: 'ai-field-suggestions',
     document: {
-      actions: (prev, { schemaType }) => {
+      actions: (prev, context) => {
+        const { schemaType, draft } = context
+
         // Only add to post documents
         if (schemaType !== 'post') {
           return prev
         }
 
-        return [AIFieldSuggestionsAction, ...prev]
+        // Show first if content exists, otherwise add at end
+        const hasContent = draft?.content && draft.content.length > 0
+
+        if (hasContent) {
+          // Content exists - put AI Field Suggestions at beginning
+          return [AIFieldSuggestionsAction, ...prev]
+        } else {
+          // Content is empty - add at end (Generate with AI will be first)
+          return [...prev, AIFieldSuggestionsAction]
+        }
       },
     },
   }
