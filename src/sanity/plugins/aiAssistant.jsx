@@ -16,7 +16,7 @@ import { SparklesIcon, DocumentTextIcon, CheckmarkIcon } from '@sanity/icons'
 import { useDocumentOperation } from 'sanity'
 
 export function AIAssistantAction(props) {
-  const { draft, id, onComplete } = props
+  const { draft, published, id, onComplete } = props
   const { patch } = useDocumentOperation(id, 'post')
   const [isOpen, setIsOpen] = useState(false)
   const [prompt, setPrompt] = useState('')
@@ -26,8 +26,9 @@ export function AIAssistantAction(props) {
   const [appliedFields, setAppliedFields] = useState({})
   const [error, setError] = useState(null)
 
-  // Determine mode based on content
-  const hasContent = draft?.content && draft.content.length > 0
+  // Determine mode based on content (check both draft and published)
+  const currentDoc = draft || published
+  const hasContent = currentDoc?.content && currentDoc.content.length > 0
   const mode = hasContent ? 'suggestions' : 'generate'
 
   // Generate full post from prompt
@@ -49,7 +50,7 @@ export function AIAssistantAction(props) {
         },
         body: JSON.stringify({
           prompt: prompt.trim(),
-          locale: draft?.locale || 'en'
+          locale: currentDoc?.locale || 'en'
         }),
       })
 
@@ -66,11 +67,11 @@ export function AIAssistantAction(props) {
     } finally {
       setIsGenerating(false)
     }
-  }, [prompt, draft])
+  }, [prompt, currentDoc])
 
   // Generate field suggestions
   const handleGenerateSuggestions = useCallback(async () => {
-    if (!draft?.content || draft.content.length === 0) {
+    if (!currentDoc?.content || currentDoc.content.length === 0) {
       setError('Please add content first before generating suggestions')
       return
     }
@@ -92,8 +93,8 @@ export function AIAssistantAction(props) {
           },
           body: JSON.stringify({
             field,
-            content: draft.content,
-            locale: draft?.locale || 'en',
+            content: currentDoc.content,
+            locale: currentDoc?.locale || 'en',
           }),
         })
 
@@ -110,7 +111,7 @@ export function AIAssistantAction(props) {
     } finally {
       setIsGenerating(false)
     }
-  }, [draft])
+  }, [currentDoc])
 
   // Insert full generated post
   const handleInsertPost = useCallback(() => {
@@ -312,7 +313,7 @@ export function AIAssistantAction(props) {
                   tone="primary"
                   icon={SparklesIcon}
                   onClick={handleGenerateSuggestions}
-                  disabled={!draft?.content || draft.content.length === 0}
+                  disabled={!currentDoc?.content || currentDoc.content.length === 0}
                 />
 
                 {isGenerating && (
@@ -353,8 +354,8 @@ export function AIAssistantAction(props) {
                         )}
                       </Flex>
                       <Text size={1} weight="semibold">{suggestions.title}</Text>
-                      {draft?.title && draft.title !== suggestions.title && (
-                        <Text size={1} muted>Current: {draft.title}</Text>
+                      {currentDoc?.title && currentDoc.title !== suggestions.title && (
+                        <Text size={1} muted>Current: {currentDoc.title}</Text>
                       )}
                     </Stack>
                   </Card>
@@ -378,8 +379,8 @@ export function AIAssistantAction(props) {
                         )}
                       </Flex>
                       <Text size={1}>{suggestions.excerpt}</Text>
-                      {draft?.excerpt && draft.excerpt !== suggestions.excerpt && (
-                        <Text size={1} muted>Current: {draft.excerpt}</Text>
+                      {currentDoc?.excerpt && currentDoc.excerpt !== suggestions.excerpt && (
+                        <Text size={1} muted>Current: {currentDoc.excerpt}</Text>
                       )}
                     </Stack>
                   </Card>
@@ -407,11 +408,11 @@ export function AIAssistantAction(props) {
                           <Badge key={i} tone="primary">{tag}</Badge>
                         ))}
                       </Flex>
-                      {draft?.tags?.length > 0 && (
+                      {currentDoc?.tags?.length > 0 && (
                         <Box>
                           <Text size={1} muted>Current: </Text>
                           <Flex gap={2} wrap="wrap" marginTop={2}>
-                            {draft.tags.map((tag, i) => (
+                            {currentDoc.tags.map((tag, i) => (
                               <Badge key={i} mode="outline">{tag}</Badge>
                             ))}
                           </Flex>
