@@ -11,8 +11,9 @@ import FAQSection from "@/components/common/FAQSection";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { generateHrefLangsAndCanonicalTag } from "@/utils";
+import { fetchToolPagesForFooter } from "@/services/toolPageService";
 
-export default function RedirectCheckPage() {
+export default function RedirectCheckPage({ toolPages = [] }) {
     const { t } = useTranslation();
     const router = useRouter();
     const { locale, asPath } = router;
@@ -61,7 +62,7 @@ export default function RedirectCheckPage() {
     const title = `${t('tool.redirect-title', 'Bulk Redirect Checker: Analyze URL Chains & Speed Compare')} | ${APP_NAME}`;
 
     return (
-        <MainLayout>
+        <MainLayout toolPages={toolPages}>
             <Head>
                 <title>{title}</title>
                 <meta
@@ -111,9 +112,13 @@ export default function RedirectCheckPage() {
 }
 
 export async function getStaticProps({ locale }) {
+    const toolPages = await fetchToolPagesForFooter(locale);
+
     return {
         props: {
+            toolPages,
             ...(await serverSideTranslations(locale, [ 'common' ])),
         },
+        revalidate: 3600, // Revalidate every hour to pick up new tool pages
     };
 }
