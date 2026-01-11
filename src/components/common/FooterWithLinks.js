@@ -85,10 +85,13 @@ const FooterLink = ({ href, children, isExternal = false }) => {
     );
 };
 
-export default function FooterWithLinks({ toolPages = [] }) {
+export default function FooterWithLinks({ toolPages = [], companyPages = [] }) {
     const { t } = useTranslation();
     const bgColor = useColorModeValue("gray.50", "gray.900");
     const borderColor = useColorModeValue("gray.200", "gray.700");
+
+    // Filter tool pages to only show those with widgets (exclude company pages)
+    const actualToolPages = toolPages.filter(page => page.widget !== 'none');
 
     return (
         <Box bg={bgColor} color={useColorModeValue("gray.700", "gray.200")}>
@@ -112,10 +115,10 @@ export default function FooterWithLinks({ toolPages = [] }) {
                     </Stack>
 
                     {/* Dynamic Tool Pages from CMS */}
-                    {toolPages.length > 0 && (
+                    {actualToolPages.length > 0 && (
                         <Stack align={"flex-start"}>
                             <ListHeader>{t('footer.more-tools', 'More Tools')}</ListHeader>
-                            {toolPages.slice(0, 6).map((tool) => (
+                            {actualToolPages.slice(0, 6).map((tool) => (
                                 <FooterLink key={tool.slug} href={`/${tool.slug}`}>
                                     {tool.title}
                                 </FooterLink>
@@ -132,21 +135,31 @@ export default function FooterWithLinks({ toolPages = [] }) {
                         {/* Add more resource links as needed */}
                     </Stack>
 
-                    {/* Company */}
+                    {/* Company - Read from CMS if available, otherwise fallback to hardcoded */}
                     <Stack align={"flex-start"}>
                         <ListHeader>{t('footer.company', 'Company')}</ListHeader>
-                        <FooterLink href="/about" isExternal={false}>
-                            {t('footer.about', 'About')}
-                        </FooterLink>
-                        <FooterLink href="/contact" isExternal={false}>
-                            {t('footer.contact', 'Contact')}
-                        </FooterLink>
-                        <FooterLink href="/privacy" isExternal={false}>
-                            {t('footer.privacy', 'Privacy Policy')}
-                        </FooterLink>
-                        <FooterLink href="/terms" isExternal={false}>
-                            {t('footer.terms', 'Terms of Service')}
-                        </FooterLink>
+                        {companyPages.length > 0 ? (
+                            companyPages.map((page) => (
+                                <FooterLink key={page.slug} href={`/${page.slug}`} isExternal={false}>
+                                    {page.title}
+                                </FooterLink>
+                            ))
+                        ) : (
+                            <>
+                                <FooterLink href="/about" isExternal={false}>
+                                    {t('footer.about', 'About')}
+                                </FooterLink>
+                                <FooterLink href="/contact" isExternal={false}>
+                                    {t('footer.contact', 'Contact')}
+                                </FooterLink>
+                                <FooterLink href="/privacy" isExternal={false}>
+                                    {t('footer.privacy', 'Privacy Policy')}
+                                </FooterLink>
+                                <FooterLink href="/terms" isExternal={false}>
+                                    {t('footer.terms', 'Terms of Service')}
+                                </FooterLink>
+                            </>
+                        )}
                     </Stack>
                 </SimpleGrid>
             </Container>

@@ -13,7 +13,7 @@ import FAQSection from "@/components/common/FAQSection";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { generateHrefLangsAndCanonicalTag } from "@/utils";
-import { fetchToolPagesForFooter, fetchToolPageBySlug, fetchAllToolPageSlugs } from "@/services/toolPageService";
+import { fetchAllPagesForFooter, fetchToolPageBySlug, fetchAllToolPageSlugs } from "@/services/toolPageService";
 
 // Map widget types to components
 const WIDGET_COMPONENTS = {
@@ -29,14 +29,13 @@ const ICON_MAP = {
   FaExternalLinkAlt,
 };
 
-export default function ToolPage({ toolData, allToolPages = [] }) {
-  const { t } = useTranslation();
+export default function ToolPage({ toolData, toolPages = [], companyPages = [] }) {
   const router = useRouter();
   const { locale, asPath } = router;
 
   if (!toolData) {
     return (
-      <MainLayout toolPages={allToolPages}>
+      <MainLayout toolPages={toolPages} companyPages={companyPages}>
         <Head>
           <title>{`Tool Not Found | ${APP_NAME}`}</title>
         </Head>
@@ -54,7 +53,8 @@ export default function ToolPage({ toolData, allToolPages = [] }) {
     );
   }
 
-  const WidgetComponent = WIDGET_COMPONENTS[toolData.widget];
+  const hasWidget = toolData.widget && toolData.widget !== 'none';
+  const WidgetComponent = hasWidget ? WIDGET_COMPONENTS[toolData.widget] : null;
   const IconComponent = ICON_MAP[toolData.heroIcon] || FaLink;
 
   const pageTitle = toolData.metaTitle || `${toolData.title} | ${APP_NAME}`;
@@ -63,8 +63,55 @@ export default function ToolPage({ toolData, allToolPages = [] }) {
   // Prepare FAQ data for schema
   const faqData = toolData.faqs || [];
 
+  // Content styles for rich text
+  const contentStyles = {
+    "& p": {
+      fontSize: { base: "md", md: "lg" },
+      lineHeight: "1.8",
+      color: "gray.700",
+      mb: 4,
+    },
+    "& h1": {
+      fontSize: { base: "3xl", md: "4xl" },
+      fontWeight: "bold",
+      mt: 10,
+      mb: 6,
+      color: "gray.900",
+    },
+    "& h2": {
+      fontSize: { base: "2xl", md: "3xl" },
+      fontWeight: "bold",
+      mt: 8,
+      mb: 4,
+      color: "gray.900",
+    },
+    "& h3": {
+      fontSize: { base: "xl", md: "2xl" },
+      fontWeight: "bold",
+      mt: 6,
+      mb: 3,
+      color: "gray.900",
+    },
+    "& ul, & ol": {
+      pl: 6,
+      mb: 4,
+    },
+    "& li": {
+      fontSize: { base: "md", md: "lg" },
+      color: "gray.700",
+      mb: 2,
+    },
+    "& a": {
+      color: "#7D65DB",
+      textDecoration: "underline",
+      _hover: {
+        color: "#6550C0",
+      },
+    },
+  };
+
   return (
-    <MainLayout toolPages={allToolPages}>
+    <MainLayout toolPages={toolPages} companyPages={companyPages}>
       <Head>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
@@ -107,75 +154,71 @@ export default function ToolPage({ toolData, allToolPages = [] }) {
 
       <AppContainer>
         <Box my={12}>
-          {/* Content Before Widget */}
-          {toolData.contentBeforeWidget && toolData.contentBeforeWidget.length > 0 && (
-            <Box mb={8}>
-              <PortableText value={toolData.contentBeforeWidget} />
-            </Box>
-          )}
-
-          {/* Widget Section */}
-          <WidgetComponent
-            icon={IconComponent}
-            buttonText={toolData.buttonText || t('tool.check-button', 'Check')}
-            examples={toolData.exampleUrls || []}
-          >
-            <Flex direction="column" align="center" textAlign="center">
-              <Box {...styles.checkPage.heroBox}>
-                <Icon as={IconComponent} {...styles.checkPage.heroIcon} />
-              </Box>
-              <Heading as="h1" {...styles.checkPage.heading}>
-                {toolData.heroHeading}
-              </Heading>
-              {toolData.heroDescription && (
-                <Text {...styles.checkPage.description}>
-                  {toolData.heroDescription}
-                </Text>
+          {/* For pages with widgets (tool pages) */}
+          {hasWidget && (
+            <>
+              {/* Content Before Widget */}
+              {toolData.contentBeforeWidget && toolData.contentBeforeWidget.length > 0 && (
+                <Box mb={8} sx={contentStyles}>
+                  <PortableText value={toolData.contentBeforeWidget} />
+                </Box>
               )}
-            </Flex>
-          </WidgetComponent>
 
-          {/* Content After Widget */}
-          {toolData.contentAfterWidget && toolData.contentAfterWidget.length > 0 && (
-            <Box
-              mt={8}
-              sx={{
-                "& p": {
-                  fontSize: { base: "md", md: "lg" },
-                  lineHeight: "1.8",
-                  color: "gray.700",
-                  mb: 4,
-                },
-                "& h2": {
-                  fontSize: { base: "2xl", md: "3xl" },
-                  fontWeight: "bold",
-                  mt: 8,
-                  mb: 4,
-                  color: "gray.900",
-                },
-                "& h3": {
-                  fontSize: { base: "xl", md: "2xl" },
-                  fontWeight: "bold",
-                  mt: 6,
-                  mb: 3,
-                  color: "gray.900",
-                },
-                "& ul, & ol": {
-                  pl: 6,
-                  mb: 4,
-                },
-                "& li": {
-                  fontSize: { base: "md", md: "lg" },
-                  color: "gray.700",
-                  mb: 2,
-                },
-              }}
-            >
-              <PortableText value={toolData.contentAfterWidget} />
-            </Box>
+              {/* Widget Section */}
+              <WidgetComponent
+                icon={IconComponent}
+                buttonText={toolData.buttonText}
+                examples={toolData.exampleUrls || []}
+              >
+                <Flex direction="column" align="center" textAlign="center">
+                  <Box {...styles.checkPage.heroBox}>
+                    <Icon as={IconComponent} {...styles.checkPage.heroIcon} />
+                  </Box>
+                  <Heading as="h1" {...styles.checkPage.heading}>
+                    {toolData.heroHeading}
+                  </Heading>
+                  {toolData.heroDescription && (
+                    <Text {...styles.checkPage.description}>
+                      {toolData.heroDescription}
+                    </Text>
+                  )}
+                </Flex>
+              </WidgetComponent>
+
+              {/* Content After Widget */}
+              {toolData.contentAfterWidget && toolData.contentAfterWidget.length > 0 && (
+                <Box mt={8} sx={contentStyles}>
+                  <PortableText value={toolData.contentAfterWidget} />
+                </Box>
+              )}
+            </>
           )}
 
-          {/* FAQ Section */}
+          {/* For pages without widgets (content pages) */}
+          {!hasWidget && (
+            <>
+              {/* Page Title */}
+              <Heading as="h1" size="2xl" mb={6} textAlign="center">
+                {toolData.title}
+              </Heading>
+
+              {/* Main Content */}
+              {toolData.contentBeforeWidget && toolData.contentBeforeWidget.length > 0 && (
+                <Box maxW="800px" mx="auto" sx={contentStyles}>
+                  <PortableText value={toolData.contentBeforeWidget} />
+                </Box>
+              )}
+
+              {/* Additional Content */}
+              {toolData.contentAfterWidget && toolData.contentAfterWidget.length > 0 && (
+                <Box maxW="800px" mx="auto" mt={8} sx={contentStyles}>
+                  <PortableText value={toolData.contentAfterWidget} />
+                </Box>
+              )}
+            </>
+          )}
+
+          {/* FAQ Section (for both types) */}
           {faqData.length > 0 && <FAQSection data={faqData} />}
         </Box>
       </AppContainer>
@@ -214,13 +257,14 @@ export async function getStaticProps({ params, locale }) {
     };
   }
 
-  // Fetch all published tool pages for footer links
-  const allToolPages = await fetchToolPagesForFooter(locale || 'en');
+  // Fetch all pages for footer links (categorized)
+  const { toolPages, companyPages } = await fetchAllPagesForFooter(locale || 'en');
 
   return {
     props: {
       toolData,
-      allToolPages,
+      toolPages,
+      companyPages,
       ...(await serverSideTranslations(locale, ["common"])),
     },
     revalidate: 3600, // Revalidate every hour

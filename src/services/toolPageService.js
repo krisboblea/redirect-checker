@@ -156,3 +156,74 @@ export async function fetchRecentToolPages(limit = 5, locale = 'en') {
     return [];
   }
 }
+
+/**
+ * Fetch all pages for footer links (excluding non-footer pages)
+ *
+ * @param {string} locale - The locale to fetch (default: 'en')
+ * @returns {Promise<Object>} - Object with categorized pages
+ */
+export async function fetchAllPagesForFooter(locale = 'en') {
+  try {
+    const query = `*[
+      _type == "toolPage" &&
+      defined(slug.current) &&
+      locale == $locale
+    ] | order(publishedAt desc) {
+      title,
+      "slug": slug.current,
+      widget
+    }`;
+
+    const allPages = await client.fetch(query, { locale });
+
+    // Categorize pages
+    const toolPages = [];
+    const companyPages = [];
+
+    allPages.forEach(page => {
+      if (page.widget === 'none') {
+        companyPages.push(page);
+      } else {
+        toolPages.push(page);
+      }
+    });
+
+    return {
+      toolPages,
+      companyPages,
+    };
+  } catch (error) {
+    console.error('Error fetching all pages for footer:', error);
+    return {
+      toolPages: [],
+      companyPages: [],
+    };
+  }
+}
+
+/**
+ * Fetch company/content pages (pages with widget='none')
+ *
+ * @param {string} locale - The locale to fetch (default: 'en')
+ * @returns {Promise<Array>} - Array of company pages
+ */
+export async function fetchCompanyPages(locale = 'en') {
+  try {
+    const query = `*[
+      _type == "toolPage" &&
+      widget == "none" &&
+      locale == $locale &&
+      defined(slug.current)
+    ] | order(title asc) {
+      title,
+      "slug": slug.current
+    }`;
+
+    const pages = await client.fetch(query, { locale });
+    return pages || [];
+  } catch (error) {
+    console.error('Error fetching company pages:', error);
+    return [];
+  }
+}
