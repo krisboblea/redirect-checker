@@ -12,12 +12,6 @@
   "heroIcon": "FaLink",
   "heroHeading": "301 Redirect Checker",
   "heroDescription": "Verify 301 permanent redirects, analyze redirect chains, and ensure your website migration maintains SEO rankings. Check multiple URLs instantly.",
-  "buttonText": "Check 301 Redirects",
-  "exampleUrls": [
-    "https://www.google.com",
-    "https://github.com",
-    "https://stackoverflow.com"
-  ],
   "contentBeforeWidget": [],
   "contentAfterWidget": [
     {
@@ -433,7 +427,7 @@
     },
     {
       "key": "examples",
-      "value": "https://www.google.com,https://github.com,https://stackoverflow.com"
+      "value": "http://redirhub.com,http://google.com,http://x.com"
     }
   ]
 }

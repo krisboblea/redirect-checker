@@ -12,12 +12,6 @@
   "heroIcon": "FaLink",
   "heroHeading": "Short URL Expander",
   "heroDescription": "Reveal the full destination of shortened URLs instantly.",
-  "buttonText": "Expand Short URLs",
-  "exampleUrls": [
-    "http://bit.ly/try",
-    "https://rbnd.ly/booked",
-    "https://t.co/example"
-  ],
   "contentBeforeWidget": [],
   "contentAfterWidget": [],
   "faqs": [
@@ -81,7 +75,7 @@
     },
     {
       "key": "examples",
-      "value": "http://bit.ly/try,https://rbnd.ly/booked,https://t.co/example"
+      "value": "https://bit.ly/try,https://rbnd.ly/booked,https://redirhub.com/try-redirect"
     }
   ]
 }

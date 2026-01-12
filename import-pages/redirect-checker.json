@@ -12,12 +12,6 @@
   "heroIcon": "FaLink",
   "heroHeading": "Redirect Checker",
   "heroDescription": "Analyze redirect chains and performance for multiple URLs at once.",
-  "buttonText": "Check Redirects",
-  "exampleUrls": [
-    "http://google.com",
-    "http://twitter.com",
-    "https://github.com"
-  ],
   "contentBeforeWidget": [],
   "contentAfterWidget": [],
   "faqs": [
@@ -81,7 +75,7 @@
     },
     {
       "key": "examples",
-      "value": "http://google.com,http://twitter.com,https://github.com"
+      "value": "http://redirhub.com,http://google.com,http://x.com"
     }
   ]
 }
