@@ -95,10 +95,35 @@ export default function FooterWithLinks({ pages = [] }) {
     const companyPages = pages.filter(page => page.category === 'company');
     const resourcePages = pages.filter(page => page.category === 'resources');
 
+    // Further categorize tool pages by slug patterns for better organization
+    const mainTools = toolPages.filter(page =>
+        ['redirect', 'expander', 'block'].includes(page.slug)
+    );
+
+    const redirectTypeTools = toolPages.filter(page =>
+        page.slug && page.slug.match(/^(301|302|303|307|308)-redirect-checker$/)
+    ).sort((a, b) => a.slug.localeCompare(b.slug));
+
+    const useCaseTools = toolPages.filter(page =>
+        page.slug && (
+            page.slug.includes('migration') ||
+            page.slug.includes('domain-change') ||
+            page.slug.includes('monitoring')
+        )
+    );
+
+    const platformTools = toolPages.filter(page =>
+        page.slug && (
+            page.slug.includes('wordpress') ||
+            page.slug.includes('shopify') ||
+            page.slug.includes('wix')
+        )
+    );
+
     return (
         <Box bg={bgColor} color={useColorModeValue("gray.700", "gray.200")}>
             <Container as={Stack} maxW={"6xl"} py={10}>
-                <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
+                <SimpleGrid columns={{ base: 1, sm: 2, md: 5 }} spacing={8}>
                     {/* Main Tools */}
                     <Stack align={"flex-start"}>
                         <ListHeader>{t('footer.tools', 'Tools')}</ListHeader>
@@ -108,28 +133,46 @@ export default function FooterWithLinks({ pages = [] }) {
                         <FooterLink href="/expander">
                             {t('footer.url-expander', 'URL Expander')}
                         </FooterLink>
+                        <FooterLink href="/block">
+                            {t('footer.block-checker', 'Block Checker')}
+                        </FooterLink>
                     </Stack>
 
-                    {/* Dynamic Tool Pages from CMS */}
-                    {toolPages.length > 0 && (
+                    {/* Redirect Types */}
+                    {redirectTypeTools.length > 0 && (
                         <Stack align={"flex-start"}>
-                            <ListHeader>{t('footer.more-tools', 'More Tools')}</ListHeader>
-                            {toolPages.slice(0, 6).map((tool) => (
+                            <ListHeader>{t('footer.redirect-types', 'By Redirect Type')}</ListHeader>
+                            {redirectTypeTools.map((tool) => (
                                 <FooterLink key={tool.slug} href={`/${tool.slug}`}>
-                                    {tool.title}
+                                    {tool.title.replace(' Checker', '')}
                                 </FooterLink>
                             ))}
                         </Stack>
                     )}
 
-                    {/* Resources */}
-                    <Stack align={"flex-start"}>
-                        <ListHeader>{t('footer.resources', 'Resources')}</ListHeader>
-                        <FooterLink href="/blog">
-                            {t('footer.blog', 'Blog')}
-                        </FooterLink>
-                        {/* Add more resource links as needed */}
-                    </Stack>
+                    {/* Use Cases */}
+                    {(useCaseTools.length > 0 || platformTools.length > 0) && (
+                        <Stack align={"flex-start"}>
+                            <ListHeader>{t('footer.use-cases', 'By Use Case')}</ListHeader>
+                            {useCaseTools.map((tool) => (
+                                <FooterLink key={tool.slug} href={`/${tool.slug}`}>
+                                    {tool.title.replace(' Redirect Checker', '').replace(' Checker', '')}
+                                </FooterLink>
+                            ))}
+                        </Stack>
+                    )}
+
+                    {/* Platforms */}
+                    {platformTools.length > 0 && (
+                        <Stack align={"flex-start"}>
+                            <ListHeader>{t('footer.platforms', 'By Platform')}</ListHeader>
+                            {platformTools.map((tool) => (
+                                <FooterLink key={tool.slug} href={`/${tool.slug}`}>
+                                    {tool.title.replace(' Redirect Checker', '')}
+                                </FooterLink>
+                            ))}
+                        </Stack>
+                    )}
 
                     {/* Company - Read from CMS if available, otherwise fallback to hardcoded */}
                     <Stack align={"flex-start"}>
@@ -142,6 +185,9 @@ export default function FooterWithLinks({ pages = [] }) {
                             ))
                         ) : (
                             <>
+                                <FooterLink href="/blog">
+                                    {t('footer.blog', 'Blog')}
+                                </FooterLink>
                                 <FooterLink href="/about" isExternal={false}>
                                     {t('footer.about', 'About')}
                                 </FooterLink>
