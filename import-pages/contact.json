@@ -79,26 +79,6 @@
           "text": "Monday - Friday: 9:00 AM - 5:00 PM (PST)"
         }
       ]
-    },
-    {
-      "_type": "block",
-      "style": "h2",
-      "children": [
-        {
-          "_type": "span",
-          "text": "Frequently Asked Questions"
-        }
-      ]
-    },
-    {
-      "_type": "block",
-      "style": "normal",
-      "children": [
-        {
-          "_type": "span",
-          "text": "Before reaching out, you may find answers to common questions in our FAQ sections on each tool page. Check out our Redirect Checker or Block Checker pages for more information."
-        }
-      ]
     }
   ],
   "contentAfterWidget": [],
