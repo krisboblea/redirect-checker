@@ -1,5 +1,5 @@
 {
-  "_type": "toolPage",
+  "_type": "page",
   "title": "301 Redirect Checker",
   "slug": {
     "_type": "slug",
@@ -7,6 +7,7 @@
   },
   "metaTitle": "Free 301 Redirect Checker Tool | Verify Permanent Redirects",
   "metaDescription": "Check 301 permanent redirects, analyze redirect chains, and ensure proper SEO implementation. Free bulk 301 redirect checker for web professionals and SEO experts.",
+  "category": "tools",
   "widget": "redirect",
   "heroIcon": "FaLink",
   "heroHeading": "301 Redirect Checker",

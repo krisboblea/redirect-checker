@@ -1,7 +1,7 @@
 import { postType } from "./postType";
 import { authorType } from "./authorType";
-import { toolPageType } from "./toolPageType";
+import { pageType } from "./pageType";
 
 export const schema = {
-  types: [postType, authorType, toolPageType],
+  types: [postType, authorType, pageType],
 }

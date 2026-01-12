@@ -11,7 +11,7 @@ import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { generateHrefLangsAndCanonicalTag } from "@/utils";
-import { fetchToolPagesForFooter, fetchToolPageBySlug } from "@/services/toolPageService";
+import { fetchAllPagesForFooter, fetchPageBySlug } from "@/services/pageService";
 
 // Map icon names to icon components
 const ICON_MAP = {
@@ -21,14 +21,14 @@ const ICON_MAP = {
   FaExternalLinkAlt,
 };
 
-export default function RedirectCheckPage({ toolData, toolPages = [] }) {
+export default function RedirectCheckPage({ toolData, pages = [] }) {
     const router = useRouter();
     const { locale, asPath } = router;
 
     // Use data from CMS if available, otherwise show 404
     if (!toolData) {
         return (
-            <MainLayout toolPages={toolPages}>
+            <MainLayout pages={pages}>
                 <Head>
                     <title>{`Page Not Found | ${APP_NAME}`}</title>
                 </Head>
@@ -52,7 +52,7 @@ export default function RedirectCheckPage({ toolData, toolPages = [] }) {
     const faqData = toolData.faqs || [];
 
     return (
-        <MainLayout toolPages={toolPages}>
+        <MainLayout pages={pages}>
             <Head>
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
@@ -172,13 +172,13 @@ export default function RedirectCheckPage({ toolData, toolPages = [] }) {
 
 export async function getStaticProps({ locale }) {
     // Fetch tool page data from Sanity
-    const toolData = await fetchToolPageBySlug('redirect', locale || 'en');
-    const toolPages = await fetchToolPagesForFooter(locale);
+    const toolData = await fetchPageBySlug('redirect', locale || 'en');
+    const pages = await fetchAllPagesForFooter(locale);
 
     return {
         props: {
             toolData,
-            toolPages,
+            pages,
             ...(await serverSideTranslations(locale, [ 'common' ])),
         },
         revalidate: 3600, // Revalidate every hour

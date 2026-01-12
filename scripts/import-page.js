@@ -1,10 +1,10 @@
 /**
- * Import Tool Page to Sanity
+ * Import Page to Sanity
  *
  * Usage:
- *   node scripts/import-tool-page.js example-tool-pages/301-redirect-checker.json
+ *   node scripts/import-page.js import-pages/301-redirect-checker.json
  *
- * This script imports a tool page JSON file into your Sanity dataset.
+ * This script imports a page JSON file into your Sanity dataset.
  */
 
 // Load environment variables
@@ -61,62 +61,47 @@ async function importToolPage(jsonFilePath) {
     }
 
     const jsonContent = fs.readFileSync(fullPath, 'utf-8');
-    let toolPageData = JSON.parse(jsonContent);
+    let pageData = JSON.parse(jsonContent);
 
     // Add _key properties to all array items
-    toolPageData = addKeysToArrays(toolPageData);
+    pageData = addKeysToArrays(pageData);
 
-    console.log(`📄 Importing tool page: ${toolPageData.title}`);
-    console.log(`🔗 Slug: ${toolPageData.slug.current}`);
+    console.log(`📄 Importing page: ${pageData.title}`);
+    console.log(`🔗 Slug: ${pageData.slug.current}`);
 
-    // Check if a tool page with this slug already exists
-    const existingQuery = `*[_type == "toolPage" && slug.current == $slug && locale == $locale][0]`;
+    // Check if a page with this slug already exists
+    const existingQuery = `*[_type == "page" && slug.current == $slug && locale == $locale][0]`;
     const existing = await client.fetch(existingQuery, {
-      slug: toolPageData.slug.current,
-      locale: toolPageData.locale || 'en',
+      slug: pageData.slug.current,
+      locale: pageData.locale || 'en',
     });
 
     if (existing) {
-      console.log(`⚠️  A tool page with slug "${toolPageData.slug.current}" already exists.`);
+      console.log(`⚠️  A page with slug "${pageData.slug.current}" already exists.`);
       console.log(`📝 Document ID: ${existing._id}`);
-
-      // Ask if user wants to update
-      const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
-
-      const answer = await new Promise((resolve) => {
-        readline.question('Do you want to update it? (yes/no): ', resolve);
-      });
-      readline.close();
-
-      if (answer.toLowerCase() !== 'yes' && answer.toLowerCase() !== 'y') {
-        console.log('❌ Import cancelled.');
-        process.exit(0);
-      }
+      console.log(`🔄 Updating existing page...`);
 
       // Update existing document
       const result = await client
         .patch(existing._id)
-        .set(toolPageData)
+        .set(pageData)
         .commit();
 
-      console.log(`✅ Tool page updated successfully!`);
+      console.log(`✅ Page updated successfully!`);
       console.log(`📝 Document ID: ${result._id}`);
     } else {
       // Create new document
-      const result = await client.create(toolPageData);
+      const result = await client.create(pageData);
 
-      console.log(`✅ Tool page created successfully!`);
+      console.log(`✅ Page created successfully!`);
       console.log(`📝 Document ID: ${result._id}`);
     }
 
-    console.log(`\n🌐 Preview URL: http://localhost:3000/${toolPageData.slug.current}`);
-    console.log(`🎨 Edit in Sanity: http://localhost:3000/studio/desk/toolPage;${toolPageData.slug.current}`);
+    console.log(`\n🌐 Preview URL: http://localhost:3000/${pageData.slug.current}`);
+    console.log(`🎨 Edit in Sanity: http://localhost:3000/studio/desk/page;${pageData.slug.current}`);
 
   } catch (error) {
-    console.error('❌ Error importing tool page:', error.message);
+    console.error('❌ Error importing page:', error.message);
 
     if (error.message.includes('token')) {
       console.log('\n💡 Tip: Make sure SANITY_API_TOKEN is set in your .env file');
@@ -131,8 +116,8 @@ async function importToolPage(jsonFilePath) {
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  console.log('Usage: node scripts/import-tool-page.js <json-file-path>');
-  console.log('Example: node scripts/import-tool-page.js example-tool-pages/301-redirect-checker.json');
+  console.log('Usage: node scripts/import-page.js <json-file-path>');
+  console.log('Example: node scripts/import-page.js import-pages/301-redirect-checker.json');
   process.exit(1);
 }
 

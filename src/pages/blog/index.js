@@ -4,11 +4,11 @@ import { useTranslation } from "next-i18next";
 import BlogListLayout from "@/components/blog/BlogListLayout";
 import BlogPostGrid from "@/components/blog/BlogPostGrid";
 import BlogPagination from "@/components/blog/BlogPagination";
-import { fetchToolPagesForFooter } from "@/services/toolPageService";
+import { fetchAllPagesForFooter } from "@/services/pageService";
 
 const PER_PAGE = 12;
 
-export default function IndexPage({ posts, pagination, toolPages = [] }) {
+export default function IndexPage({ posts, pagination, pages = [] }) {
   const { t } = useTranslation();
   const { currentPage, totalPages } = pagination || {
     currentPage: 1,
@@ -20,7 +20,7 @@ export default function IndexPage({ posts, pagination, toolPages = [] }) {
     <BlogListLayout
       title={t('blog.title', 'BLOG')}
       description={t('blog.description', 'Explore our latest blog posts and articles about web development, design, and more.')}
-      toolPages={toolPages}
+      pages={pages}
     >
       <BlogPostGrid posts={posts} showHero={isFirstPage} />
       <BlogPagination currentPage={currentPage} totalPages={totalPages} />
@@ -81,7 +81,7 @@ export async function getServerSideProps({ locale, query }) {
       end,
     });
 
-    const toolPages = await fetchToolPagesForFooter(locale || "en");
+    const pages = await fetchAllPagesForFooter(locale || "en");
 
     return {
       props: {
@@ -90,12 +90,12 @@ export async function getServerSideProps({ locale, query }) {
           currentPage: safePage,
           totalPages,
         },
-        toolPages,
+        pages,
         ...(await serverSideTranslations(locale, [ "common" ])),
       },
     };
   } catch (error) {
-    const toolPages = await fetchToolPagesForFooter(locale || "en");
+    const pages = await fetchAllPagesForFooter(locale || "en");
 
     return {
       props: {
@@ -104,7 +104,7 @@ export async function getServerSideProps({ locale, query }) {
           currentPage: 1,
           totalPages: 1,
         },
-        toolPages,
+        pages,
         ...(await serverSideTranslations(locale, [ "common" ])),
       },
     };

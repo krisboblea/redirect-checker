@@ -1,9 +1,9 @@
 import { defineField, defineType } from 'sanity'
 import { LANGUAGES, defaultLocale, getLocaleLabel } from '../../config/i18n'
 
-export const toolPageType = defineType({
-  name: 'toolPage',
-  title: 'Tool Page',
+export const pageType = defineType({
+  name: 'page',
+  title: 'Page',
   type: 'document',
   fields: [
     defineField({
@@ -57,6 +57,22 @@ export const toolPageType = defineType({
       title: 'Meta Description',
       description: 'SEO meta description (appears in search results)',
       validation: (rule) => rule.max(160).warning('Should be 160 characters or less'),
+    }),
+    defineField({
+      name: 'category',
+      type: 'string',
+      title: 'Category',
+      description: 'Page category for organizing footer links',
+      options: {
+        list: [
+          { title: 'Tools', value: 'tools' },
+          { title: 'Company', value: 'company' },
+          { title: 'Resources', value: 'resources' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'tools',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'widget',
@@ -234,12 +250,12 @@ export const toolPageType = defineType({
       title: 'title',
       slug: 'slug',
       locale: 'locale',
-      widget: 'widget',
+      category: 'category',
     },
-    prepare({ title, slug, locale, widget }) {
+    prepare({ title, slug, locale, category }) {
       return {
         title: title,
-        subtitle: `${getLocaleLabel(locale)} • /${slug?.current || slug} • ${widget}`,
+        subtitle: `${getLocaleLabel(locale)} • /${slug?.current || slug} • ${category || 'tools'}`,
       }
     },
   },

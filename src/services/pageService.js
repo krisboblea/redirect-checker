@@ -1,21 +1,21 @@
 /**
- * Tool Page Service
+ * Page Service
  *
- * Handles all data fetching operations for tool pages from Sanity CMS
+ * Handles all data fetching operations for pages from Sanity CMS
  */
 
 import { client } from "@/sanity/lib/client";
 
 /**
- * Fetch all published tool pages for footer links
+ * Fetch all published pages for footer links
  *
- * @param {string} locale - The locale to fetch tool pages for (default: 'en')
- * @returns {Promise<Array>} - Array of tool pages with title and slug
+ * @param {string} locale - The locale to fetch pages for (default: 'en')
+ * @returns {Promise<Array>} - Array of pages with title and slug
  */
 export async function fetchToolPagesForFooter(locale = 'en') {
   try {
     const query = `*[
-      _type == "toolPage" &&
+      _type == "page" &&
       defined(slug.current) &&
       locale == $locale
     ] | order(publishedAt desc) {
@@ -23,25 +23,25 @@ export async function fetchToolPagesForFooter(locale = 'en') {
       "slug": slug.current
     }`;
 
-    const toolPages = await client.fetch(query, { locale });
-    return toolPages || [];
+    const pages = await client.fetch(query, { locale });
+    return pages || [];
   } catch (error) {
-    console.error('Error fetching tool pages for footer:', error);
+    console.error('Error fetching pages for footer:', error);
     return [];
   }
 }
 
 /**
- * Fetch a single tool page by slug
+ * Fetch a single page by slug
  *
- * @param {string} slug - The slug of the tool page
+ * @param {string} slug - The slug of the page
  * @param {string} locale - The locale to fetch (default: 'en')
- * @returns {Promise<Object|null>} - Tool page data or null if not found
+ * @returns {Promise<Object|null>} - Page data or null if not found
  */
-export async function fetchToolPageBySlug(slug, locale = 'en') {
+export async function fetchPageBySlug(slug, locale = 'en') {
   try {
     const query = `*[
-      _type == "toolPage" &&
+      _type == "page" &&
       slug.current == $slug &&
       locale == $locale
     ][0] {
@@ -67,26 +67,26 @@ export async function fetchToolPageBySlug(slug, locale = 'en') {
     let toolPage = await client.fetch(query, { slug, locale });
 
     // Fallback to English if not found in current locale
-    if (!toolPage && locale !== 'en') {
+    if (!page && locale !== 'en') {
       toolPage = await client.fetch(query, { slug, locale: 'en' });
     }
 
-    return toolPage;
+    return page;
   } catch (error) {
-    console.error('Error fetching tool page by slug:', error);
+    console.error('Error fetching page by slug:', error);
     return null;
   }
 }
 
 /**
- * Fetch all tool page slugs for static path generation
+ * Fetch all page slugs for static path generation
  *
  * @returns {Promise<Array>} - Array of objects with slug and locale
  */
-export async function fetchAllToolPageSlugs() {
+export async function fetchAllPageSlugs() {
   try {
     const query = `*[
-      _type == "toolPage" && defined(slug.current)
+      _type == "page" && defined(slug.current)
     ] {
       "slug": slug.current,
       locale
@@ -95,22 +95,22 @@ export async function fetchAllToolPageSlugs() {
     const slugs = await client.fetch(query);
     return slugs || [];
   } catch (error) {
-    console.error('Error fetching tool page slugs:', error);
+    console.error('Error fetching page slugs:', error);
     return [];
   }
 }
 
 /**
- * Fetch tool pages by widget type
+ * Fetch pages by widget type
  *
  * @param {string} widgetType - The widget type (redirect, block)
  * @param {string} locale - The locale to fetch (default: 'en')
- * @returns {Promise<Array>} - Array of tool pages
+ * @returns {Promise<Array>} - Array of pages
  */
 export async function fetchToolPagesByWidget(widgetType, locale = 'en') {
   try {
     const query = `*[
-      _type == "toolPage" &&
+      _type == "page" &&
       widget == $widgetType &&
       locale == $locale &&
       defined(slug.current)
@@ -121,25 +121,25 @@ export async function fetchToolPagesByWidget(widgetType, locale = 'en') {
       publishedAt
     }`;
 
-    const toolPages = await client.fetch(query, { widgetType, locale });
-    return toolPages || [];
+    const pages = await client.fetch(query, { widgetType, locale });
+    return pages || [];
   } catch (error) {
-    console.error('Error fetching tool pages by widget:', error);
+    console.error('Error fetching pages by widget:', error);
     return [];
   }
 }
 
 /**
- * Fetch recent tool pages
+ * Fetch recent pages
  *
- * @param {number} limit - Maximum number of tool pages to fetch (default: 5)
+ * @param {number} limit - Maximum number of pages to fetch (default: 5)
  * @param {string} locale - The locale to fetch (default: 'en')
- * @returns {Promise<Array>} - Array of recent tool pages
+ * @returns {Promise<Array>} - Array of recent pages
  */
 export async function fetchRecentToolPages(limit = 5, locale = 'en') {
   try {
     const query = `*[
-      _type == "toolPage" &&
+      _type == "page" &&
       locale == $locale &&
       defined(slug.current)
     ] | order(publishedAt desc) [0...${limit}] {
@@ -149,56 +149,37 @@ export async function fetchRecentToolPages(limit = 5, locale = 'en') {
       publishedAt
     }`;
 
-    const toolPages = await client.fetch(query, { locale });
-    return toolPages || [];
+    const pages = await client.fetch(query, { locale });
+    return pages || [];
   } catch (error) {
-    console.error('Error fetching recent tool pages:', error);
+    console.error('Error fetching recent pages:', error);
     return [];
   }
 }
 
 /**
- * Fetch all pages for footer links (excluding non-footer pages)
+ * Fetch all pages for footer links
  *
  * @param {string} locale - The locale to fetch (default: 'en')
- * @returns {Promise<Object>} - Object with categorized pages
+ * @returns {Promise<Array>} - Array of all pages
  */
 export async function fetchAllPagesForFooter(locale = 'en') {
   try {
     const query = `*[
-      _type == "toolPage" &&
+      _type == "page" &&
       defined(slug.current) &&
       locale == $locale
     ] | order(publishedAt desc) {
       title,
       "slug": slug.current,
-      widget
+      category
     }`;
 
-    const allPages = await client.fetch(query, { locale });
-
-    // Categorize pages
-    const toolPages = [];
-    const companyPages = [];
-
-    allPages.forEach(page => {
-      if (page.widget === 'none') {
-        companyPages.push(page);
-      } else {
-        toolPages.push(page);
-      }
-    });
-
-    return {
-      toolPages,
-      companyPages,
-    };
+    const pages = await client.fetch(query, { locale });
+    return pages || [];
   } catch (error) {
     console.error('Error fetching all pages for footer:', error);
-    return {
-      toolPages: [],
-      companyPages: [],
-    };
+    return [];
   }
 }
 
@@ -211,7 +192,7 @@ export async function fetchAllPagesForFooter(locale = 'en') {
 export async function fetchCompanyPages(locale = 'en') {
   try {
     const query = `*[
-      _type == "toolPage" &&
+      _type == "page" &&
       widget == "none" &&
       locale == $locale &&
       defined(slug.current)

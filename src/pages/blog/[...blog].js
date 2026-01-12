@@ -24,7 +24,7 @@ import PostHeader from "@/components/blog/PostHeader";
 import TableOfContents from "@/components/blog/TableOfContents";
 import AuthorBox from "@/components/blog/AuthorBox";
 import RelatedArticles from "@/components/blog/RelatedArticles";
-import { fetchToolPagesForFooter } from "@/services/toolPageService";
+import { fetchAllPagesForFooter } from "@/services/pageService";
 
 const WORDS_PER_MINUTE = 200;
 
@@ -47,13 +47,13 @@ const calculateReadTimeMinutes = (content) => {
   return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
 };
 
-export default function PostPage({ postData, toolPages = [] }) {
+export default function PostPage({ postData, pages = [] }) {
   const router = useRouter();
   const { asPath } = router;
 
   if (!postData) {
     return (
-      <MainLayout toolPages={toolPages}>
+      <MainLayout pages={pages}>
         <Head>
           <title>{`Post Not Found | ${APP_NAME}`}</title>
         </Head>
@@ -223,7 +223,7 @@ export default function PostPage({ postData, toolPages = [] }) {
   };
 
   return (
-    <MainLayout toolPages={toolPages}>
+    <MainLayout pages={pages}>
       <Head>
         <title>{title}</title>
         <meta name="title" content={title} />
@@ -590,7 +590,7 @@ export async function getStaticProps({ params, locale }) {
         })
       : [];
 
-    const toolPages = await fetchToolPagesForFooter(locale || 'en');
+    const pages = await fetchAllPagesForFooter(locale || 'en');
 
     return {
       props: {
@@ -600,7 +600,7 @@ export async function getStaticProps({ params, locale }) {
           readTimeMinutes,
           relatedPosts: relatedPosts || [],
         },
-        toolPages,
+        pages,
         ...(await serverSideTranslations(locale, ["common"])),
       },
       revalidate: 60,

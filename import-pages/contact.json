@@ -1,5 +1,5 @@
 {
-  "_type": "toolPage",
+  "_type": "page",
   "title": "Contact Us",
   "slug": {
     "_type": "slug",
@@ -7,6 +7,7 @@
   },
   "metaTitle": "Contact Us | FindRedirect",
   "metaDescription": "Get in touch with the FindRedirect team. We're here to help with your redirect management needs.",
+  "category": "company",
   "widget": "none",
   "contentBeforeWidget": [
     {

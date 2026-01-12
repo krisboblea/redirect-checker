@@ -1,5 +1,5 @@
 {
-  "_type": "toolPage",
+  "_type": "page",
   "title": "About Us",
   "slug": {
     "_type": "slug",
@@ -7,6 +7,7 @@
   },
   "metaTitle": "About Us | FindRedirect",
   "metaDescription": "Learn about FindRedirect - your trusted platform for URL redirect checking, monitoring, and optimization tools.",
+  "category": "company",
   "widget": "none",
   "contentBeforeWidget": [
     {

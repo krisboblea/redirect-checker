@@ -1,5 +1,5 @@
 {
-  "_type": "toolPage",
+  "_type": "page",
   "title": "Domain Block Checker",
   "slug": {
     "_type": "slug",
@@ -7,6 +7,7 @@
   },
   "metaTitle": "Domain Block Checker: Verify Accessibility in China",
   "metaDescription": "Check if your domain is blocked by the Great Firewall of China. Ensure your content is accessible to users in China with our reliable tool.",
+  "category": "tools",
   "widget": "block",
   "heroIcon": "FaShieldVirus",
   "heroHeading": "Domain Block Checker",

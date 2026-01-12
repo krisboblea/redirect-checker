@@ -13,7 +13,8 @@ import FAQSection from "@/components/common/FAQSection";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { generateHrefLangsAndCanonicalTag } from "@/utils";
-import { fetchAllPagesForFooter, fetchToolPageBySlug, fetchAllToolPageSlugs } from "@/services/toolPageService";
+import { fetchAllPagesForFooter, fetchPageBySlug, fetchAllPageSlugs } from "@/services/pageService";
+import { allLanguages } from "@/config/i18n";
 
 // Map widget types to components
 const WIDGET_COMPONENTS = {
@@ -29,13 +30,13 @@ const ICON_MAP = {
   FaExternalLinkAlt,
 };
 
-export default function ToolPage({ toolData, toolPages = [], companyPages = [] }) {
+export default function ToolPage({ toolData, pages = [] }) {
   const router = useRouter();
   const { locale, asPath } = router;
 
   if (!toolData) {
     return (
-      <MainLayout toolPages={toolPages} companyPages={companyPages}>
+      <MainLayout pages={pages}>
         <Head>
           <title>{`Tool Not Found | ${APP_NAME}`}</title>
         </Head>
@@ -111,7 +112,7 @@ export default function ToolPage({ toolData, toolPages = [], companyPages = [] }
   };
 
   return (
-    <MainLayout toolPages={toolPages} companyPages={companyPages}>
+    <MainLayout pages={pages}>
       <Head>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
@@ -227,12 +228,19 @@ export default function ToolPage({ toolData, toolPages = [], companyPages = [] }
 }
 
 export async function getStaticPaths() {
-  const tools = await fetchAllToolPageSlugs();
+  const tools = await fetchAllPageSlugs();
 
-  const paths = tools.map((tool) => ({
-    params: { tool: tool.slug },
-    locale: tool.locale || "en",
-  }));
+  // Get unique slugs (since we'll generate paths for all locales)
+  // Exclude 'redirect' since it has its own dedicated page file
+  const uniqueSlugs = [...new Set(tools.map(t => t.slug))].filter(slug => slug !== 'redirect');
+
+  // Generate paths for each slug in all locales
+  const paths = uniqueSlugs.flatMap((slug) =>
+    allLanguages.map((locale) => ({
+      params: { tool: slug },
+      locale,
+    }))
+  );
 
   return {
     paths,
@@ -249,7 +257,7 @@ export async function getStaticProps({ params, locale }) {
     };
   }
 
-  const toolData = await fetchToolPageBySlug(slug, locale || 'en');
+  const toolData = await fetchPageBySlug(slug, locale || 'en');
 
   if (!toolData) {
     return {
@@ -258,13 +266,12 @@ export async function getStaticProps({ params, locale }) {
   }
 
   // Fetch all pages for footer links (categorized)
-  const { toolPages, companyPages } = await fetchAllPagesForFooter(locale || 'en');
+  const pages = await fetchAllPagesForFooter(locale || 'en');
 
   return {
     props: {
       toolData,
-      toolPages,
-      companyPages,
+      pages,
       ...(await serverSideTranslations(locale, ["common"])),
     },
     revalidate: 3600, // Revalidate every hour

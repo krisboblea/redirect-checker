@@ -85,13 +85,15 @@ const FooterLink = ({ href, children, isExternal = false }) => {
     );
 };
 
-export default function FooterWithLinks({ toolPages = [], companyPages = [] }) {
+export default function FooterWithLinks({ pages = [] }) {
     const { t } = useTranslation();
     const bgColor = useColorModeValue("gray.50", "gray.900");
     const borderColor = useColorModeValue("gray.200", "gray.700");
 
-    // Filter tool pages to only show those with widgets (exclude company pages)
-    const actualToolPages = toolPages.filter(page => page.widget !== 'none');
+    // Categorize pages by category field
+    const toolPages = pages.filter(page => (page.category || 'tools') === 'tools');
+    const companyPages = pages.filter(page => page.category === 'company');
+    const resourcePages = pages.filter(page => page.category === 'resources');
 
     return (
         <Box bg={bgColor} color={useColorModeValue("gray.700", "gray.200")}>
@@ -109,10 +111,10 @@ export default function FooterWithLinks({ toolPages = [], companyPages = [] }) {
                     </Stack>
 
                     {/* Dynamic Tool Pages from CMS */}
-                    {actualToolPages.length > 0 && (
+                    {toolPages.length > 0 && (
                         <Stack align={"flex-start"}>
                             <ListHeader>{t('footer.more-tools', 'More Tools')}</ListHeader>
-                            {actualToolPages.slice(0, 6).map((tool) => (
+                            {toolPages.slice(0, 6).map((tool) => (
                                 <FooterLink key={tool.slug} href={`/${tool.slug}`}>
                                     {tool.title}
                                 </FooterLink>
