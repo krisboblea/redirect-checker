@@ -160,6 +160,69 @@
         }
       ],
       "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Detailed Performance Data",
+          "marks": ["strong"]
+        }
+      ],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Want more details? View individual performance pages for "
+        },
+        {
+          "_type": "span",
+          "text": "RedirHub",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/redirhub-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " and "
+        },
+        {
+          "_type": "span",
+          "text": "Bitly",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/bitly-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": ", or check our "
+        },
+        {
+          "_type": "span",
+          "text": "complete uptime comparison",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/uptime"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " covering all 5 services we monitor."
+        }
+      ],
+      "style": "normal"
     }
   ],
   "faqs": [

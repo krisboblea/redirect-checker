@@ -58,6 +58,53 @@ export default function ToolPage({ toolData, pages = [] }) {
   const router = useRouter();
   const { locale, asPath } = router;
 
+  // Content styles for rich text with dark mode support
+  const contentStyles = {
+    "& p": {
+      fontSize: { base: "md", md: "lg" },
+      lineHeight: "1.8",
+      color: useColorModeValue("gray.700", "gray.300"),
+      mb: 4,
+    },
+    "& h1": {
+      fontSize: { base: "3xl", md: "4xl" },
+      fontWeight: "bold",
+      mt: 10,
+      mb: 6,
+      color: useColorModeValue("gray.900", "gray.100"),
+    },
+    "& h2": {
+      fontSize: { base: "2xl", md: "3xl" },
+      fontWeight: "bold",
+      mt: 8,
+      mb: 4,
+      color: useColorModeValue("gray.900", "gray.100"),
+    },
+    "& h3": {
+      fontSize: { base: "xl", md: "2xl" },
+      fontWeight: "bold",
+      mt: 6,
+      mb: 3,
+      color: useColorModeValue("gray.900", "gray.100"),
+    },
+    "& ul, & ol": {
+      pl: 6,
+      mb: 4,
+    },
+    "& li": {
+      fontSize: { base: "md", md: "lg" },
+      color: useColorModeValue("gray.700", "gray.300"),
+      mb: 2,
+    },
+    "& a": {
+      color: useColorModeValue("#7D65DB", "#9F7FFF"),
+      textDecoration: "underline",
+      _hover: {
+        color: useColorModeValue("#6550C0", "#B99FFF"),
+      },
+    },
+  };
+
   if (!toolData) {
     return (
       <MainLayout pages={pages}>
@@ -91,52 +138,6 @@ export default function ToolPage({ toolData, pages = [] }) {
   // Prepare FAQ data for schema
   const faqData = toolData.faqs || [];
 
-  // Content styles for rich text
-  const contentStyles = {
-    "& p": {
-      fontSize: { base: "md", md: "lg" },
-      lineHeight: "1.8",
-      color: "gray.700",
-      mb: 4,
-    },
-    "& h1": {
-      fontSize: { base: "3xl", md: "4xl" },
-      fontWeight: "bold",
-      mt: 10,
-      mb: 6,
-      color: "gray.900",
-    },
-    "& h2": {
-      fontSize: { base: "2xl", md: "3xl" },
-      fontWeight: "bold",
-      mt: 8,
-      mb: 4,
-      color: "gray.900",
-    },
-    "& h3": {
-      fontSize: { base: "xl", md: "2xl" },
-      fontWeight: "bold",
-      mt: 6,
-      mb: 3,
-      color: "gray.900",
-    },
-    "& ul, & ol": {
-      pl: 6,
-      mb: 4,
-    },
-    "& li": {
-      fontSize: { base: "md", md: "lg" },
-      color: "gray.700",
-      mb: 2,
-    },
-    "& a": {
-      color: "#7D65DB",
-      textDecoration: "underline",
-      _hover: {
-        color: "#6550C0",
-      },
-    },
-  };
 
   return (
     <MainLayout pages={pages}>

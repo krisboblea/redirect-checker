@@ -150,6 +150,69 @@
       ],
       "listItem": "bullet",
       "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "More Performance Comparisons",
+          "marks": ["strong"]
+        }
+      ],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Looking for more comparisons? Check out our "
+        },
+        {
+          "_type": "span",
+          "text": "complete uptime comparison",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/uptime"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " of all 5 services, or see individual performance data for "
+        },
+        {
+          "_type": "span",
+          "text": "Bitly",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/bitly-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " and "
+        },
+        {
+          "_type": "span",
+          "text": "RedirHub",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/redirhub-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": "."
+        }
+      ],
+      "style": "normal"
     }
   ],
   "faqs": [

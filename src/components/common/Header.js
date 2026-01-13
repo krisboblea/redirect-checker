@@ -6,7 +6,6 @@ import NavLink from "./NavLink";
 import MobileDrawer from "./MobileDrawer";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { LanguageMenu } from "./LanguageMenu";
 import { useTranslation } from "next-i18next";
 
 function navUrl(page, locale) {
@@ -76,7 +75,6 @@ const DesktopNav = ({ navItems }) => (
                 {item.label}
             </NavLink>
         ))}
-        <LanguageMenu />
     </Stack>
 );
 

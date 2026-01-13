@@ -128,6 +128,69 @@
         }
       ],
       "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Compare RedirHub Performance",
+          "marks": ["strong"]
+        }
+      ],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "See how RedirHub stacks up against the competition. Check our "
+        },
+        {
+          "_type": "span",
+          "text": "complete uptime comparison",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/uptime"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " of all services, or compare against "
+        },
+        {
+          "_type": "span",
+          "text": "Bitly",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/bitly-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " specifically. You can also view our "
+        },
+        {
+          "_type": "span",
+          "text": "top link shorteners ranking",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/top-link-shorteners"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " to see how we compare."
+        }
+      ],
+      "style": "normal"
     }
   ],
   "faqs": [

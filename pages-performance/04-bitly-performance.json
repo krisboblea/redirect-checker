@@ -113,7 +113,60 @@
       "children": [
         {
           "_type": "span",
-          "text": "While Bitly is widely used, consider comparing its performance with other redirect services. Check our comparison pages for detailed head-to-head analysis."
+          "text": "Compare Bitly with Other Services",
+          "marks": ["strong"]
+        }
+      ],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "While Bitly is widely used, consider comparing its performance with other redirect services. Check our "
+        },
+        {
+          "_type": "span",
+          "text": "Bitly vs Rebrandly comparison",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/bitly-vs-rebrandly"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": ", view the "
+        },
+        {
+          "_type": "span",
+          "text": "complete uptime comparison",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/uptime"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " of all 5 services, or see how "
+        },
+        {
+          "_type": "span",
+          "text": "RedirHub performs",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/redirhub-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": " as an alternative."
         }
       ],
       "style": "normal"

@@ -150,6 +150,83 @@
       ],
       "listItem": "bullet",
       "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Compare Individual Services",
+          "marks": ["strong"]
+        }
+      ],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Want to dive deeper into specific services? Check out our detailed performance analysis for "
+        },
+        {
+          "_type": "span",
+          "text": "RedirHub",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/redirhub-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": ", "
+        },
+        {
+          "_type": "span",
+          "text": "Bitly",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/bitly-performance"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": ", or compare services head-to-head with our "
+        },
+        {
+          "_type": "span",
+          "text": "Bitly vs Rebrandly comparison",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/bitly-vs-rebrandly"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": ". You can also see our "
+        },
+        {
+          "_type": "span",
+          "text": "top 3 link shorteners ranking",
+          "marks": [
+            {
+              "_type": "link",
+              "href": "/top-link-shorteners"
+            }
+          ]
+        },
+        {
+          "_type": "span",
+          "text": "."
+        }
+      ],
+      "style": "normal"
     }
   ],
   "faqs": [
