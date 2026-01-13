@@ -6,6 +6,7 @@ import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
 import BlockChecker from "@/components/block-check/BlockChecker";
+import UptimeWidget from "@/components/uptime/UptimeWidget";
 import { APP_NAME } from "@/configs/constant";
 import { FaLink, FaBan, FaSearch, FaExternalLinkAlt } from "react-icons/fa";
 import { styles } from "@/configs/checker";
@@ -20,6 +21,7 @@ import { allLanguages } from "@/config/i18n";
 const WIDGET_COMPONENTS = {
   redirect: RedirectChecker,
   block: BlockChecker,
+  uptime: UptimeWidget,
 };
 
 // Map icon names to icon components
@@ -185,6 +187,7 @@ export default function ToolPage({ toolData, pages = [] }) {
 
               {/* Widget Section */}
               <WidgetComponent
+                {...config}
                 icon={IconComponent}
                 buttonText={config.buttonText || toolData.buttonText}
                 examples={
