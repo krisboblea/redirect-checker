@@ -1,5 +1,5 @@
 import { Box, Button, Center, Alert, AlertIcon } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useTranslation } from 'next-i18next';
@@ -20,10 +20,12 @@ export default function UptimeWidget({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Parse services string into array
-  const serviceIds = services
-    ? services.split(',').map(s => s.trim()).filter(Boolean)
-    : [];
+  // Parse services string into array (memoized to prevent unnecessary re-renders)
+  const serviceIds = useMemo(() => {
+    return services
+      ? services.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+  }, [services]);
 
   useEffect(() => {
     async function fetchDataSources() {
@@ -54,13 +56,15 @@ export default function UptimeWidget({
     }
 
     fetchDataSources();
-  }, [router.query.tool, services, serviceIds, t]);
+  }, [router.query.tool, serviceIds, t]);
 
   // Filter sites based on serviceIds if API doesn't filter
   // (This is a safety fallback in case API filtering isn't working)
-  const filteredSites = serviceIds.length > 0 && sitesData.sites
-    ? sitesData.sites.filter(site => serviceIds.includes(site[0]?.token))
-    : sitesData.sites;
+  const filteredSites = useMemo(() => {
+    return serviceIds.length > 0 && sitesData.sites
+      ? sitesData.sites.filter(site => serviceIds.includes(site[0]?.token))
+      : sitesData.sites;
+  }, [serviceIds, sitesData.sites]);
 
   return (
     <>

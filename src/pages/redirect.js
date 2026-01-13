@@ -5,6 +5,7 @@ import { PortableText } from "@portabletext/react";
 import MainLayout from "@/layouts/MainLayout";
 import { AppContainer } from "@/components/common/AppContainer";
 import RedirectChecker from "@/components/redirect-check/RedirectChecker";
+import { toolPageComponents } from "@/components/common/PortableTextComponents";
 import { APP_NAME } from "@/configs/constant";
 import { FaLink, FaBan, FaSearch, FaExternalLinkAlt } from "react-icons/fa";
 import { styles } from "@/configs/checker";
@@ -115,7 +116,7 @@ export default function RedirectCheckPage({ toolData, pages = [] }) {
                     {/* Content Before Widget */}
                     {toolData.contentBeforeWidget && toolData.contentBeforeWidget.length > 0 && (
                         <Box mb={8}>
-                            <PortableText value={toolData.contentBeforeWidget} />
+                            <PortableText value={toolData.contentBeforeWidget} components={toolPageComponents} />
                         </Box>
                     )}
 
@@ -180,7 +181,7 @@ export default function RedirectCheckPage({ toolData, pages = [] }) {
                                 },
                             }}
                         >
-                            <PortableText value={toolData.contentAfterWidget} />
+                            <PortableText value={toolData.contentAfterWidget} components={toolPageComponents} />
                         </Box>
                     )}
 
