@@ -24,9 +24,14 @@
     {
       "key": "ctaText",
       "value": "Compare with RedirHub"
+    },
+    {
+      "key": "services",
+      "value": "[\"ps0k\"]"
     }
   ],
-  "contentBeforeWidget": [
+  "contentBeforeWidget": [],
+  "contentAfterWidget": [
     {
       "_type": "block",
       "children": [
@@ -91,9 +96,7 @@
       ],
       "listItem": "bullet",
       "style": "normal"
-    }
-  ],
-  "contentAfterWidget": [
+    },
     {
       "_type": "block",
       "children": [

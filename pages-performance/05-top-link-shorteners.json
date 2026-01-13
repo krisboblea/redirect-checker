@@ -24,9 +24,14 @@
     {
       "key": "ctaText",
       "value": "Try the Fastest Service - RedirHub"
+    },
+    {
+      "key": "services",
+      "value": "[\"yy6y\",\"ps0k\",\"peet\"]"
     }
   ],
-  "contentBeforeWidget": [
+  "contentBeforeWidget": [],
+  "contentAfterWidget": [
     {
       "_type": "block",
       "children": [
@@ -91,9 +96,7 @@
       ],
       "listItem": "bullet",
       "style": "normal"
-    }
-  ],
-  "contentAfterWidget": [
+    },
     {
       "_type": "block",
       "children": [

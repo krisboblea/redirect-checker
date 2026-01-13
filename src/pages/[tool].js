@@ -9,7 +9,7 @@ import BlockChecker from "@/components/block-check/BlockChecker";
 import UptimeWidget from "@/components/uptime/UptimeWidget";
 import { toolPageComponents } from "@/components/common/PortableTextComponents";
 import { APP_NAME } from "@/configs/constant";
-import { FaLink, FaBan, FaSearch, FaExternalLinkAlt } from "react-icons/fa";
+import { FaLink, FaBan, FaSearch, FaExternalLinkAlt, FaServer, FaShieldAlt, FaNetworkWired, FaClock, FaCheckCircle, FaCloud } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import FAQSection from "@/components/common/FAQSection";
 import { useTranslation } from "next-i18next";
@@ -31,6 +31,12 @@ const ICON_MAP = {
   FaBan,
   FaSearch,
   FaExternalLinkAlt,
+  FaServer,
+  FaShieldAlt,
+  FaNetworkWired,
+  FaClock,
+  FaCheckCircle,
+  FaCloud,
 };
 
 // Helper function to convert widgetConfig array to object
@@ -39,7 +45,7 @@ function parseWidgetConfig(config) {
   if (Array.isArray(config)) {
     return config.reduce((acc, item) => {
       if (item.key && item.value !== undefined) {
-        acc[item.key] = item.value;
+        acc[ item.key ] = item.value;
       }
       return acc;
     }, {});
@@ -73,8 +79,8 @@ export default function ToolPage({ toolData, pages = [] }) {
   }
 
   const hasWidget = toolData.widget && toolData.widget !== 'none';
-  const WidgetComponent = hasWidget ? WIDGET_COMPONENTS[toolData.widget] : null;
-  const IconComponent = ICON_MAP[toolData.heroIcon] || FaLink;
+  const WidgetComponent = hasWidget ? WIDGET_COMPONENTS[ toolData.widget ] : null;
+  const IconComponent = ICON_MAP[ toolData.heroIcon ] || FaLink;
 
   const pageTitle = toolData.metaTitle || `${toolData.title} | ${APP_NAME}`;
   const pageDescription = toolData.metaDescription || toolData.heroDescription;
@@ -252,7 +258,7 @@ export async function getStaticPaths() {
 
   // Get unique slugs (since we'll generate paths for all locales)
   // Exclude 'redirect' and 'home' since they have their own dedicated page files
-  const uniqueSlugs = [...new Set(tools.map(t => t.slug))].filter(slug => slug !== 'redirect' && slug !== 'home');
+  const uniqueSlugs = [ ...new Set(tools.map(t => t.slug)) ].filter(slug => slug !== 'home');
 
   // Generate paths for each slug in all locales
   const paths = uniqueSlugs.flatMap((slug) =>
@@ -292,7 +298,7 @@ export async function getStaticProps({ params, locale }) {
     props: {
       toolData,
       pages,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, [ "common" ])),
     },
     revalidate: 3600, // Revalidate every hour
   };

@@ -19,14 +19,19 @@
     },
     {
       "key": "ctaUrl",
-      "value": "https://www.redirhub.com/signup"
+      "value": "https://www.redirhub.com/"
     },
     {
       "key": "ctaText",
       "value": "Start Free Trial - 99.9% Uptime SLA"
+    },
+    {
+      "key": "services",
+      "value": "[\"yy6y\"]"
     }
   ],
-  "contentBeforeWidget": [
+  "contentBeforeWidget": [],
+  "contentAfterWidget": [
     {
       "_type": "block",
       "children": [
@@ -102,9 +107,7 @@
       ],
       "listItem": "bullet",
       "style": "normal"
-    }
-  ],
-  "contentAfterWidget": [
+    },
     {
       "_type": "block",
       "children": [

@@ -2,14 +2,14 @@
   "_type": "page",
   "title": "Link Shortener Uptime Comparison",
   "slug": {
-    "current": "uptime"
+    "current": "shortener-uptime"
   },
   "metaTitle": "Link Shortener Uptime Comparison: 5 Services Tested 24/7 | 2026",
   "metaDescription": "Real-time uptime and performance monitoring for RedirHub, Bitly, Rebrandly, EasyRedir, and Redirect Pizza. Compare response times, reliability, and service quality across top redirect services.",
   "category": "tools",
   "widget": "uptime",
   "locale": "en",
-  "heroIcon": "FaChartLine",
+  "heroIcon": "FaCheckCircle",
   "heroHeading": "Link Shortener Uptime & Performance Monitoring",
   "heroDescription": "Compare real-time uptime statistics and response times across 5 leading redirect services",
   "widgetConfig": [
@@ -24,9 +24,14 @@
     {
       "key": "ctaText",
       "value": "Try RedirHub - 99.9% Uptime Guarantee"
+    },
+    {
+      "key": "services",
+      "value": "[\"yy6y\",\"ps0k\",\"peet\",\"1z19\",\"nwxh\"]"
     }
   ],
-  "contentBeforeWidget": [
+  "contentBeforeWidget": [],
+  "contentAfterWidget": [
     {
       "_type": "block",
       "children": [
@@ -91,9 +96,7 @@
       ],
       "listItem": "bullet",
       "style": "normal"
-    }
-  ],
-  "contentAfterWidget": [
+    },
     {
       "_type": "block",
       "children": [
