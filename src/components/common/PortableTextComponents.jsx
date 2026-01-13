@@ -42,6 +42,10 @@ export const createPortableTextComponents = (options = {}) => {
           </Box>
         );
       },
+      // Handle span blocks (inline content)
+      span: ({ value, children }) => {
+        return <Text as="span">{children}</Text>;
+      },
     },
     marks: {
       // Internal links
