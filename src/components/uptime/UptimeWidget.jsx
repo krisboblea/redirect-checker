@@ -9,10 +9,10 @@ import { styles } from "@/configs/uptime";
 
 export default function UptimeWidget({
   children,           // Hero content from [tool].js
-  services,           // Comma-separated service IDs from widgetConfig (e.g., "yy6y,ps0k,peet")
-  showDataSources = "true",  // From widgetConfig
-  ctaUrl = "https://www.redirhub.com",  // From widgetConfig
-  ctaText,            // From widgetConfig (optional)
+  services,           // REQUIRED: Comma-separated service IDs (e.g., "yy6y,ps0k,peet")
+  showDataSources = "true",  // Show data sources section
+  ctaUrl = "https://www.redirhub.com",  // CTA button URL
+  ctaText,            // CTA button text (optional)
 }) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -33,17 +33,17 @@ export default function UptimeWidget({
         setIsLoading(true);
         setError(null);
 
-        // Build API params
-        const params = {};
+        // Validate services are provided
+        if (serviceIds.length === 0) {
+          setError(t('tool.uptime-no-services', 'No services specified for uptime monitoring.'));
+          setIsLoading(false);
+          return;
+        }
 
-        // Priority 1: Use page slug for service configuration
-        if (router.query.tool) {
-          params.slug = router.query.tool;
-        }
-        // Priority 2: Use services from widgetConfig (backward compatibility)
-        else if (serviceIds.length > 0) {
-          params.services = serviceIds.join(',');
-        }
+        // API only accepts services parameter
+        const params = {
+          services: serviceIds.join(',')
+        };
 
         const apiResponse = await axios.get("/api/uptime", { params });
         setSitesData(apiResponse.data.data);
@@ -56,10 +56,10 @@ export default function UptimeWidget({
     }
 
     fetchDataSources();
-  }, [router.query.tool, serviceIds, t]);
+  }, [serviceIds, t]);
 
-  // Filter sites based on serviceIds if API doesn't filter
-  // (This is a safety fallback in case API filtering isn't working)
+  // The API now returns filtered data based on services parameter
+  // This is kept as a safety fallback
   const filteredSites = useMemo(() => {
     return serviceIds.length > 0 && sitesData.sites
       ? sitesData.sites.filter(site => serviceIds.includes(site[0]?.token))
