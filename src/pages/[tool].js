@@ -189,12 +189,6 @@ export default function ToolPage({ toolData, pages = [] }) {
               <WidgetComponent
                 {...config}
                 icon={IconComponent}
-                buttonText={config.buttonText || toolData.buttonText}
-                examples={
-                  typeof config.examples === 'string'
-                    ? config.examples.split(',').map(s => s.trim()).filter(Boolean)
-                    : config.examples || toolData.exampleUrls || []
-                }
               >
                 <Flex direction="column" align="center" textAlign="center">
                   <Box {...styles.checkPage.heroBox}>
