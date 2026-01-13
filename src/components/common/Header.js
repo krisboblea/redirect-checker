@@ -1,6 +1,6 @@
 import { Box, Flex, Button, useColorModeValue, Stack, useColorMode, Image, IconButton, useDisclosure } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { APP_LOGO, APP_LOGO_DARK, APP_NAME, HIDE_NAV, INDEX_PAGE, LOCALE, NAVS } from "@/configs/constant";
+import { APP_LOGO, APP_LOGO_DARK, APP_NAME, HIDE_NAV, LOCALE, NAVS } from "@/configs/constant";
 import { FaSun, FaMoon, FaHome, FaCheckCircle, FaBlog, FaBars, FaRocket, FaExpand } from "react-icons/fa";
 import NavLink from "./NavLink";
 import MobileDrawer from "./MobileDrawer";
@@ -10,7 +10,7 @@ import { LanguageMenu } from "./LanguageMenu";
 import { useTranslation } from "next-i18next";
 
 function navUrl(page, locale) {
-    if (INDEX_PAGE === page || page === 'home') {
+    if (page === 'home') {
         return locale !== LOCALE ? `/${locale}` : '/';
     }
     return locale !== LOCALE ? `/${locale}/${page}` : `/${page}`;
@@ -39,8 +39,7 @@ export default function Header() {
         return links.filter((link) => navs.includes(link.id));
     }, []);
 
-    // put the item id = INDEX_PAGE to the first item
-    const navItems = navsInUse.filter((link) => link.id !== INDEX_PAGE).map((link) => ({
+    const navItems = navsInUse.map((link) => ({
         id: link.id,
         href: navUrl(link.id, locale),
         icon: link.icon,
