@@ -54,7 +54,7 @@ export default function UptimeWidget({
     }
 
     fetchDataSources();
-  }, [router.query.tool, services, serviceIds.length, t]);
+  }, [router.query.tool, services, serviceIds, t]);
 
   // Filter sites based on serviceIds if API doesn't filter
   // (This is a safety fallback in case API filtering isn't working)
