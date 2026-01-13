@@ -1,6 +1,6 @@
 import { Box, Flex, Button, useColorModeValue, Stack, useColorMode, Image, IconButton, useDisclosure } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { APP_LOGO, APP_LOGO_DARK, APP_NAME, HIDE_NAV, LOCALE, NAVS } from "@/configs/constant";
+import { APP_LOGO, APP_LOGO_DARK, APP_NAME, LOCALE } from "@/configs/constant";
 import { FaSun, FaMoon, FaHome, FaCheckCircle, FaBlog, FaBars, FaRocket, FaExpand } from "react-icons/fa";
 import NavLink from "./NavLink";
 import MobileDrawer from "./MobileDrawer";
@@ -28,15 +28,10 @@ export default function Header() {
         const links = [
             { id: 'home', icon: <FaHome />, label: "Home" },
             { id: 'uptime', icon: <FaRocket />, label: "Uptime" },
-            { id: 'redirect', icon: <FaCheckCircle />, label: "Redirect Check" },
             { id: 'expander', icon: <FaExpand />, label: "URL Expander" },
             { id: 'blog', icon: <FaBlog />, label: "Blog" },
         ];
-        if (!NAVS) {
-            return links;
-        }
-        const navs = JSON.parse(NAVS);
-        return links.filter((link) => navs.includes(link.id));
+        return links;
     }, []);
 
     const navItems = navsInUse.map((link) => ({
@@ -51,9 +46,9 @@ export default function Header() {
             <Flex h={16} alignItems={"center"} justifyContent={"space-between"} maxW="container.xl" mx="auto">
                 <Logo locale={locale} />
                 <Flex alignItems={"center"}>
-                    {!HIDE_NAV && <DesktopNav navItems={navItems} />}
+                    <DesktopNav navItems={navItems} />
                     <ColorModeToggle colorMode={colorMode} toggleColorMode={toggleColorMode} />
-                    {!HIDE_NAV && <MobileMenuButton onOpen={onOpen} />}
+                    <MobileMenuButton onOpen={onOpen} />
                 </Flex>
             </Flex>
             <MobileDrawer isOpen={isOpen} onClose={onClose} navItems={navItems} />
