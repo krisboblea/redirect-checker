@@ -27,7 +27,7 @@
     },
     {
       "key": "services",
-      "value": "[\"ps0k\",\"peet\"]"
+      "value": "ps0k,peet"
     }
   ],
   "contentBeforeWidget": [],

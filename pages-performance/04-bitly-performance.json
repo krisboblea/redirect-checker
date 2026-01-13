@@ -27,7 +27,7 @@
     },
     {
       "key": "services",
-      "value": "[\"ps0k\"]"
+      "value": "ps0k"
     }
   ],
   "contentBeforeWidget": [],
