@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy initialize OpenAI client
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -100,6 +103,7 @@ Return ONLY a valid JSON array like:
         )
     }
 
+    const openai = getOpenAIClient()
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
@@ -110,17 +114,22 @@ Return ONLY a valid JSON array like:
       max_tokens: field === 'faqs' ? 1000 : 200,
     })
 
-    let result: any = completion.choices[0].message.content?.trim()
+    let result: string | any[] =
+      completion.choices[0].message.content?.trim() || ''
 
     // Parse JSON for tags and faqs
     if (field === 'tags' || field === 'faqs') {
       try {
-        result = JSON.parse(result)
+        result = JSON.parse(result as string)
       } catch (e) {
         // Try to extract JSON from markdown code blocks
-        const jsonMatch = result.match(/```(?:json)?\s*(\[[\s\S]*?\])\s*```/)
-        if (jsonMatch) {
-          result = JSON.parse(jsonMatch[1])
+        if (typeof result === 'string') {
+          const jsonMatch = result.match(/```(?:json)?\s*(\[[\s\S]*?\])\s*```/)
+          if (jsonMatch) {
+            result = JSON.parse(jsonMatch[1])
+          } else {
+            throw new Error('Invalid JSON response from AI')
+          }
         } else {
           throw new Error('Invalid JSON response from AI')
         }
@@ -128,12 +137,12 @@ Return ONLY a valid JSON array like:
     }
 
     return NextResponse.json({ value: result })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error generating field:', error)
     return NextResponse.json(
       {
         error: 'Failed to generate field',
-        details: error.message,
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     )

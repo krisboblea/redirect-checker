@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-
+// Generate random key for Sanity blocks
 function generateKey() {
-  return Math.random().toString(36).substr(2, 9)
+  return Math.random().toString(36).substring(2, 11)
+}
+
+// Lazy initialize OpenAI client
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
 }
 
 export async function POST(req: NextRequest) {
@@ -77,6 +81,7 @@ Content structure for Sanity:
 
 IMPORTANT: Return ONLY valid JSON, no markdown code blocks or explanations.`
 
+    const openai = getOpenAIClient()
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
@@ -90,7 +95,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown code blocks or explanations.`
 
     const content = completion.choices[0].message.content
     if (!content) {
-      throw new Error('No response from AI')
+      throw new Error('No content returned from OpenAI')
     }
 
     const generatedPost = JSON.parse(content)
@@ -111,20 +116,22 @@ IMPORTANT: Return ONLY valid JSON, no markdown code blocks or explanations.`
             _type: 'span',
             _key: generateKey(),
             text: child.text || '',
-            marks: child.marks || []
-          }))
+            marks: child.marks || [],
+          })),
+          markDefs: block.markDefs || [],
         }
       }
       return block
     })
 
-    // Format FAQs with keys
-    const formattedFaqs = Array.isArray(generatedPost.faqs)
-      ? generatedPost.faqs.map((faq: any) => ({
-        _key: generateKey(),
-        question: faq.question,
-        answer: faq.answer
-      }))
+    // Ensure FAQs don't exceed 5 and format with required Sanity fields
+    const faqs = generatedPost.faqs
+      ? generatedPost.faqs.slice(0, 5).map((faq: any) => ({
+          _type: 'object',
+          _key: generateKey(),
+          question: faq.question || '',
+          answer: faq.answer || '',
+        }))
       : []
 
     return NextResponse.json({
@@ -132,14 +139,14 @@ IMPORTANT: Return ONLY valid JSON, no markdown code blocks or explanations.`
       excerpt: generatedPost.excerpt || '',
       tags: generatedPost.tags || [],
       content: formattedContent,
-      faqs: formattedFaqs
+      faqs: faqs,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error generating post:', error)
     return NextResponse.json(
       {
         error: 'Failed to generate post',
-        details: error.message,
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     )
