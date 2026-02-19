@@ -11,7 +11,7 @@
  * The AI translation button calls /api/sanity/process-translations which uses
  * the generalized translation service from src/lib/translation/translate-document.ts
  *
- * Supported document types: post, page
+ * Supported document types: automatically derived from TRANSLATABLE_FIELDS in translate-document.ts
  */
 
 import { definePlugin } from 'sanity'
@@ -19,6 +19,7 @@ import { Badge, Button, Card, Flex, Stack, Text } from '@sanity/ui'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'sanity/router'
 import { LANGUAGES } from '@/sanity/config/i18n'
+import { TRANSLATABLE_FIELDS } from '@/lib/translation/translate-document'
 
 interface Translation {
   _id: string
@@ -33,8 +34,8 @@ interface LanguageSwitcherProps {
   documentType: string
 }
 
-// Document types that support translation
-const TRANSLATABLE_TYPES = ['post', 'page']
+// Automatically derive supported types from TRANSLATABLE_FIELDS config
+const TRANSLATABLE_TYPES = Object.keys(TRANSLATABLE_FIELDS)
 
 function LanguageSwitcherComponent({
   document,
