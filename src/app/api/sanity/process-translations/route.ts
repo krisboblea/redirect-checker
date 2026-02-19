@@ -115,7 +115,7 @@ async function handleProcessTranslations(req: NextRequest) {
     }
 
     let processed = 0
-    const results = []
+    const results: any[] = []
 
     for (const doc of documentsToProcess) {
       try {
