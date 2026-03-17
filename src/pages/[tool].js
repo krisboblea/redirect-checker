@@ -58,6 +58,7 @@ function parseWidgetConfig(config) {
 export default function ToolPage({ toolData, pages = [] }) {
     const router = useRouter();
     const { locale, asPath } = router;
+    const path = asPath === '/' ? '' : asPath;
 
     // Create PortableText components with locale
     const toolPageComponents = createPortableTextComponents({
@@ -121,10 +122,10 @@ export default function ToolPage({ toolData, pages = [] }) {
                 <AppContainer>
                     <Box my={12} textAlign="center">
                         <Heading as="h1" size="2xl" mb={4}>
-              Tool not found
+                            Tool not found
                         </Heading>
                         <Text fontSize="xl" color="gray.600">
-              The tool you&apos;re looking for doesn&apos;t exist.
+                            The tool you&apos;re looking for doesn&apos;t exist.
                         </Text>
                     </Box>
                 </AppContainer>
@@ -154,7 +155,7 @@ export default function ToolPage({ toolData, pages = [] }) {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
                 {/* hreflangs and canonical tag */}
-                {generateHrefLangsAndCanonicalTag(locale, asPath)}
+                {generateHrefLangsAndCanonicalTag(locale, path)}
 
                 {/* FAQ Schema */}
                 {faqData.length > 0 && (
