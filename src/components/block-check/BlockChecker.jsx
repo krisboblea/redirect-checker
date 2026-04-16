@@ -18,6 +18,7 @@ import { FaSearch } from "react-icons/fa";
 import BlockResultList from "./BlockResultList";
 import { checkBlocks } from "./checkBlocks.js";
 import { useTranslation } from "next-i18next";
+import { trackEvent } from "@/utils/analytics";
 
 export default function BlockChecker({ children, buttonText }) {
   const {t} = useTranslation();
@@ -41,6 +42,11 @@ export default function BlockChecker({ children, buttonText }) {
 
     await checkBlocks({ urlList, setProgress, toast, setResults });
     setIsLoading(false);
+
+    trackEvent('block_check_submitted', {
+      url_count: urlList.length,
+      trigger: 'manual',
+    });
   }, [urls, toast]);
 
   useEffect(() => {
@@ -62,6 +68,11 @@ export default function BlockChecker({ children, buttonText }) {
           await checkBlocks({ urlList: urlsToCheck, setProgress, toast, setResults });
           setIsLoading(false);
           scrollToResults();
+
+          trackEvent('block_check_submitted', {
+            url_count: urlsToCheck.length,
+            trigger: 'auto',
+          });
         }, 300);
       }
     }

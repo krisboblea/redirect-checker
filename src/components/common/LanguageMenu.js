@@ -11,16 +11,13 @@ import {
 } from '@chakra-ui/react';
 import { FaArrowDown, FaCircle, FaLanguage } from 'react-icons/fa';
 import { useRouter } from 'next/router';
-import { getSupportedLocales } from '@/configs/utils';
+import { LANGUAGES } from '@/sanity/config/i18n';
 
 export function LanguageMenu() {
     const router = useRouter();
     const { locale } = router;
 
     const buttonStyles = {
-        colorScheme: "white",
-        px: 3,
-        py: 2,
         rounded: "full",
     };
 
@@ -42,14 +39,14 @@ export function LanguageMenu() {
                 </Flex>
             </MenuButton>
             <MenuList p={2} minW={'fit-content'} zIndex={999}>
-                {getSupportedLocales()?.map((lang) => (
+                {LANGUAGES?.map((lang) => (
                     <MenuItem
-                        key={lang.value}
-                        onClick={() => router.push(router.pathname, router.asPath, { locale: lang.value })}
+                        key={lang.id}
+                        onClick={() => router.push(router.pathname, router.asPath, { locale: lang.id })}
                         borderRadius={'md'}
                     >
                         <Box {...textStyles}>
-                            {lang.text}
+                            {lang.flag} {lang.nativeName}
                         </Box>
                     </MenuItem>
                 ))}

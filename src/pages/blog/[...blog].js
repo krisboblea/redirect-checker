@@ -2,6 +2,7 @@ import { client } from "@/sanity/lib/client";
 import { PortableText } from "@portabletext/react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { useRef } from "react";
 import {
   Box,
   Container,
@@ -10,20 +11,19 @@ import {
   Divider,
   Flex,
   Image as ChakraImage,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
 } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
 import { urlFor } from "@/sanity/lib/image";
-import { APP_NAME } from "@/configs/constant";
+import { APP_NAME, LOCALE } from "@/configs/constant";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import PostHeader from "@/components/blog/PostHeader";
 import TableOfContents from "@/components/blog/TableOfContents";
 import AuthorBox from "@/components/blog/AuthorBox";
 import RelatedArticles from "@/components/blog/RelatedArticles";
+import FAQSection from "@/components/common/FAQSection";
+import { createPortableTextComponents } from "@/components/common/PortableTextComponents";
+import { fetchAllPagesForFooter } from "@/services/pageService";
+import { getHrefForLocale } from "@/utils";
 
 const WORDS_PER_MINUTE = 200;
 
@@ -46,13 +46,14 @@ const calculateReadTimeMinutes = (content) => {
   return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
 };
 
-export default function PostPage({ postData }) {
+export default function PostPage({ postData, pages = [] }) {
   const router = useRouter();
-  const { asPath } = router;
+  const { locale, asPath } = router;
+  const currentHeadingIndexRef = useRef(-1);
 
   if (!postData) {
     return (
-      <MainLayout>
+      <MainLayout pages={pages}>
         <Head>
           <title>{`Post Not Found | ${APP_NAME}`}</title>
         </Head>
@@ -151,78 +152,15 @@ export default function PostPage({ postData }) {
       }
       : null;
 
-  let currentHeadingIndex = -1;
-
-  const portableComponents = {
-    types: {
-      image: ({ value }) => {
-        const src = value?.asset
-          ? urlFor(value).width(1200).fit("max").url()
-          : value?.url;
-
-        if (!src) return null;
-
-        return (
-          <Box my={6} textAlign="center">
-            <ChakraImage
-              src={src}
-              alt={value?.alt || postData.title}
-              mx="auto"
-              maxH="640px"
-              maxWidth={'800px'}
-              w="100%"
-              objectFit="contain"
-              loading="lazy"
-            />
-            {value?.caption && (
-              <Text mt={2} fontSize="sm" color="gray.500">
-                {value.caption}
-              </Text>
-            )}
-          </Box>
-        );
-      },
-    },
-    block: {
-      h2: ({ children }) => {
-        currentHeadingIndex++;
-        return (
-          <Heading
-            as="h2"
-            id={`heading-${currentHeadingIndex}`}
-            fontSize={{ base: "2xl", md: "3xl" }}
-            fontWeight="bold"
-            mt={10}
-            mb={4}
-            color="gray.900"
-            scrollMarginTop="100px"
-          >
-            {children}
-          </Heading>
-        );
-      },
-      h3: ({ children }) => {
-        currentHeadingIndex++;
-        return (
-          <Heading
-            as="h3"
-            id={`heading-${currentHeadingIndex}`}
-            fontSize={{ base: "xl", md: "2xl" }}
-            fontWeight="bold"
-            mt={6}
-            mb={3}
-            color="gray.900"
-            scrollMarginTop="100px"
-          >
-            {children}
-          </Heading>
-        );
-      },
-    },
-  };
+  // Create PortableText components with heading IDs for table of contents
+  const portableComponents = createPortableTextComponents({
+    postData,
+    enableHeadings: true,
+    currentHeadingIndexRef,
+  });
 
   return (
-    <MainLayout>
+    <MainLayout pages={pages}>
       <Head>
         <title>{title}</title>
         <meta name="title" content={title} />
@@ -274,14 +212,18 @@ export default function PostPage({ postData }) {
           />
         )}
 
+        <link
+          key="canonical"
+          rel="canonical"
+          href={getHrefForLocale(locale, asPath)}
+        />
         {postData.availableTranslations &&
           postData.availableTranslations.map((translation) => (
             <link
               key={translation.locale}
               rel="alternate"
               hrefLang={translation.locale}
-              href={`${process.env.NEXT_PUBLIC_SITE_URL}/${translation.locale === "en" ? "" : `${translation.locale}/`
-                }blog/${translation.slug}`}
+              href={getHrefForLocale(translation.locale, asPath)}
             />
           ))}
 
@@ -372,76 +314,12 @@ export default function PostPage({ postData }) {
                   {postData.faqs && postData.faqs.length > 0 && (
                     <Box as="section" mt={10}>
                       <Divider mb={6} />
-                      <Heading
-                        as="h2"
-                        fontSize={{ base: "2xl", md: "3xl" }}
-                        fontWeight="bold"
-                        my={8}
-                        color="gray.900"
-                      >
-                        Frequently Asked Questions
-                      </Heading>
-                      <Accordion allowMultiple allowToggle>
-                        {postData.faqs.map((faq, index) => (
-                          <AccordionItem
-                            key={index}
-                            border="1px solid"
-                            borderColor="gray.200"
-                            borderRadius="2xl"
-                            mb={4}
-                            overflow="hidden"
-                            transition="all 0.3s ease"
-                            _hover={{
-                              boxShadow: "md",
-                              borderColor: "#7D65DB",
-                            }}
-                          >
-                            <AccordionButton
-                              py={4}
-                              px={6}
-                              _hover={{
-                                bg: "purple.50",
-                              }}
-                              borderTopRadius="2xl"
-                              borderTop={"2px solid #7D65DB"}
-                              _expanded={{
-                                bg: "#7D65DB",
-                                color: "white",
-                              }}
-                              transition="all 0.2s"
-                            >
-                              <Box
-                                flex="1"
-                                textAlign="left"
-                                fontSize={{ base: "lg", md: "xl" }}
-                                fontWeight="semibold"
-                              >
-                                {faq.question}
-                              </Box>
-                              <AccordionIcon
-                                fontSize="24px"
-                                transition="transform 0.2s ease"
-                              />
-                            </AccordionButton>
-                            <AccordionPanel
-                              pb={6}
-                              pt={4}
-                              px={6}
-                              bg="gray.50"
-                              borderTop="1px solid"
-                              borderColor="gray.200"
-                            >
-                              <Text
-                                fontSize={{ base: "md", md: "lg" }}
-                                color="gray.700"
-                                lineHeight="1.7"
-                              >
-                                {faq.answer}
-                              </Text>
-                            </AccordionPanel>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
+                      <FAQSection
+                        data={postData.faqs}
+                        title="Frequently Asked Questions"
+                        showContactButton={false}
+                        accentColor="#7D65DB"
+                      />
                     </Box>
                   )}
 
@@ -482,7 +360,7 @@ export async function getStaticPaths() {
     const posts = await client.fetch(SLUGS_QUERY);
 
     const paths = posts.map((post) => ({
-      params: { blog: [post.slug] },
+      params: { blog: [ post.slug ] },
       locale: post.locale || "en",
     }));
 
@@ -500,7 +378,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params, locale }) {
-  const slug = params.blog ? params.blog[0] : null;
+  const slug = params.blog ? params.blog[ 0 ] : null;
 
   if (!slug) {
     return {
@@ -583,11 +461,13 @@ export async function getStaticProps({ params, locale }) {
 
     const relatedPosts = postData.tags && postData.tags.length > 0
       ? await client.fetch(RELATED_POSTS_QUERY, {
-          postId: postData._id,
-          locale: locale || 'en',
-          tags: postData.tags,
-        })
+        postId: postData._id,
+        locale: locale || 'en',
+        tags: postData.tags,
+      })
       : [];
+
+    const pages = await fetchAllPagesForFooter(locale || 'en');
 
     return {
       props: {
@@ -597,7 +477,8 @@ export async function getStaticProps({ params, locale }) {
           readTimeMinutes,
           relatedPosts: relatedPosts || [],
         },
-        ...(await serverSideTranslations(locale, ["common"])),
+        pages,
+        ...(await serverSideTranslations(locale, [ "common" ])),
       },
       revalidate: 60,
     };

@@ -22,8 +22,9 @@ import RedirectResultList from "./RedirectResultList";
 import { checkRedirects } from "./redirectUtils.jsx";
 import { useDevice } from "@/hooks/useDevice";
 import { useTranslation } from "next-i18next";
+import { trackEvent } from "@/utils/analytics";
 
-export default function RedirectChecker({children, icon, buttonText, examples}) {
+export default function RedirectChecker({children, icon, ...config}) {
   const {t} = useTranslation();
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +33,15 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
   const router = useRouter();
   const [urls, setUrls] = useState('');
   const { isMobile } = useDevice();
-  const placeholder = t('tool.redirect-placeholder', "Enter URLs (one per line) e.g., ")  + examples[0];
+
+  const { examples, buttonText } = config;
+
+  // Process examples: handle string format from widgetConfig or use array
+  const processedExamples = typeof examples === 'string'
+    ? examples.split(',').map(s => s.trim()).filter(Boolean)
+    : examples || [];
+
+  const placeholder = t('tool.redirect-placeholder', "Enter URLs (one per line) e.g., ")  + (processedExamples[0] || '');
 
   const { bgColor, borderColor } = useColorModeValue(
     { bgColor: "white", borderColor: "gray.200"  },
@@ -75,10 +84,15 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
     setIsLoading(false);
     scrollToResults();
     shouldAutoRunRef.current = false;
+
+    trackEvent('redirect_check_submitted', {
+      url_count: urlList.length,
+      trigger: 'manual',
+    });
   }, [urls, toast]);
 
   const handleShowExamples = () => {
-    const exampleUrls = examples.join("\n");
+    const exampleUrls = processedExamples.join("\n");
     setUrls(exampleUrls);
   };
 
@@ -124,6 +138,11 @@ export default function RedirectChecker({children, icon, buttonText, examples}) 
             setIsLoading(false);
             scrollToResults();
             shouldAutoRunRef.current = false;
+
+            trackEvent('redirect_check_submitted', {
+              url_count: urlsToCheck.length,
+              trigger: 'auto',
+            });
           });
         }, 300);
       }

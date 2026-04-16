@@ -24,6 +24,7 @@ import {
 import { FaCheckCircle, FaTimesCircle, FaExternalLinkAlt, FaShare, FaShareAlt } from "react-icons/fa";
 import { useTranslation } from "next-i18next";
 import { useDevice } from '@/hooks/useDevice';
+import { trackEvent } from "@/utils/analytics";
 
 export default function BlockResultList({ results }) {
   const {t} = useTranslation();
@@ -33,11 +34,16 @@ export default function BlockResultList({ results }) {
   const bgColor = useColorModeValue("gray.100", "gray.700"); // Store the value in a variable
   const toast = useToast();
 
-  const handleShare = (urls) => {
+  const handleShare = (urls, type = 'single') => {
     const urlString = Array.isArray(urls) ? urls.join(',') : urls;
     const shareUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(urlString)}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
+        trackEvent('result_shared', {
+          tool: 'block',
+          type,
+          url_count: Array.isArray(urls) ? urls.length : 1,
+        });
         toast({
           title: t('tool.share-url-copied', 'Share URL copied!'),
           description: t('tool.share-url-copied-description', 'The result URL has been copied to your clipboard.'),
@@ -58,8 +64,8 @@ export default function BlockResultList({ results }) {
       });
   };
 
-  const handleShareResult = (url) => handleShare(url);
-  const handleShareAllResults = () => handleShare(results.map(result => result.url));
+  const handleShareResult = (url) => handleShare(url, 'single');
+  const handleShareAllResults = () => handleShare(results.map(result => result.url), 'all');
 
   return (
     <VStack spacing={6} align="stretch">
