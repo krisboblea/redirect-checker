@@ -39,6 +39,7 @@ import { FaBicycle, FaCar, FaCode } from "react-icons/fa";
 import { styles } from "@/configs/checker";
 import { useDevice } from '@/hooks/useDevice';
 import { useTranslation } from "next-i18next";
+import { trackEvent } from "@/utils/analytics";
 
 const DetailButton = ({ isOpen, onToggle, onShare }) => {
   const {t} = useTranslation();
@@ -80,14 +81,20 @@ export default function RedirectResultList({ results }) {
   }, null);
 
   const handleOpenUrl = (url) => {
+    trackEvent('result_url_opened', { url });
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handleShare = (urls) => {
+  const handleShare = (urls, type = 'single') => {
     const urlString = Array.isArray(urls) ? urls.join(',') : urls;
     const shareUrl = `${window.location.origin}${window.location.pathname}?url=${encodeURIComponent(urlString)}`;
     navigator.clipboard.writeText(shareUrl)
       .then(() => {
+        trackEvent('result_shared', {
+          tool: 'redirect',
+          type,
+          url_count: Array.isArray(urls) ? urls.length : 1,
+        });
         toast({
           title: t('tool.share-url-copied', 'Share URL copied!'),
           description: t('tool.share-url-copied-description', 'The result URL has been copied to your clipboard.'),
@@ -108,8 +115,8 @@ export default function RedirectResultList({ results }) {
       });
   };
 
-  const handleShareResult = (url) => handleShare(url);
-  const handleShareAllResults = () => handleShare(results.map(result => result.url));
+  const handleShareResult = (url) => handleShare(url, 'single');
+  const handleShareAllResults = () => handleShare(results.map(result => result.url), 'all');
 
   return (
     <VStack spacing={6} align="stretch">
@@ -177,7 +184,10 @@ export default function RedirectResultList({ results }) {
                 {(!result.error_msg && !isMobile) && (
                   <DetailButton
                     isOpen={showDetails[index]}
-                    onToggle={() => setShowDetails(prevState => ({ ...prevState, [index]: !prevState[index] }))}
+                    onToggle={() => {
+                      setShowDetails(prevState => ({ ...prevState, [index]: !prevState[index] }));
+                      trackEvent('result_details_expanded', { url: result.url });
+                    }}
                     onShare={() => handleShareResult(result.url)}
                   />
                 )}
@@ -206,7 +216,10 @@ export default function RedirectResultList({ results }) {
                 {(!result.error_msg && isMobile) && (
                   <DetailButton
                     isOpen={showDetails[index]}
-                    onToggle={() => setShowDetails(prevState => ({ ...prevState, [index]: !prevState[index] }))}
+                    onToggle={() => {
+                      setShowDetails(prevState => ({ ...prevState, [index]: !prevState[index] }));
+                      trackEvent('result_details_expanded', { url: result.url });
+                    }}
                     onShare={() => handleShareResult(result.url)}
                   />
                 )}

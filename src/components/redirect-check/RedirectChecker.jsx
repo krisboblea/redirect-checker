@@ -22,6 +22,7 @@ import RedirectResultList from "./RedirectResultList";
 import { checkRedirects } from "./redirectUtils.jsx";
 import { useDevice } from "@/hooks/useDevice";
 import { useTranslation } from "next-i18next";
+import { trackEvent } from "@/utils/analytics";
 
 export default function RedirectChecker({children, icon, ...config}) {
   const {t} = useTranslation();
@@ -83,6 +84,11 @@ export default function RedirectChecker({children, icon, ...config}) {
     setIsLoading(false);
     scrollToResults();
     shouldAutoRunRef.current = false;
+
+    trackEvent('redirect_check_submitted', {
+      url_count: urlList.length,
+      trigger: 'manual',
+    });
   }, [urls, toast]);
 
   const handleShowExamples = () => {
@@ -132,6 +138,11 @@ export default function RedirectChecker({children, icon, ...config}) {
             setIsLoading(false);
             scrollToResults();
             shouldAutoRunRef.current = false;
+
+            trackEvent('redirect_check_submitted', {
+              url_count: urlsToCheck.length,
+              trigger: 'auto',
+            });
           });
         }, 300);
       }
